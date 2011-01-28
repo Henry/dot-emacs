@@ -69,13 +69,6 @@
 
 (define-key my-map [f1] 'my-show-definition)
 
-;; (global-set-key (kbd "C-c d")
-;;                 (lambda ()
-;;                   (interactive)
-;;                   (w3m-goto-url
-;;                    (format "http://dictionary.reference.com/browse/%s"
-;;                            (read-string "Search word: " (current-word))))))
-
 ;; -----------------------------------------------------------------------------
 ;;;  browse-apropos-url
 ;;   from http://www.emacswiki.org/emacs/BrowseAproposURL
@@ -102,7 +95,8 @@
         ("^gn:? +\\(.*\\)" . ;; Google News
          "http://news.google.com/news?sa=N&tab=dn&q=\\1")
 
-        ("^gt:? +\\(\\w+\\)|? *\\(\\w+\\) +\\(\\w+://.*\\)" . ;; Google Translate URL
+        ;; Google Translate URL
+        ("^gt:? +\\(\\w+\\)|? *\\(\\w+\\) +\\(\\w+://.*\\)" .
          "http://translate.google.com/translate?langpair=\\1|\\2&u=\\3")
 
         ("^gt:? +\\(\\w+\\)|? *\\(\\w+\\) +\\(.*\\)" . ;; Google Translate Text
@@ -122,9 +116,6 @@
 
         ("^ewiki$" . ;; Emacs Wiki
          "http://www.emacswiki.org")
-
-        ("^arda$" . ;; The Encyclopedia of Arda
-         "http://www.glyphweb.com/arda/")
 
         ))
 
@@ -179,14 +170,6 @@ Term is word at point or the selcted region"
 (define-key my-map (kbd "<f3>") 'browse-apropos-url)
 (define-key my-map (kbd "C-<f3>") (lambda()(interactive)(rgr/google-search-auto)))
 (define-key my-map (kbd "M-<f3>") 'rgr/google-search-prompt)
-
-;; -----------------------------------------------------------------------------
-;;; Emacs/W3 Configuration
-
-;;(add-to-list 'load-path
-;;           (expand-file-name "~/.emacs.d/packages/w3/lisp"))
-
-;;(require 'w3-auto "w3-auto")
 
 ;; -----------------------------------------------------------------------------
 ;;; init-www.el ends here
