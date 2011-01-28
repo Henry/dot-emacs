@@ -11,11 +11,12 @@
 # Ignore corefiles
 core
 
-# Ignore Youtoo intermediate build files from optional packages
+# Ignore
 /personal
 /save
 /lisp/save
 /lisp/pending
 /packages
+tramp
 
 # end-of-file
