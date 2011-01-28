@@ -1,0 +1,3 @@
+(cd packages && ./getAll && ./Allmake)
+./makeEeemacs
+./makeTAGS

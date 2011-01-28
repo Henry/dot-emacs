@@ -1,0 +1,21 @@
+# Ignore editor and misc backup files - anywhere
+*~
+.*~
+*.bak
+\#*\#
+.directory
+
+# Ignore all object files
+*.elc
+
+# Ignore corefiles
+core
+
+# Ignore Youtoo intermediate build files from optional packages
+/personal
+/save
+/lisp/save
+/lisp/pending
+/packages
+
+# end-of-file
