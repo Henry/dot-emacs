@@ -9,7 +9,7 @@ case `uname -m` in
     ;;
 esac
 
-rm -rf ~/bin/eemacs ~/bin/eeemacs
+rm -rf ~/bin/eemacs
 
 (cd ~/.emacs.d/lisp && make)
 (cd ~/.emacs.d/my-lisp && make)

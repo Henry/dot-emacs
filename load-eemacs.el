@@ -207,7 +207,8 @@
 ;; Don't load by default as the reading of the cache takes a short time
 ;; build a special version which includes it: eeemacs
 ;; or load at run-time
-;;(load "init-emms")
+;; P.S. It is OK to pre-load the latest emms
+(load "init-emms")
 
 ;; -----------------------------------------------------------------------------
 ;;; Dictionary and thesaurus
