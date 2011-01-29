@@ -89,7 +89,8 @@
       eshell-prompt-regexp shell-prompt-pattern
       eshell-prompt-function
       (lambda ()
-        (if (= (user-uid) 0)
+        (if (or (= (user-uid) 0)
+                (string-match "^/su\\(do\\)?:" default-directory))
             (format "MrBig<%d> " (ring-length eshell-history-ring))
           (format "%s(%d) "
                   (getenv "HOSTNAME") (ring-length eshell-history-ring))
