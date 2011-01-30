@@ -4,6 +4,8 @@
 (require 'tramp)
 
 (setq tramp-default-method "ssh" ;; "scp"
+      password-cache t
+      password-cache-expiry 1000
       tramp-remote-path (split-string (getenv "PATH") ":")
       tramp-process-echos nil
       tramp-auto-save-directory (expand-file-name "~/Emacs/Tramp/autosave")
