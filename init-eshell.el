@@ -17,8 +17,8 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; Apply elisp sexp editing sugar
-(require 'highlight-parentheses)
-(require 'paredit)
+;(require 'highlight-parentheses)
+;(require 'paredit)
 
 ;; -----------------------------------------------------------------------------
 ;;; Set the list of modules to be loaded
@@ -141,27 +141,26 @@
   (completion-selection-mode t)
   (completion-selection-set 'complete-pcomplete)
 
-  (local-set-key
-   [(control ?\.)]
+  (local-set-key [(control ?\.)]
    (lambda ()
      "Call `completion-selection-select-complete' for the
 `pcomplete' completion mechanism."
      (interactive)
      (completion-selection-set-complete 'complete-pcomplete)))
 
- ;;  (define-key completion-dynamic-map "\C-c\C-c"
- ;;    (lambda ()
- ;;      "For eshell-mode call the `eshell-interrupt-process' command
- ;;  after rejecting the completion"
- ;;      (interactive)
- ;;      (completion-reject)
- ;;      (if (eq major-mode 'eshell-mode)
- ;;          (eshell-interrupt-process))))
+  (define-key completion-overlay-map [(control ?c)]
+    (lambda ()
+      "For eshell-mode call the `eshell-interrupt-process' command
+  after rejecting the completion"
+      (interactive)
+      (completion-reject)
+      (if (eq major-mode 'eshell-mode)
+          (eshell-interrupt-process))))
 
-  (show-matching-paren)
-  (highlight-parentheses-mode t)
-  (paredit-mode +1)
-  (setq paredit-add-space-for-delimiter nil)
+  ;(show-matching-paren)
+  ;(highlight-parentheses-mode t)
+  ;(paredit-mode +1)
+  ;(setq paredit-add-space-for-delimiter nil)
   )
 
 (add-hook 'eshell-mode-hook 'my-eshell-mode-hook)
