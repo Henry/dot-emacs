@@ -1,0 +1,4 @@
+for file in *.el
+do
+    emacs -batch -L . -f batch-byte-compile $file
+done

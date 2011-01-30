@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Do not use the extended emacs as the server (bugs in the redisplay)
+ssh -X $1 emacs -server -f multi-eshell 2>/dev/null &

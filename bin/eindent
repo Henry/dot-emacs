@@ -1,0 +1,1 @@
+eemacs $1 --batch --eval "(progn (untabify (point-min) (point-max)) (indent-region (point-min) (point-max)) (save-buffer t))"
