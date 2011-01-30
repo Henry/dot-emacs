@@ -1,9 +1,9 @@
 #                            -*- mode: org; -*-
-#+TITLE:                         *dot-emacs*
+#+TITLE:     *My emacs extensions, configuration and image dump scripts*
 #+AUTHOR: Henry Weller
 #+EMAIL: no-reply
 #+OPTIONS: author:nil email:nil ^:{}
 
-My emacs configuration and image dump scripts.
-
-
+Many of the code snippets and ideas collated here were obtained originally from
+the [[http://www.emacswiki.org][EmacsWiki]] and I am indebted to all those who contribute to this excellent
+resource.
