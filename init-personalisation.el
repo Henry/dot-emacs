@@ -314,8 +314,9 @@ rather than vertically.")
 ;; -----------------------------------------------------------------------------
 ;;; Make the prefix key `C-z' for my personal keymap.
 ;; On dvorak-keyboards `C-t' is one of the most accessible keys.
+;;     but used by stumpwm
 ;; On qwerty-keyboards `C-z' is one of the most accessible keys.
-
+;;     and good enough on dvorak-keyboards
 (define-key my-map [(control ?u)] 'my-rotate-windows)
 (define-key my-map [(down)] 'duplicate-start-of-line-or-region)
 (define-key my-map "i" 'goto-last-change)
@@ -327,8 +328,8 @@ rather than vertically.")
 (define-key my-map "l" 'linum-mode)
 (define-key my-map "o" 'occur-by-moccur)
 (define-key my-map "r" 'revert-buffer)
-(define-key my-map "s" 'elscreen-eshell)
-(define-key my-map "S" 'elscreen-shell)
+(define-key my-map "s" 'multi-eshell)
+(define-key my-map "S" 'multi-shell)
 (define-key my-map [(control ?s)] 'support)
 (define-key my-map "t" 'toggle-truncate-lines)
 (define-key my-map "v" 'find-file-other-frame)

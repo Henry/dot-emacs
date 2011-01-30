@@ -135,6 +135,9 @@
       wl-use-highlight-mouse-line nil
       wl-show-plug-status-on-modeline t
       wl-message-window-size '(1 . 4)
+
+      ;; Create draft in a new frame
+      wl-draft-use-frame t
       )
 
 ;; Set mail-icon to be shown universally in the modeline.
@@ -659,10 +662,10 @@ Set the `j' key to run `mime-preview-quit'."
   ;; cited message
   (when (re-search-forward "^> \\[1" nil t)
     (beginning-of-line)
-    (delete-lines 1)
+    (kill-line 1)
     (while (or (looking-at "^> *$")
                (looking-at "^> \\[[1-9]"))
-      (delete-lines 1))
+      (kill-line 1))
     (when (re-search-forward "^> \\[[1-9][\\. ]" nil t)
       (beginning-of-line)
       (let ((pt (point)))
@@ -680,13 +683,13 @@ Set the `j' key to run `mime-preview-quit'."
           (progn
             (beginning-of-line)
             (while (looking-at "^> *$")
-              (delete-lines 1)
+              (kill-line 1)
               (forward-line -1))
             (forward-line 1)
-            (delete-lines 1))
+            (kill-line 1))
         (goto-char (point-max))
         (re-search-backward "^$")
-        (delete-lines 1)))))
+        (kill-line 1)))))
 
 (defun wl-rehilight ()
   "Re-highlight message."
