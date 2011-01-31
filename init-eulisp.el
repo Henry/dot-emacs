@@ -80,7 +80,7 @@
   (outline-minor-mode +1)
 
   ;; Switch-on font-lock
-  (font-lock-mode))
+  (font-lock-mode 1))
 
 (add-hook 'makefile-mode-hook 'my-makefile-mode-hook)
 

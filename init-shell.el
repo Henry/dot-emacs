@@ -34,7 +34,7 @@
 (defun my-shell-mode-hook ()
 
   ;; Switch-on font-lock
-  (font-lock-mode)
+  (font-lock-mode 1)
 
   ;; Show trailing whitespace, tabs and lines > 80
   (whitespace-mode 1)

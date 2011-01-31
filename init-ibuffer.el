@@ -40,7 +40,8 @@
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
-            (ibuffer-switch-to-saved-filter-groups "default")))
+            (ibuffer-switch-to-saved-filter-groups "default")
+            (font-lock-mode 1)))
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
