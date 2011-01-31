@@ -6,4 +6,4 @@ eeserver="eemacs -q -l ~/.emacs.d/init-eemacs.el -server server"
 
 (emacsclient -n -e \
     "(progn (select-frame (make-frame)) (multi-eshell 1))" 2>/dev/null || \
- $eeserver -f elscreen-eshell 2>/dev/null) &
+ $eeserver -f multi-eshell 2>/dev/null) &
