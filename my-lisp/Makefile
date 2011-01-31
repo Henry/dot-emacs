@@ -9,6 +9,8 @@ elc_files := $(shell ls *.el | sed 's:\.el:\.elc:g')
         -L ./ \
         -L ../lisp \
         -L ../packages/icicles \
+	-L ../packages/anything-config \
+	-L ../packages/anything-config/extensions \
         -L ../packages/auctex/auctex \
 	-L ../packages/bbdb/lisp \
 	-L ../packages/completion-ui \

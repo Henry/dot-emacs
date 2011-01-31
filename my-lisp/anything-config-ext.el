@@ -4,15 +4,17 @@
 
 (provide 'anything-config-ext)
 
+(add-to-list 'load-path (expand-file-name
+                         "~/.emacs.d/packages/anything-config"))
 (require 'anything)
 (require 'anything-config)
-(require 'anything-etags)
 (require 'anything-gtags)
 (require 'anything-match-plugin)
-(require 'anything-complete)
+;;(require 'anything-complete)
 ;;(require 'anything-traverse)
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/icicles"))
+(add-to-list 'load-path (expand-file-name
+                         "~/.emacs.d/packages/icicles"))
 (require 'lacarte)
 
 ;; -----------------------------------------------------------------------------

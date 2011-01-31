@@ -1,7 +1,12 @@
 ;;; init-tramp.el --- Initialize tramp remote file editing
 ;; -----------------------------------------------------------------------------
 
-(require 'tramp)
+;; Don't load tramp into the dumped image as it causes a minor start-up glitch
+;(require 'tramp)
+
+;; This can only be done after tramp is loaded
+;; (add-to-list 'tramp-default-proxies-alist
+;;              '("well.+" nil "/well:"))
 
 (setq tramp-default-method "ssh" ;; "scp"
       password-cache t
@@ -13,9 +18,6 @@
       '(
         (t (expand-file-name "~/Emacs/Tramp/autosave") ok-create full-path)
         ))
-
-(add-to-list 'tramp-default-proxies-alist
-             '("well.+" nil "/well:"))
 
 ;; -----------------------------------------------------------------------------
 ;;;  Using Tramp to open files sudo’d to root

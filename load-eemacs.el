@@ -50,7 +50,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; CEDET
-;(load "init-cedet")
+;;(load "init-cedet")
 
 ;; -----------------------------------------------------------------------------
 ;;; ECB
@@ -82,11 +82,6 @@
 ;; -----------------------------------------------------------------------------
 ;;; Print settings
 (load "init-printing")
-
-;; -----------------------------------------------------------------------------
-;;; Workspaces
-;; save and restore window configurations in registers
-;;(load "init-workspaces")
 
 ;; -----------------------------------------------------------------------------
 ;;; Thing at point settings
@@ -125,7 +120,6 @@
 ;; -----------------------------------------------------------------------------
 ;;; GIT-Emacs: Emacs front-end for GIT repositories
 (load "init-magit")
-;;(load "init-egg")
 
 ;; -----------------------------------------------------------------------------
 ;;; Insideous Big Brother Database
@@ -184,10 +178,6 @@
 ;;(load "init-apt")
 
 ;; -----------------------------------------------------------------------------
-;;; Anything: Show things that are now and have happened for selection
-(load "init-anything")
-
-;; -----------------------------------------------------------------------------
 ;;; Tags: Initialise all things tags related
 (load "init-tags")
 
@@ -219,30 +209,16 @@
 (load "init-imaxima")
 
 ;; -----------------------------------------------------------------------------
-;;; Predictive completion mode
-;;(load "init-predictive")
-
-;; -----------------------------------------------------------------------------
 ;;; completion-ui: Enhanced in-buffer completion packages
 (load "init-completion")
-;;(load "init-ca2")
-;;(load "init-autocomplete")
-
-;; -----------------------------------------------------------------------------
-;;; Smart TAB completion
-;;(load "init-smart-tab")
-
-;; -----------------------------------------------------------------------------
-;;; Buffer selection menu
-;;(load "init-bs")
 
 ;; -----------------------------------------------------------------------------
 ;;; Buffer selection menu
 (load "init-ibuffer")
 
 ;; -----------------------------------------------------------------------------
-;;; Minibuffer incremental buffer selection
-;;(load "init-iswitchb")
+;;; Anything: Show things that are now and have happened for selection
+(load "init-anything")
 
 ;; -----------------------------------------------------------------------------
 ;;; ido: Interactive-do minibuffer completion packages
