@@ -99,7 +99,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; tramp --- Remote file editing
-;;(load "init-tramp")
+(load "init-tramp")
 
 ;; -----------------------------------------------------------------------------
 ;;; tar-mode --- Read and write archive files automatically
