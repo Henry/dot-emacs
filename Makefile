@@ -8,6 +8,7 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	$(EMACS) -batch -L . \
 	-L lisp \
 	-L my-lisp \
+	-L packages/anything \
 	-L packages/apel \
 	-L packages/apt-el \
 	-L packages/auctex \

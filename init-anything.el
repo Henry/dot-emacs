@@ -2,6 +2,7 @@
 ;; -----------------------------------------------------------------------------
 ;;;  Anything: Show things that are now and have happened for selection
 
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/anything"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/icicles"))
 
 (require 'anything-config-ext)
