@@ -158,10 +158,6 @@
 (load "init-www")
 
 ;; -----------------------------------------------------------------------------
-;;; Newsticker: asynchronously retrieves headlines from a list of news sites
-(load "init-newsticker")
-
-;; -----------------------------------------------------------------------------
 ;;; openwith: Open files using specified application
 (load "init-openwith")
 
