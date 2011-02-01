@@ -11,7 +11,6 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L packages/anything-config \
 	-L packages/anything-config/extensions \
 	-L packages/apel \
-	-L packages/apt-el \
 	-L packages/auctex \
 	-L packages/bbdb/lisp \
 	-L packages/ca2 \
@@ -20,9 +19,7 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L packages/doremi \
 	-L packages/ebib/src \
 	-L packages/ecb \
-	-L packages/ee \
 	-L packages/emms/lisp \
-	-L packages/elscreen \
 	-L packages/flim \
 	-L packages/icicles \
 	-L packages/magit \

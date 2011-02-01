@@ -134,8 +134,8 @@
 (load "init-org")
 
 ;; -----------------------------------------------------------------------------
-;;; Muse-mode: authoring and publishing environment
-(load "init-muse")
+;;; Wiki modes: modes for typesetting WIKI pages
+(load "init-wiki")
 
 ;; -----------------------------------------------------------------------------
 ;;; outline-mode: outlining and folding
@@ -162,20 +162,12 @@
 (load "init-newsticker")
 
 ;; -----------------------------------------------------------------------------
-;;; EE: Categorizing information manager for Emacs.
-(load "init-ee")
-
-;; -----------------------------------------------------------------------------
 ;;; openwith: Open files using specified application
 (load "init-openwith")
 
 ;; -----------------------------------------------------------------------------
 ;;; oprofile: An oprofile callgraph viewer
 (load "init-oprofile")
-
-;; -----------------------------------------------------------------------------
-;;; apt-mode: allows easy running of Debian apt-related software
-;;(load "init-apt")
 
 ;; -----------------------------------------------------------------------------
 ;;; Tags: Initialise all things tags related
