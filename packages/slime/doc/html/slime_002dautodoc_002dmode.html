@@ -1,0 +1,67 @@
+<html lang="en">
+<head>
+<title>slime-autodoc-mode - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Packages.html#Contributed-Packages" title="Contributed Packages">
+<link rel="prev" href="Fuzzy-Completion.html#Fuzzy-Completion" title="Fuzzy Completion">
+<link rel="next" href="ASDF.html#ASDF" title="ASDF">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="slime-autodoc-mode"></a>
+<a name="slime_002dautodoc_002dmode"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="ASDF.html#ASDF">ASDF</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Fuzzy-Completion.html#Fuzzy-Completion">Fuzzy Completion</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Packages.html#Contributed-Packages">Contributed Packages</a>
+<hr>
+</div>
+
+<h3 class="section">9.4 <code>slime-autodoc-mode</code></h3>
+
+<p>Autodoc mode is an additional minor-mode for automatically showing
+information about symbols near the point. For function names the
+argument list is displayed, and for global variables, the value. 
+This is a clone of <code>eldoc-mode</code> for Emacs Lisp.
+
+   <p>The mode can be enabled by default in the <code>slime-setup</code> call of your
+<code>~/.emacs</code>:
+<pre class="example">     (slime-setup '(slime-autodoc))
+</pre>
+     <dl>
+<dt><kbd>M-x slime-arglist NAME</kbd><dd><a name="index-slime_002darglist-NAME-263"></a>
+Show the argument list of the function NAME.
+
+     <br><dt><kbd>M-x slime-autodoc-mode</kbd><dd><a name="index-slime_002dautodoc_002dmode-264"></a>
+Toggles autodoc-mode on or off according to the argument, and
+toggles the mode when invoked without argument. 
+</dl>
+
+   <p>If the variable <code>slime-use-autodoc-mode</code> is set (default), Emacs
+starts a timer, otherwise the information is only displayed after
+pressing SPC.
+
+   </body></html>
+

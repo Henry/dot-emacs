@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+<title>Global IO Redirection - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Tips-and-Tricks.html#Tips-and-Tricks" title="Tips and Tricks">
+<link rel="prev" href="Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp" title="Connecting to a remote lisp">
+<link rel="next" href="Auto_002dSLIME.html#Auto_002dSLIME" title="Auto-SLIME">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Global-IO-Redirection"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Auto_002dSLIME.html#Auto_002dSLIME">Auto-SLIME</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp">Connecting to a remote lisp</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Tips-and-Tricks.html#Tips-and-Tricks">Tips and Tricks</a>
+<hr>
+</div>
+
+<h3 class="section">8.2 Globally redirecting all IO to the REPL</h3>
+
+<p>By default <acronym>SLIME</acronym> does not change <code>*standard-output*</code> and
+friends outside of the <acronym>REPL</acronym>. If you have any other threads which
+call <code>format</code>, <code>write-string</code>, etc. that output will be seen
+only in the <code>*inferior-lisp*</code> buffer or on the terminal, more
+often than not this is inconvenient. So, if you want code such as this:
+
+<pre class="example">     (run-in-new-thread
+       (lambda ()
+         (write-line "In some random thread.~%" *standard-output*)))
+</pre>
+   <p>to send its output to <acronym>SLIME</acronym>'s repl buffer, as opposed to
+<code>*inferior-lisp*</code>, set <code>swank:*globally-redirect-io*</code> to T.
+
+   <p>Note that the value of this variable is only checked when swank
+accepts the connection so you should set it via
+<samp><span class="file">~/.swank.lisp</span></samp>. Otherwise you will need to call
+<code>swank::globally-redirect-io-to-connection</code> yourself, but you
+shouldn't do that unless you know what you're doing.
+
+<!--  -->
+</body></html>
+

@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+<title>Setting up pathname translations - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp" title="Connecting to a remote lisp">
+<link rel="prev" href="Setting-up-Emacs.html#Setting-up-Emacs" title="Setting up Emacs">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Setting-up-pathname-translations"></a>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Setting-up-Emacs.html#Setting-up-Emacs">Setting up Emacs</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp">Connecting to a remote lisp</a>
+<hr>
+</div>
+
+<h4 class="subsection">8.1.3 Setting up pathname translations</h4>
+
+<p>One of the main problems with running swank remotely is that Emacs
+assumes the files can be found using normal filenames. if we want
+things like <code>slime-compile-and-load-file</code> (<kbd>C-c C-k</kbd>) and
+<code>slime-edit-definition</code> (<kbd>M-.</kbd>) to work correctly we need to
+find a way to let our local Emacs refer to remote files.
+
+   <p>There are, mainly, two ways to do this. The first is to mount, using
+NFS or similar, the remote machine's hard disk on the local machine's
+file system in such a fashion that a filename like
+<samp><span class="file">/opt/project/source.lisp</span></samp> refers to the same file on both
+machines. Unfortunetly NFS is usually slow, often buggy, and not
+always feasable, fortunetely we have an ssh connection and Emacs'
+<code>tramp-mode</code> can do the rest. 
+(See see <a href="../tramp/index.html#Top">TRAMP User Manual</a>.)
+
+   <p>What we do is teach Emacs how to take a filename on the remote machine
+and translate it into something that tramp can understand and access
+(and vice-versa). Assuming the remote machine's host name is
+<code>remote.example.com</code>, <code>cl:machine-instance</code> returns
+&ldquo;remote&rdquo; and we login as the user &ldquo;user&rdquo; we can use <acronym>SLIME</acronym>'s
+built-in mechanism to setup the proper transaltions by simply doing:
+
+<pre class="example">     (push (slime-create-filename-translator :machine-instance "remote.example.com"
+                                             :remote-host "remote"
+                                             :username "user")
+           slime-filename-translations)
+</pre>
+   <!--  -->
+</body></html>
+

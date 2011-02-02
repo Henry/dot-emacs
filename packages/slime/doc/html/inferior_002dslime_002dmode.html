@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+<title>inferior-slime-mode - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Packages.html#Contributed-Packages" title="Contributed Packages">
+<link rel="prev" href="Highlight-Edits.html#Highlight-Edits" title="Highlight Edits">
+<link rel="next" href="Scratch-Buffer.html#Scratch-Buffer" title="Scratch Buffer">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="inferior-slime-mode"></a>
+<a name="inferior_002dslime_002dmode"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Scratch-Buffer.html#Scratch-Buffer">Scratch Buffer</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Highlight-Edits.html#Highlight-Edits">Highlight Edits</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Packages.html#Contributed-Packages">Contributed Packages</a>
+<hr>
+</div>
+
+<h3 class="section">9.15 <code>inferior-slime-mode</code></h3>
+
+<p>The <code>inferior-slime-mode</code> is a minor mode is intended to use with
+a comint buffer.  It provides some of the SLIME commands, like symbol
+completion and documentation lookup.  To install it, add something
+like this to user <samp><span class="file">.emacs</span></samp>:
+
+<pre class="example">     (slime-setup '(inferior-slime-mode))
+     (add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode 1)))
+</pre>
+     <dl>
+<dt><kbd>M-x inferior-slime-mode</kbd><dd><a name="index-inferior_002dslime_002dmode-298"></a>
+Turns inferior-slime-mode on or off. 
+</dl>
+
+   <p><a name="index-inferior_002dslime_002dmode_002dmap-299"></a>The variable <code>inferior-slime-mode-map</code> contains the extra
+keybindings.
+
+   </body></html>
+

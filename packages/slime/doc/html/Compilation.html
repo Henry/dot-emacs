@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+<title>Compilation - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Commands.html#Commands" title="Commands">
+<link rel="prev" href="Programming.html#Programming" title="Programming">
+<link rel="next" href="Evaluation.html#Evaluation" title="Evaluation">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Compilation"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Evaluation.html#Evaluation">Evaluation</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Programming.html#Programming">Programming</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Commands.html#Commands">Commands</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.2.2 Compilation commands</h4>
+
+<p><a name="index-Compilation-69"></a>
+<acronym>SLIME</acronym> has fancy commands for compiling functions, files, and
+packages. The fancy part is that notes and warnings offered by the
+Lisp compiler are intercepted and annotated directly onto the
+corresponding expressions in the Lisp source buffer. (Give it a try to
+see what this means.)
+
+     
+<a name="index-Compiling-Functions-70"></a>
+<dl><dt><kbd>C-c C-c</kbd><dt><kbd>M-x slime-compile-defun</kbd><dd><a name="index-C_002dc-C_002dc-71"></a><a name="index-slime_002dcompile_002ddefun-72"></a>
+Compile the top-level form at point.
+
+     <br><dt><kbd>C-c C-y</kbd><dt><kbd>M-x slime-call-defun</kbd><dd><a name="index-C_002dc-C_002dy-73"></a><a name="index-slime_002dcall_002ddefun-74"></a>
+Insert a call to the function defined around point into the REPL.
+
+     <br><dt><kbd>C-c C-k</kbd><dt><kbd>M-x slime-compile-and-load-file</kbd><dd><a name="index-C_002dc-C_002dk-75"></a><a name="index-slime_002dcompile_002dand_002dload_002dfile-76"></a>
+Compile and load the current buffer's source file.
+
+     <br><dt><kbd>C-c M-k</kbd><dt><kbd>M-x slime-compile-file</kbd><dd><a name="index-C_002dc-M_002dk-77"></a><a name="index-slime_002dcompile_002dfile-78"></a>
+Compile (but don't load) the current buffer's source file.
+
+     <br><dt><kbd>C-c C-l</kbd><dt><kbd>M-x slime-load-file</kbd><dd><a name="index-C_002dc-C_002dl-79"></a><a name="index-slime_002dload_002dfile-80"></a>
+Load a source file and compile if necessary, without loading into a buffer..
+
+     <br><dt><kbd>C-c C-z</kbd><dt><kbd>M-x slime-switch-to-output-buffer</kbd><dd><a name="index-C_002dc-C_002dz-81"></a><a name="index-slime_002dswitch_002dto_002doutput_002dbuffer-82"></a>
+Select the output buffer, preferably in a different window.
+
+     <br><dt><kbd>M-x slime-compile-region</kbd><dd><a name="index-slime_002dcompile_002dregion-83"></a>
+Compile region at point.
+
+   </dl>
+
+   <p>The annotations are indicated as underlining on source forms. The
+compiler message associated with an annotation can be read either by
+placing the mouse over the text or with the selection commands below.
+
+     <dl>
+<dt><kbd>M-n</kbd><dt><kbd>M-x slime-next-note</kbd><dd><a name="index-M_002dn-84"></a><a name="index-slime_002dnext_002dnote-85"></a>
+Move the point to the next compiler note and displays the note.
+
+     <br><dt><kbd>M-p</kbd><dt><kbd>M-x slime-previous-note</kbd><dd><a name="index-M_002dp-86"></a><a name="index-slime_002dprevious_002dnote-87"></a>
+Move the point to the previous compiler note and displays the note.
+
+     <br><dt><kbd>C-c M-c</kbd><dt><kbd>M-x slime-remove-notes</kbd><dd><a name="index-C_002dc-M_002dc-88"></a><a name="index-slime_002dremove_002dnotes-89"></a>
+Remove all annotations from the buffer. 
+</dl>
+
+<!--  -->
+</body></html>
+

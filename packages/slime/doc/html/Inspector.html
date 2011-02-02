@@ -1,0 +1,85 @@
+<html lang="en">
+<head>
+<title>Inspector - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Commands.html#Commands" title="Commands">
+<link rel="prev" href="Recovery.html#Recovery" title="Recovery">
+<link rel="next" href="Profiling.html#Profiling" title="Profiling">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Inspector"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Profiling.html#Profiling">Profiling</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Recovery.html#Recovery">Recovery</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Commands.html#Commands">Commands</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.2.5 Inspector commands</h4>
+
+<p>The <acronym>SLIME</acronym> inspector is a Emacs-based alternative to the
+standard <code>INSPECT</code> function. The inspector presents objects in
+Emacs buffers using a combination of plain text, hyperlinks to related
+objects.
+
+   <p>The inspector can easily be specialized for the objects in your own
+programs. For details see the the <code>inspect-for-emacs</code> generic
+function in <samp><span class="file">swank-backend.lisp</span></samp>.
+
+     <dl>
+<dt><kbd>C-c I</kbd><dt><kbd>M-x slime-inspect</kbd><dd><a name="index-C_002dc-I-112"></a><a name="index-slime_002dinspect-113"></a>
+Inspect the value of an expression entered in the minibuffer.
+
+   </dl>
+
+   <p>The standard commands available in the inspector are:
+
+     <dl>
+<dt><kbd>RET</kbd><dt><kbd>M-x slime-inspector-operate-on-point</kbd><dd><a name="index-RET-114"></a><a name="index-slime_002dinspector_002doperate_002don_002dpoint-115"></a>
+If point is on a value then recursivly call the inspcetor on that
+value. If point is on an action then call that action.
+
+     <br><dt><kbd>d</kbd><dt><kbd>M-x slime-inspector-describe</kbd><dd><a name="index-d-116"></a><a name="index-slime_002dinspector_002ddescribe-117"></a>
+Describe the slot at point.
+
+     <br><dt><kbd>l</kbd><dt><kbd>M-x slime-inspector-pop</kbd><dd><a name="index-l-118"></a><a name="index-slime_002dinspector_002dpop-119"></a>
+Go back to the previous object (return from <kbd>RET</kbd>).
+
+     <br><dt><kbd>n</kbd><dt><kbd>M-x slime-inspector-next</kbd><dd><a name="index-n-120"></a><a name="index-slime_002dinspector_002dnext-121"></a>
+The inverse of <kbd>l</kbd>. Also bound to <kbd>SPC</kbd>.
+
+     <br><dt><kbd>q</kbd><dt><kbd>M-x slime-inspector-quit</kbd><dd><a name="index-q-122"></a><a name="index-slime_002dinspector_002dquit-123"></a>
+Dismiss the inspector buffer.
+
+     <br><dt><kbd>M-RET</kbd><dt><kbd>M-x slime-inspector-copy-down</kbd><dd><a name="index-M_002dRET-124"></a><a name="index-slime_002dinspector_002dcopy_002ddown-125"></a>
+Store the value under point in the variable `*'.  This can
+then be used to access the object in the REPL.
+
+   </dl>
+
+<!--  -->
+</body></html>
+

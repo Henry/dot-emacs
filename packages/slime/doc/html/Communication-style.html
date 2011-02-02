@@ -1,0 +1,91 @@
+<html lang="en">
+<head>
+<title>Communication style - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Lisp_002dside.html#Lisp_002dside" title="Lisp-side">
+<link rel="next" href="Other-configurables.html#Other-configurables" title="Other configurables">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Communication-style"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Other-configurables.html#Other-configurables">Other configurables</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Lisp_002dside.html#Lisp_002dside">Lisp-side</a>
+<hr>
+</div>
+
+<h4 class="subsection">7.2.1 Communication style</h4>
+
+<p><a name="index-SWANK_003a_002aCOMMUNICATION_002dSTYLE_002a-246"></a>
+The most important configurable is <code>SWANK:*COMMUNICATION-STYLE*</code>,
+which specifies the mechanism by which Lisp reads and processes
+protocol messages from Emacs. The choice of communication style has a
+global influence on <acronym>SLIME</acronym>'s operation.
+
+   <p>The available communication styles are:
+
+     <dl>
+<dt><code>NIL</code><dd>This style simply loops reading input from the communication socket
+and serves <acronym>SLIME</acronym> protocol events as they arise. The simplicity
+means that the Lisp cannot do any other processing while under
+<acronym>SLIME</acronym>'s control.
+
+     <br><dt><code>:FD-HANDLER</code><dd>This style uses the classical Unix-style &ldquo;<code>select()</code>-loop.&rdquo;
+Swank registers the communication socket with an event-dispatching
+framework (such as <code>SERVE-EVENT</code> in <acronym>CMUCL</acronym> and
+<acronym>SBCL</acronym>) and receives a callback when data is available. In
+this style requests from Emacs are only detected and processed when
+Lisp enters the event-loop. This style is simple and predictable.
+
+     <br><dt><code>:SIGIO</code><dd>This style uses <dfn>signal-driven I/O</dfn> with a <code>SIGIO</code> signal
+handler. Lisp receives requests from Emacs along with a signal,
+causing it to interrupt whatever it is doing to serve the
+request. This style has the advantage of responsiveness, since Emacs
+can perform operations in Lisp even while it is busy doing other
+things. It also allows Emacs to issue requests concurrently, e.g. to
+send one long-running request (like compilation) and then interrupt
+that with several short requests before it completes. The
+disadvantages are that it may conflict with other uses of <code>SIGIO</code>
+by Lisp code, and it may cause untold havoc by interrupting Lisp at an
+awkward moment.
+
+     <br><dt><code>:SPAWN</code><dd>This style uses multiprocessing support in the Lisp system to execute
+each request in a separate thread. This style has similar properties
+to <code>:SIGIO</code>, but it does not use signals and all requests issued
+by Emacs can be executed in parallel.
+
+   </dl>
+
+   <p>The default request handling style is chosen according to the
+capabilities of your Lisp system. The general order of preference is
+<code>:SPAWN</code>, then <code>:SIGIO</code>, then <code>:FD-HANDLER</code>, with
+<code>NIL</code> as a last resort. You can check the default style by
+calling <code>SWANK-BACKEND:PREFERRED-COMMUNICATION-STYLE</code>. You can
+also override the default by setting
+<code>SWANK:*COMMUNICATION-STYLE*</code> in your Swank init file.
+
+<!--  -->
+</body></html>
+

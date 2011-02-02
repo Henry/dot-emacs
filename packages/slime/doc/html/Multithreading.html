@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+<title>Multithreading - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="User_002dinterface-conventions.html#User_002dinterface-conventions" title="User-interface conventions">
+<link rel="prev" href="Inferior_002dlisp.html#Inferior_002dlisp" title="Inferior-lisp">
+<link rel="next" href="Key-bindings.html#Key-bindings" title="Key bindings">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Multithreading"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Key-bindings.html#Key-bindings">Key bindings</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Inferior_002dlisp.html#Inferior_002dlisp">Inferior-lisp</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="User_002dinterface-conventions.html#User_002dinterface-conventions">User-interface conventions</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.1.3 Multithreading</h4>
+
+<p>If the Lisp system supports multithreading, SLIME spawns a new thread
+for each request, e.g., <kbd>C-x C-e</kbd> creates a new thread to evaluate
+the expression.  An exception to this rule are requests from the
+<acronym>REPL</acronym>: all commands entered in the <acronym>REPL</acronym> buffer are evaluated in a
+dedicated <acronym>REPL</acronym> thread.
+
+   <p>Some complications arise with multithreading and special variables. 
+Non-global special bindings are thread-local, e.g., changing the value
+of a let bound special variable in one thread has no effect on the
+binding of the variables with the same name in other threads.  This
+makes it sometimes difficult to change the printer or reader behaviour
+for new threads.  The variable
+<code>swank:*default-worker-thread-bindings*</code> was introduced for such
+situtuations: instead of modifying the global value of a variable, add a
+binding the <code>swank:*default-worker-thread-bindings*</code>.  E.g., with
+the following code, new threads will read floating point values as
+doubles by default:
+
+<pre class="example">     (push '(*read-default-float-format* . double-float)
+            swank:*default-worker-thread-bindings*).
+</pre>
+   </body></html>
+

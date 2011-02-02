@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+<title>XEmacs Installation - ECB - the Emacs Code Browser</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="ECB - the Emacs Code Browser">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="ecb.html#Top">
+<link rel="up" href="Installation.html#Installation" title="Installation">
+<link rel="prev" href="Installation.html#Installation" title="Installation">
+<link rel="next" href="GNU-Emacs-Installation.html#GNU-Emacs-Installation" title="GNU Emacs Installation">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="XEmacs-Installation"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="GNU-Emacs-Installation.html#GNU-Emacs-Installation">GNU Emacs Installation</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Installation.html#Installation">Installation</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Installation.html#Installation">Installation</a>
+<hr>
+</div>
+
+<h4 class="subsection">1.1.1 Installation of ECB for XEmacs users</h4>
+
+<p>Basic requirement: ECB requires a XEmacs-version &gt;= 21!
+
+   <p>For XEmacs-users it is strongly recommended to use the
+package-management-system of XEmacs for first-time
+downloading/installing ECB or for upgrading to a newer version of ECB. 
+Here is a short guide (for details about the package-manager of XEmacs
+see the related info-manual):
+
+   <p><strong>Caution</strong>: If ECB is already installed and you just want
+upgrading to a newer version then it is recommended to deactivate ECB
+before proceeding with the steps below!
+
+     <ol type=1 start=1>
+<li>Choose a download-site
+
+     <p>This can be done via the menu &ldquo;Tools &ndash;&gt; Packages &ndash;&gt; Add Download
+Site&rdquo;: Choose one of the listed sites. Or you can customize the
+option <code>package-get-remote</code> by hand and save it for future
+sessions.
+
+     <li>Activate the packages list
+
+     <p>This can be done either by the menu &ldquo;Tools &ndash;&gt; Packages &ndash;&gt; List and
+Install&rdquo; or via the command <code>pui-list-packages</code>. After that a
+special packages-buffer is displayed where you can interactively
+install or upgrade packages. At the end of this buffer there is a
+short description how to use this buffer.
+
+     <li>Install ECB and all required packages
+
+     <p>Mark the package named &ldquo;ecb&rdquo; for install. Do this also for the
+required packages &ldquo;semantic&rdquo;, &ldquo;eieio&rdquo; and &ldquo;speedbar&rdquo;. The
+package &ldquo;mail-lib&rdquo; is needed for easy submitting of problem-reports
+to the ECB-maintainers and the package &ldquo;c-support&rdquo; is needed for
+easy using hideshow within the Methods-buffer of ECB<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>.
+
+     <p>After marking all needed packages for installation hit <kbd>x</kbd> to
+install them.
+
+     <p>If you have already installed ECB and you want just upgrading to the
+latest available version then proceed as described above - same if you
+want to upgrade one of the required packages.
+
+     <li>Start ECB
+
+     <p>Now you can immediately start ECB via the command <code>ecb-activate</code>;
+there is no need to restart XEmacs! As an alternative you can first
+read the online-help via <code>ecb-show-help</code>.
+
+        </ol>
+
+   <p>If you do not like the package-manager of XEmacs but you want
+installing ECB &ldquo;by hand&rdquo; direct from the ECB-website then you have
+to follow the instructions for GNU Emacs, see <a href="GNU-Emacs-Installation.html#GNU-Emacs-Installation">GNU Emacs Installation</a>.
+
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> All
+required packages can simply autom. marked by hitting <kbd>r</kbd> in the
+packages buffer. But this installs a lot of packages more (e.g. the
+Newsreader Gnus) which are really not essential for ECB. Therefore it
+is recommended to mark the required packages by hand.</p>
+
+   <p><hr></div>
+
+   </body></html>
+

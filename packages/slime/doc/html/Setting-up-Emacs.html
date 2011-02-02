@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+<title>Setting up Emacs - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp" title="Connecting to a remote lisp">
+<link rel="prev" href="Setting-up-the-lisp-image.html#Setting-up-the-lisp-image" title="Setting up the lisp image">
+<link rel="next" href="Setting-up-pathname-translations.html#Setting-up-pathname-translations" title="Setting up pathname translations">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Setting-up-Emacs"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Setting-up-pathname-translations.html#Setting-up-pathname-translations">Setting up pathname translations</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Setting-up-the-lisp-image.html#Setting-up-the-lisp-image">Setting up the lisp image</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp">Connecting to a remote lisp</a>
+<hr>
+</div>
+
+<h4 class="subsection">8.1.2 Setting up Emacs</h4>
+
+<p>Now we need to create the tunnel between the local machine and the
+remote machine.
+
+<pre class="example">     ssh -L4005:127.0.0.1:4005 username@remote.example.com
+</pre>
+   <p>That ssh invocation creates an ssh tunnel between the port 4005 on our
+local machine and the port 4005 on the remote machine<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>.
+
+   <p>Finally we can start <acronym>SLIME</acronym>:
+
+<pre class="example">     M-x slime-connect RET RET
+</pre>
+   <p>The <kbd>RET RET</kbd> sequence just means that we want to use the default
+host (<code>127.0.0.1</code>) and the default port (<code>4005</code>). Even
+though we're connecting to a remote machine the ssh tunnel fools Emacs
+into thinking it's actually <code>127.0.0.1</code>.
+
+<!--  -->
+<div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> By
+default swank listens for incoming connections on port 4005, had we
+passed a <code>:port</code> parameter to <code>swank:create-server</code> we'd be
+using that port number instead</p>
+
+   <p><hr></div>
+
+   </body></html>
+

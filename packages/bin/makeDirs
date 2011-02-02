@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for file in `find . -name "*.info"`
+do
+    install-info --section=Packages $file ${file%/*}/dir
+done

@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+<title>Autoloading - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Setup-Tuning.html#Setup-Tuning" title="Setup Tuning">
+<link rel="next" href="Multiple-Lisps.html#Multiple-Lisps" title="Multiple Lisps">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Autoloading"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Multiple-Lisps.html#Multiple-Lisps">Multiple Lisps</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Setup-Tuning.html#Setup-Tuning">Setup Tuning</a>
+<hr>
+</div>
+
+<h4 class="subsection">2.5.1 Autoloading</h4>
+
+<p>The basic setup loads <acronym>SLIME</acronym> always, even if you don't use <acronym>SLIME</acronym>. 
+Emacs will start up a little faster if we load <acronym>SLIME</acronym> only on
+demand.  To achieve that, you have to change your <samp><span class="file">~/.emacs</span></samp>
+slightly:
+
+<pre class="example">     (setq inferior-lisp-program "<em>the path to your Lisp system</em>")
+     (add-to-list 'load-path "<em>the path of your <samp></em><span class="file">slime</span><em></samp> directory</em>")
+     (require 'slime-autoloads)
+     (slime-setup)
+</pre>
+   <p>The only difference compared to the basic setup is the line
+<code>(require 'slime-autoloads)</code>.  It tells Emacs that the rest of
+<acronym>SLIME</acronym> should be loaded automatically when one of the commands
+<kbd>M-x slime</kbd> or <kbd>M-x slime-connect</kbd> is executed the first time.
+
+   </body></html>
+

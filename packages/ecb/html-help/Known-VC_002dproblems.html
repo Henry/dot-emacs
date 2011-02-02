@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+<title>Known VC-problems - ECB - the Emacs Code Browser</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="ECB - the Emacs Code Browser">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="ecb.html#Top">
+<link rel="up" href="Version_002dcontrol-support.html#Version_002dcontrol-support" title="Version-control support">
+<link rel="prev" href="Adding-new-backends.html#Adding-new-backends" title="Adding new backends">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Known-VC-problems"></a>
+<a name="Known-VC_002dproblems"></a>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Adding-new-backends.html#Adding-new-backends">Adding new backends</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Version_002dcontrol-support.html#Version_002dcontrol-support">Version-control support</a>
+<hr>
+</div>
+
+<h4 class="subsection">10.8.6 Currently know problems with the VC-support</h4>
+
+<h5 class="subsubsection">10.8.6.1 Remote repositories and XEmacs</h5>
+
+<p>Currently there are mostly problems related to XEmacs - cause of its
+outdated VC-package which allows no heuristic state-computation but
+always runs &ldquo;cvs status&rdquo; to get the VC-state for a file (done by
+<code>vc-cvs-status</code>). This can be horrible slow for remote
+CVS-root-repositories. Now ECB performs the VC-check stealthy and only
+in idle-time of Emacs but even so XEmacs can be blocked espcially if
+the cygwin-build of XEmacs is used: This XEmacs-version is
+substantially slower concering file-operations and has sometimes a
+very slow and delayed response-behavior for mouse- and keyboard
+interrupts - so even ECB let the user interrupt by using
+<code>input-pending-p</code> before getting the VC-state of a file XEmacs
+sometimes does not react to such user-interrupts and seems to be
+blocked.
+
+   <p>Current solution: ECB offers the option
+<code>ecb-vc-xemacs-exclude-remote-cvs-repository</code> which excludes
+remote repositories from being checked. This option is per default t
+for XEmacs. Whenever XEmacs syncs up its VC-package with the Emacs one
+this option will automatically take no effect.
+
+   </body></html>
+

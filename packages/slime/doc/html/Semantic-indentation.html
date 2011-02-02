@@ -1,0 +1,91 @@
+<html lang="en">
+<head>
+<title>Semantic indentation - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="slime_002dmode.html#slime_002dmode" title="slime-mode">
+<link rel="prev" href="Commands.html#Commands" title="Commands">
+<link rel="next" href="Reader-conditionals.html#Reader-conditionals" title="Reader conditionals">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Semantic-indentation"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Reader-conditionals.html#Reader-conditionals">Reader conditionals</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Commands.html#Commands">Commands</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="slime_002dmode.html#slime_002dmode">slime-mode</a>
+<hr>
+</div>
+
+<h3 class="section">3.3 Semantic indentation</h3>
+
+<p><acronym>SLIME</acronym> automatically discovers how to indent the macros in your Lisp
+system. To do this the Lisp side scans all the macros in the system and
+reports to Emacs all the ones with <code>&amp;body</code> arguments. Emacs then
+indents these specially, putting the first arguments four spaces in and
+the &ldquo;body&rdquo; arguments just two spaces, as usual.
+
+   <p>This should &ldquo;just work.&rdquo; If you are a lucky sort of person you needn't
+read the rest of this section.
+
+   <p>To simplify the implementation, <acronym>SLIME</acronym> doesn't distinguish between
+macros with the same symbol-name but different packages. This makes it
+fit nicely with Emacs's indentation code. However, if you do have
+several macros with the same symbol-name then they will all be indented
+the same way, arbitrarily using the style from one of their
+arglists. You can find out which symbols are involved in collisions
+with:
+
+<pre class="example">     (swank:print-indentation-lossage)
+</pre>
+   <p>If a collision causes you irritation, don't have a nervous breakdown,
+just override the Elisp symbol's <code>common-lisp-indent-function</code>
+property to your taste. <acronym>SLIME</acronym> won't override your custom settings, it
+just tries to give you good defaults.
+
+   <p>A more subtle issue is that imperfect caching is used for the sake of
+performance. <a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>
+
+   <p>In an ideal world, Lisp would automatically scan every symbol for
+indentation changes after each command from Emacs. However, this is too
+expensive to do every time. Instead Lisp usually just scans the symbols
+whose home package matches the one used by the Emacs buffer where the
+request comes from. That is sufficient to pick up the indentation of
+most interactively-defined macros. To catch the rest we make a full scan
+of every symbol each time a new Lisp package is created between commands
+&ndash; that takes care of things like new systems being loaded.
+
+   <p>You can use <kbd>M-x slime-update-indentation</kbd> to force all symbols to
+be scanned for indentation information.
+
+<!--  -->
+<div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> <em>Of course</em> we made sure it was actually too
+slow before making the ugly optimization.</p>
+
+   <p><hr></div>
+
+   </body></html>
+

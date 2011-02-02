@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+<title>CVS Incantations - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Downloading.html#Downloading" title="Downloading">
+<link rel="prev" href="CVS.html#CVS" title="CVS">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="CVS-Incantations"></a>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="CVS.html#CVS">CVS</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Downloading.html#Downloading">Downloading</a>
+<hr>
+</div>
+
+<h4 class="subsection">2.2.2 CVS incantations</h4>
+
+<p>To download <acronym>SLIME</acronym> you first configure your <code>CVSROOT</code> and login
+to the repository.
+
+<pre class="example">     export CVSROOT=:pserver:anonymous@common-lisp.net:/project/slime/cvsroot
+     cvs login
+</pre>
+   <p><em>(The password is </em><code>anonymous</code><em>)</em>
+
+   <p>The latest version can then be checked out with:
+<pre class="example">     cvs checkout slime
+</pre>
+   <p>Or the <code>FAIRLY-STABLE</code> version can be checked out with:
+
+<pre class="example">     cvs checkout -rFAIRLY-STABLE slime
+</pre>
+   <p>If you want to find out what's new since the version you're currently
+running, you can diff the local <samp><span class="file">ChangeLog</span></samp> against the
+repository version:
+
+<pre class="example">     cvs diff -rHEAD ChangeLog      # or: -rFAIRLY-STABLE
+</pre>
+   <!--  -->
+</body></html>
+

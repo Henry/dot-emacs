@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+<title>Connecting to a remote lisp - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Tips-and-Tricks.html#Tips-and-Tricks" title="Tips and Tricks">
+<link rel="next" href="Global-IO-Redirection.html#Global-IO-Redirection" title="Global IO Redirection">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Connecting-to-a-remote-lisp"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Global-IO-Redirection.html#Global-IO-Redirection">Global IO Redirection</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Tips-and-Tricks.html#Tips-and-Tricks">Tips and Tricks</a>
+<hr>
+</div>
+
+<h3 class="section">8.1 Connecting to a remote lisp</h3>
+
+<p>One of the advantages of the way <acronym>SLIME</acronym> is implemented is that we
+can easily run the Emacs side (slime.el) on one machine and the lisp
+backend (swank) on another. The basic idea is to start up lisp on the
+remote machine, load swank and wait for incoming slime connections. On
+the local machine we start up emacs and tell slime to connect to the
+remote machine. The details are a bit messier but the underlying idea
+is that simple.
+
+<ul class="menu">
+<li><a accesskey="1" href="Setting-up-the-lisp-image.html#Setting-up-the-lisp-image">Setting up the lisp image</a>
+<li><a accesskey="2" href="Setting-up-Emacs.html#Setting-up-Emacs">Setting up Emacs</a>
+<li><a accesskey="3" href="Setting-up-pathname-translations.html#Setting-up-pathname-translations">Setting up pathname translations</a>
+</ul>
+
+<!--  -->
+</body></html>
+

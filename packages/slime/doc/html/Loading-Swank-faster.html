@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+<title>Loading Swank faster - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Setup-Tuning.html#Setup-Tuning" title="Setup Tuning">
+<link rel="prev" href="Multiple-Lisps.html#Multiple-Lisps" title="Multiple Lisps">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Loading-Swank-faster"></a>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Multiple-Lisps.html#Multiple-Lisps">Multiple Lisps</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Setup-Tuning.html#Setup-Tuning">Setup Tuning</a>
+<hr>
+</div>
+
+<h4 class="subsection">2.5.3 Loading Swank faster</h4>
+
+<p>For SBCL, we recommend that you create a custom core file with socket
+support and <acronym>POSIX</acronym> bindings included because those modules
+take the most time to load.  To create such a core, execute the
+following steps:
+
+<pre class="example">     shell$ sbcl
+     * (mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf))
+     * (save-lisp-and-die "sbcl.core-for-slime")
+</pre>
+   <p>After that, add something like this to your <samp><span class="file">.emacs</span></samp>:
+
+<pre class="lisp">     (setq slime-lisp-implementations
+           '((sbcl ("sbcl" "--core" "sbcl.core-for-slime"))))
+</pre>
+   <p>For maximum startup speed you can include the Swank server directly in
+a core file.  The disadvantage of this approach is that the setup is a
+bit more involved and that you need to create a new core file when you
+want to update <acronym>SLIME</acronym> or <acronym>SBCL</acronym>.  The steps to execute are:
+
+<pre class="example">     shell$ sbcl
+     * (load ".../slime/swank-loader.lisp")
+     * (save-lisp-and-die "sbcl.core-with-swank")
+</pre>
+   <p class="noindent">Then add this to your <samp><span class="file">.emacs</span></samp>:
+
+   <p><a name="init_002dexample"></a>
+<pre class="lisp">     (setq slime-lisp-implementations
+           '((sbcl ("sbcl" "--core" "sbcl.core-with-swank")
+                   :init (lambda (port-file _)
+                           (format "(swank:start-server %S)\n" port-file)))))
+</pre>
+   <p class="noindent">Similar setups should also work for other Lisp implementations.
+
+   </body></html>
+

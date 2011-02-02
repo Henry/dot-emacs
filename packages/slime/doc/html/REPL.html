@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+<title>REPL - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="slime_002dmode.html#slime_002dmode" title="slime-mode">
+<link rel="next" href="Debugger.html#Debugger" title="Debugger">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="REPL"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Debugger.html#Debugger">Debugger</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="slime_002dmode.html#slime_002dmode">slime-mode</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">4 REPL: the &ldquo;top level&rdquo;</h2>
+
+<p><a name="index-Listener-136"></a>
+<acronym>SLIME</acronym> uses a custom Read-Eval-Print Loop (<acronym>REPL</acronym>, also known as a
+&ldquo;top level&rdquo;, or listener). The <acronym>REPL</acronym> user-interface is written in
+Emacs Lisp, which gives more Emacs-integration than the traditional
+<code>comint</code>-based Lisp interaction:
+
+     <ul>
+<li>Conditions signalled in <acronym>REPL</acronym> expressions are debugged with <acronym>SLDB</acronym>. 
+<li>Return values are distinguished from printed output by separate Emacs
+faces (colours). 
+<li>Emacs manages the <acronym>REPL</acronym> prompt with markers. This ensures that Lisp
+output is inserted in the right place, and doesn't get mixed up with
+user input. 
+</ul>
+
+<ul class="menu">
+<li><a accesskey="1" href="REPL-commands.html#REPL-commands">REPL commands</a>
+<li><a accesskey="2" href="Input-Navigation.html#Input-Navigation">Input Navigation</a>
+<li><a accesskey="3" href="Shortcuts.html#Shortcuts">Shortcuts</a>
+</ul>
+
+<!--  -->
+</body></html>
+

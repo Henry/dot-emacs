@@ -1,0 +1,63 @@
+body {
+    font-family: Verdana, "Bitstream Vera Sans", sans-serif;
+    background-color: #c9c9c9;
+    color: #33333A;
+}
+
+a {
+    text-decoration: none;
+    color: #533333;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #cf1212;
+}
+
+h1 {
+    text-align: center
+}
+
+img {
+    border: 0;
+}
+
+#main {
+    position: absolute;
+/*     margin-right: 20%; */
+    margin-left: 50px;
+    top: 100px;
+    text-align: justify;
+    width: 600px;
+}
+
+#TOC {
+    position: absolute;
+/*     margin-left: 78%; */
+    margin-left: 710px;
+    top: 120px;
+    width: 250px;
+    background-color: #a01c1c;
+    /* height: 770px; */
+    padding: 10px;
+    color: #c9c9c9;
+}
+
+#TOC > ul > li > ul > li ul { display: none; }
+
+#TOC a {
+    text-decoration: none;
+    color: #ffa71d;
+}
+
+#TOC a:hover {
+    text-decoration: none;
+    color: #ffdf20;
+}
+
+.bottom-dweller {
+    width: 100%;
+    position: absolute;
+    bottom: 0%;
+}

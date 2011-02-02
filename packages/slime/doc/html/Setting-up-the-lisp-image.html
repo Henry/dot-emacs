@@ -1,0 +1,97 @@
+<html lang="en">
+<head>
+<title>Setting up the lisp image - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp" title="Connecting to a remote lisp">
+<link rel="next" href="Setting-up-Emacs.html#Setting-up-Emacs" title="Setting up Emacs">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Setting-up-the-lisp-image"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Setting-up-Emacs.html#Setting-up-Emacs">Setting up Emacs</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp">Connecting to a remote lisp</a>
+<hr>
+</div>
+
+<h4 class="subsection">8.1.1 Setting up the lisp image</h4>
+
+<p>When you want to load swank without going through the normal, Emacs
+based, process just load the <samp><span class="file">swank-loader.lisp</span></samp> file. Just
+execute
+
+<pre class="example">     (load "/path/to/swank-loader.lisp")
+</pre>
+   <p>inside a running lisp image<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>. Now all we
+need to do is startup our swank server. The first example assumes we're
+using the default settings.
+
+<pre class="example">     (swank:create-server)
+</pre>
+   <p>Since we're going to be tunneling our connection via
+ssh<a rel="footnote" href="#fn-2" name="fnd-2"><sup>2</sup></a> and we'll only have one
+port open we want to tell swank to not use an extra connection for
+output (this is actually the default in current SLIME):
+
+<pre class="example">     (setf swank:*use-dedicated-output-stream* nil)
+</pre>
+   <!--  -->
+<p>If you need to do anything particular
+(like be able to reconnect to swank after you're done), look into
+<code>swank:create-server</code>'s other arguments. Some of these arguments
+are
+     <dl>
+<dt><code>:PORT</code><dd>Port number for the server to listen on (default: 4005). 
+<br><dt><code>:STYLE</code><dd>See See <a href="Communication-style.html#Communication-style">Communication style</a>. 
+<br><dt><code>:DONT-CLOSE</code><dd>Boolean indicating if the server will continue to accept connections
+after the first one (default: <code>NIL</code>). For &ldquo;long-running&rdquo; lisp processes
+to which you want to be able to connect from time to time,
+specify <code>:dont-close t</code>
+<br><dt><code>:CODING-SYSTEM</code><dd>String designating the encoding to be used to communicate between the
+Emacs and Lisp. 
+</dl>
+
+   <p>So the more complete example will be
+<pre class="example">     (swank:create-server :port 4005  :dont-close t :coding-system "utf-8-unix")
+</pre>
+   <p>On the emacs side you will use something like
+<pre class="example">     (setq slime-net-coding-system 'utf-8-unix)
+     (slime-connect "127.0.0.1" 4005))
+</pre>
+   <p>to connect to this lisp image from the same machine.
+
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> <acronym>SLIME</acronym> also provides an
+<acronym>ASDF</acronym> system definiton which does the same thing</p>
+
+   <p class="footnote"><small>[<a name="fn-2" href="#fnd-2">2</a>]</small> there is a way to connect without an ssh tunnel, but it
+has the side-effect of giving the entire world access to your lisp
+image, so we're not going to talk about it</p>
+
+   <p><hr></div>
+
+   </body></html>
+

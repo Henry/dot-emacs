@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+<title>Scratch Buffer - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Packages.html#Contributed-Packages" title="Contributed Packages">
+<link rel="prev" href="inferior_002dslime_002dmode.html#inferior_002dslime_002dmode" title="inferior-slime-mode">
+<link rel="next" href="slime_002dfancy.html#slime_002dfancy" title="slime-fancy">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Scratch-Buffer"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="slime_002dfancy.html#slime_002dfancy">slime-fancy</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="inferior_002dslime_002dmode.html#inferior_002dslime_002dmode">inferior-slime-mode</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Packages.html#Contributed-Packages">Contributed Packages</a>
+<hr>
+</div>
+
+<h3 class="section">9.16 Scratch Buffer</h3>
+
+<p><a name="slime_002dscratch"></a>
+The <acronym>SLIME</acronym> scratch buffer, in contrib package <code>slime-scratch</code>,
+imitates Emacs' usual <code>*scratch*</code> buffer.  It's just like any
+other Lisp buffer, except for the command bound to <kbd>C-j</kbd>.
+
+     <dl>
+<dt><kbd>C-j</kbd><dt><kbd>M-x slime-eval-print-last-expression</kbd><dd><a name="index-C_002dj-300"></a><a name="index-slime_002deval_002dprint_002dlast_002dexpression-301"></a>
+Evaluate the expression sexp before point and insert print value into
+the current buffer.
+
+     <br><dt><kbd>M-x slime-scratch</kbd><dd><a name="index-slime_002dscratch-302"></a>
+Create a <samp><span class="file">*slime-scratch*</span></samp> buffer. In this
+buffer you can enter Lisp expressions and evaluate them with
+<kbd>C-j</kbd>, like in Emacs's <samp><span class="file">*scratch*</span></samp> buffer.
+
+   </dl>
+
+   </body></html>
+

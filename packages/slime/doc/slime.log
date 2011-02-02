@@ -1,0 +1,305 @@
+This is pdfeTeXk, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdfetex 2008.2.13)  13 SEP 2008 23:01
+entering extended mode
+ file:line:error style messages enabled.
+**/home/dm2/henry/.emacs.d/packages/slime/doc/slime.texi
+(/home/dm2/henry/.emacs.d/packages/slime/doc/slime.texi
+(/usr/share/texmf/tex/texinfo/texinfo.tex
+Loading texinfo [version 2005-01-30.17]: Basics,
+\bindingoffset=\dimen16
+\normaloffset=\dimen17
+\pagewidth=\dimen18
+\pageheight=\dimen19
+\outerhsize=\dimen20
+\outervsize=\dimen21
+\cornerlong=\dimen22
+\cornerthick=\dimen23
+\topandbottommargin=\dimen24
+\headlinebox=\box16
+\footlinebox=\box17
+\margin=\insert252
+\EMsimple=\toks13
+\groupbox=\box18
+\groupinvalidhelp=\toks14
+\mil=\dimen25
+\exdentamount=\skip18
+\inmarginspacing=\skip19
+ pdf,
+\tempnum=\count27
+\lnkcount=\count28
+\filename=\toks15
+\filenamelength=\count29
+\pgn=\count30
+\toksA=\toks16
+\toksB=\toks17
+\toksC=\toks18
+\toksD=\toks19
+\boxA=\box19
+\countA=\count31
+
+(/usr/share/texmf/tex/plain/pdfcolor/pdfcolor.tex) fonts,
+\sffam=\fam8
+\textleading=\dimen26
+\fontdepth=\count32
+ page headings,
+\titlepagetopglue=\skip20
+\titlepagebottomglue=\skip21
+\evenheadline=\toks20
+\oddheadline=\toks21
+\evenfootline=\toks22
+\oddfootline=\toks23
+
+tables,
+\tableindent=\dimen27
+\itemindent=\dimen28
+\itemmargin=\dimen29
+\itemmax=\dimen30
+\itemno=\count33
+\multitableparskip=\skip22
+\multitableparindent=\skip23
+\multitablecolspace=\dimen31
+\multitablelinespace=\skip24
+\colcount=\count34
+\everytab=\toks24
+ conditionals,
+\doignorecount=\count35
+ indexing,
+\secondaryindent=\skip25
+\partialpage=\box20
+\doublecolumnhsize=\dimen32
+ sectioning,
+\unnumberedno=\count36
+\chapno=\count37
+\secno=\count38
+\subsecno=\count39
+\subsubsecno=\count40
+\appendixno=\count41
+\absseclevel=\count42
+\secbase=\count43
+\chapheadingskip=\skip26
+\secheadingskip=\skip27
+\subsecheadingskip=\skip28
+ toc,
+\tocfile=\write0
+\contentsrightmargin=\skip29
+\savepageno=\count44
+\lastnegativepageno=\count45
+\tocindent=\dimen33
+ environments,
+\errorbox=\box21
+\lispnarrowing=\skip30
+\envskipamount=\skip31
+\circthick=\dimen34
+\cartouter=\dimen35
+\cartinner=\dimen36
+\normbskip=\skip32
+\normpskip=\skip33
+\normlskip=\skip34
+\lskip=\skip35
+\rskip=\skip36
+\tabw=\dimen37
+ defuns,
+\defbodyindent=\skip37
+\defargsindent=\skip38
+\deflastargmargin=\skip39
+\parencount=\count46
+\brackcount=\count47
+ macros,
+\paramno=\count48
+\macname=\toks25
+
+cross references,
+\auxfile=\write1
+\savesfregister=\count49
+ insertions,
+\footnoteno=\count50
+\SAVEfootins=\box22
+\SAVEmargin=\box23
+ (/usr/share/texmf/tex/plain/dvips/epsf.tex
+\epsffilein=\read1
+\epsfframemargin=\dimen38
+\epsfframethickness=\dimen39
+\epsfrsize=\dimen40
+\epsftmp=\dimen41
+\epsftsize=\dimen42
+\epsfxsize=\dimen43
+\epsfysize=\dimen44
+\pspoints=\dimen45
+\epsfnoopenhelp=\toks26
+)
+\noepsfhelp=\toks27
+
+localization,
+\nolanghelp=\toks28
+\defaultparindent=\dimen46
+ and turning on texinfo input format.) (./slime.aux)
+\openout1 = `slime.aux'.
+
+@cpindfile=@write2
+@fnindfile=@write3
+@vrindfile=@write4
+@tpindfile=@write5
+@kyindfile=@write6
+@pgindfile=@write7
+ <./slime-small.pdf> [1
+\openout2 = `slime.cp'.
+
+\openout3 = `slime.fn'.
+
+\openout4 = `slime.vr'.
+
+\openout5 = `slime.tp'.
+
+\openout6 = `slime.ky'.
+
+\openout7 = `slime.pg'.
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./slime.toc
+[-1] [-2]) [-3] (./slime.toc) (./slime.toc) Chapter 1
+\openout0 = `slime.toc'.
+
+
+Underfull \hbox (badness 4429) in paragraph at lines 279--283
+@textrm implementation-specific func-tion-al-ity is spec-i-fied by a well-defin
+ed in-ter-face and
+
+@hbox(7.60416+2.12917)x433.62, glue set 3.53957
+.@textrm i
+.@textrm m
+.@textrm p
+.@textrm l
+.@textrm e
+.etc.
+
+Chapter 2 [1] [2] [3] [4] Chapter 3 [5] [6] [7] [8] [9] [10]
+Underfull \hbox (badness 2837) in paragraph at lines 1009--1011
+[]@textrm For ad-di-tional minor-mode com-mands and dis-cus-sion, see [][]Sec-t
+ion 6.2 [slime-
+
+@hbox(8.2125+2.73749)x433.62, glue set 3.05197
+.@hbox(0.0+0.0)x15.0
+.@textrm F
+.@kern-0.91252
+.@textrm o
+.@textrm r
+.etc.
+
+[11] [12] [13] [14] Chapter 4 [15] [16] [17] Chapter 5 [18] [19] [20]
+Chapter 6 [21] [22] Chapter 7 [23]
+Underfull \hbox (badness 7168) in paragraph at lines 1774--1778
+ @texttt symbol*[] @textrm (see [][]Sec-tion 9.2 [Com-pound Com-ple-tion], page
+ 31[][]), and
+
+@hbox(8.2125+2.73749)x433.62, glue set 4.15726
+.@glue(@leftskip) 57.81621
+.@texttt s
+.@texttt y
+.@texttt m
+.@texttt b
+.etc.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1774--1778
+ @texttt slime-fuzzy-complete-symbol[] @textrm (see [][]Sec-tion 9.3 [Fuzzy Com
+-ple-tion],
+
+@hbox(8.2125+2.73749)x433.62, glue set 4.71748
+.@glue(@leftskip) 57.81621
+.@texttt s
+.@texttt l
+.@texttt i
+.@texttt m
+.etc.
+
+[24]
+Underfull \hbox (badness 2269) in paragraph at lines 1907--1914
+[]@textrm The de-fault re-quest han-dling style is cho-sen ac-cord-ing to the c
+a-pa-bil-i-ties of
+
+@hbox(7.60416+2.12917)x433.62, glue set 2.83461
+.@hbox(0.0+0.0)x15.0
+.@textrm T
+.@textrm h
+.@textrm e
+.@glue 3.65 plus 1.825 minus 1.21666
+.etc.
+
+[25] [26] Chapter 8 [27]
+Overfull \hbox (26.43913pt too wide) in paragraph at lines 2079--2079
+ []@texttt (swank:create-server :port 4005  :dont-close t :coding-system "utf-8
+-unix")[] |
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 28.90755
+.@hbox(0.0+0.0)x0.0
+.@texttt (
+.@texttt s
+.@texttt w
+.etc.
+
+[28]
+Overfull \hbox (43.6852pt too wide) in paragraph at lines 2143--2143
+ []@texttt (push (slime-create-filename-translator :machine-instance "remote.ex
+ample.com"[] |
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 28.90755
+.@hbox(0.0+0.0)x0.0
+.@texttt (
+.@texttt p
+.@texttt u
+.etc.
+
+[29] Chapter 9 [30] [31]
+Overfull \hbox (15.27109pt too wide) in paragraph at lines 2323--2323
+ []@texttt (defmethod initialize-instance :after ((object foo) &key blub))[] |
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 86.72375
+.@hbox(0.0+0.0)x0.0
+.@texttt (
+.@texttt d
+.@texttt e
+.etc.
+
+[32] [33] [34]
+Overfull \hbox (26.43913pt too wide) in paragraph at lines 2526--2526
+ []@texttt CL-USER> (eql '@textttsl #@texttt <@textttsl STANDARD-CLASS STANDARD
+-CLASS@texttt > '@textttsl #@texttt <@textttsl STANDARD-CLASS STANDARD-|
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 28.90755
+.@hbox(0.0+0.0)x0.0
+.@texttt C
+.@texttt L
+.@texttt -
+.etc.
+
+[35] [36] [37] Chapter 10 [38] (./contributors.texi
+Missing character: There is no å in font cmr10!
+ [39])
+(Key (Character) Index) [40] (./slime.kys [41]) (Command and Function Index)
+[42] (./slime.fns [43]) (Variable and Concept Index) [44] (./slime.vrs)
+[45] ) 
+Here is how much of TeX's memory you used:
+ 2173 strings out of 197340
+ 25884 string characters out of 9961894
+ 69476 words of memory out of 5000000
+ 3106 multiletter control sequences out of 10000+50000
+ 32127 words of font info for 112 fonts, out of 500000 for 2000
+ 51 hyphenation exceptions out of 1000
+ 16i,5n,16p,259b,487s stack positions out of 1500i,500n,5000p,200000b,20000s
+PDF statistics:
+ 1023 PDF objects out of 1000000
+ 143 named destinations out of 131072
+ 694 words of extra memory for PDF output out of 200000
+</usr/share/texmf/fonts/type1/bluesky/cm/cmtt9.pfb></usr/share/texmf/font
+s/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr9.pfb><
+/usr/share/texmf/fonts/type1/bluesky/cm/cmti9.pfb></usr/share/texmf/fonts/type1
+/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmb10.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmsl10.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmtt12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsltt10.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmti10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbxti10.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmtt10.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pfb>
+Output written on slime.pdf (50 pages, 372467 bytes).

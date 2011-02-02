@@ -1,0 +1,63 @@
+<html lang="en">
+<head>
+<title>Stepping - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Frame-Navigation.html#Frame-Navigation" title="Frame Navigation">
+<link rel="next" href="Miscellaneous.html#Miscellaneous" title="Miscellaneous">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Stepping"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Miscellaneous.html#Miscellaneous">Miscellaneous</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Frame-Navigation.html#Frame-Navigation">Frame Navigation</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<h3 class="section">5.4 Stepping</h3>
+
+<p><a name="index-Stepping-197"></a>
+Stepping is not available in all implementations and works very
+differently in those in which it is available.
+
+     <dl>
+<dt><kbd>s</kbd><dt><kbd>M-x sldb-step</kbd><dd><a name="index-s-198"></a><a name="index-sldb_002dstep-199"></a>
+Step to the next expression in the frame.  For CMUCL that means, set a
+breakpoint at all those code locations in the current code block which
+are reachable from the current code location.
+
+     <br><dt><kbd>x</kbd><dt><kbd>M-x sldb-next</kbd><dd><a name="index-x-200"></a><a name="index-sldb_002dnext-201"></a>
+[Step to the next form in the current function.]
+
+     <br><dt><kbd>o</kbd><dt><kbd>M-x sldb-next</kbd><dd><a name="index-o-202"></a><a name="index-sldb_002dnext-203"></a>
+[Stop single-stepping temporarily, but resume it once the current
+function returns.]
+
+   </dl>
+
+   </body></html>
+

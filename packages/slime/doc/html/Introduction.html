@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+<title>Introduction - SLIME User Manual, version 3.0-alpha</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SLIME User Manual, version 3.0-alpha">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="index.html#Top" title="Top">
+<link rel="next" href="Getting-started.html#Getting-started" title="Getting started">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Written by Luke Gorrie.
+
+Additional contributions: Jeff Cunningham,
+
+This file has been placed in the public domain.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Introduction"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Getting-started.html#Getting-started">Getting started</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="index.html#Top">Top</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">1 Introduction</h2>
+
+<p><acronym>SLIME</acronym> is the &ldquo;Superior Lisp Interaction Mode for Emacs.&rdquo;
+
+   <p><acronym>SLIME</acronym> extends Emacs with support for interactive programming in
+Common Lisp. The features are centered around <code>slime-mode</code>, an
+Emacs minor-mode that complements the standard <code>lisp-mode</code>. While
+<code>lisp-mode</code> supports editing Lisp source files, <code>slime-mode</code>
+adds support for interacting with a running Common Lisp process for
+compilation, debugging, documentation lookup, and so on.
+
+   <p>The <code>slime-mode</code> programming environment follows the example of
+Emacs's native Emacs Lisp environment. We have also included good
+ideas from similar systems (such as <acronym>ILISP</acronym>) and some new
+ideas of our own.
+
+   <p><acronym>SLIME</acronym> is constructed from two parts: a user-interface written in
+Emacs Lisp, and a supporting server program written in Common
+Lisp. The two sides are connected together with a socket and
+communicate using an <acronym>RPC</acronym>-like protocol.
+
+   <p>The Lisp server is primarily written in portable Common Lisp. The
+required implementation-specific functionality is specified by a
+well-defined interface and implemented separately for each Lisp
+implementation. This makes <acronym>SLIME</acronym> readily portable.
+
+<!--  -->
+</body></html>
+

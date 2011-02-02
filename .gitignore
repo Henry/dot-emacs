@@ -4,7 +4,12 @@
 # Ignore personal and temporary files
 /personal
 /save
-/packages
+/packages/auctex
+/packages/save
+.svn
+CVS
+.cvs*
+.#*
 tramp
 TAGS
 

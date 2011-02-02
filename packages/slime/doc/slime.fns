@@ -1,0 +1,138 @@
+\initial {C}
+\entry {\code {common-lisp-hyperspec-format}}{9}
+\initial {I}
+\entry {\code {indent-sexp}}{8}
+\entry {\code {\xeatspaces {inferior-slime-mode}}}{38}
+\initial {S}
+\entry {\code {\xeatspaces { sldb-abort}}}{19}
+\entry {\code {\xeatspaces { sldb-break-with-default-debugger}}}{20}
+\entry {\code {\xeatspaces { sldb-continue}}}{19}
+\entry {\code {\xeatspaces { sldb-details-down}}}{20}
+\entry {\code {\xeatspaces { sldb-details-up}}}{20}
+\entry {\code {\xeatspaces { sldb-disassemble}}}{19}
+\entry {\code {\xeatspaces {sldb-down}}}{20}
+\entry {\code {\xeatspaces { sldb-eval-in-frame}}}{19}
+\entry {\code {\xeatspaces { sldb-inspect-in-frame}}}{19}
+\entry {\code {\xeatspaces { sldb-next}}}{20}
+\entry {\code {\xeatspaces { sldb-pprint-eval-in-frame}}}{19}
+\entry {\code {\xeatspaces { sldb-quit}}}{19}
+\entry {\code {\xeatspaces { sldb-restart-frame}}}{20}
+\entry {\code {\xeatspaces { sldb-return-from-frame}}}{20}
+\entry {\code {\xeatspaces { sldb-show-source}}}{19}
+\entry {\code {\xeatspaces { sldb-step}}}{20}
+\entry {\code {\xeatspaces { sldb-toggle-details}}}{19}
+\entry {\code {\xeatspaces {sldb-up}}}{20}
+\entry {\code {\xeatspaces {slime-abort-connection}}}{23}
+\entry {\code {slime-apropos}}{9}
+\entry {\code {slime-apropos-all}}{9}
+\entry {\code {slime-apropos-package}}{9}
+\entry {\code {\xeatspaces {slime-arglist NAME}}}{33}
+\entry {\code {\xeatspaces {slime-autodoc-mode}}}{33}
+\entry {\code {\xeatspaces { slime-beginning-of-defun}}}{34}
+\entry {\code {\xeatspaces {slime-browse-classes}}}{37}
+\entry {\code {\xeatspaces {slime-browse-xrefs}}}{37}
+\entry {\code {\xeatspaces { slime-call-defun}}}{12}
+\entry {\code {slime-calls-who}}{10}
+\entry {\code {\xeatspaces {slime-close-all-parens-in-sexp}}}{34}
+\entry {\code {\xeatspaces { slime-compile-and-load-file}}}{12}
+\entry {\code {\xeatspaces { slime-compile-defun}}}{12}
+\entry {\code {\xeatspaces { slime-compile-file}}}{12}
+\entry {\code {\xeatspaces {slime-compile-region}}}{12}
+\entry {\code {slime-compiler-macroexpand}}{11}
+\entry {\code {slime-compiler-macroexpand-1}}{11}
+\entry {\code {\xeatspaces { slime-complete-form}}}{32}
+\entry {\code {slime-complete-symbol}}{8}
+\entry {\code {\xeatspaces {slime-connect}}}{23}
+\entry {\code {\xeatspaces { slime-connection-list-make-default}}}{23}
+\entry {\code {\xeatspaces { slime-copy-presentation-at-point-to-kill-ring}}}{36}
+\entry {\code {\xeatspaces { slime-copy-presentation-at-point-to-repl}}}{36}
+\entry {\code {slime-describe-function}}{9}
+\entry {\code {\xeatspaces { slime-describe-presentation-at-point}}}{36}
+\entry {\code {slime-describe-symbol}}{9}
+\entry {\code {slime-disassemble-symbol}}{11}
+\entry {\code {\xeatspaces {slime-disconnect}}}{23}
+\entry {\code {slime-edit-definition}}{10}
+\entry {\code {slime-edit-definition-other-frame}}{11}
+\entry {\code {slime-edit-definition-other-window}}{11}
+\entry {\code {slime-edit-definition-with-etags}}{11}
+\entry {\code {\xeatspaces { slime-edit-value}}}{13}
+\entry {\code {\xeatspaces { slime-end-of-defun}}}{34}
+\entry {\code {\xeatspaces {slime-ensure-typeout-frame}}}{37}
+\entry {\code {\xeatspaces { slime-eval-defun}}}{13}
+\entry {\code {\xeatspaces { slime-eval-last-expression}}}{12}
+\entry {\code {\xeatspaces { slime-eval-last-expression-display-output}}}{13}
+\entry {\code {\xeatspaces { slime-eval-print-last-expression}}}{38}
+\entry {\code {\xeatspaces { slime-eval-region}}}{13}
+\entry {\code {\xeatspaces { slime-fuzzy-complete-symbol}}}{33}
+\entry {\code {\xeatspaces { slime-goto-connection}}}{23}
+\entry {\code {\xeatspaces {slime-highlight-edits-mode}}}{38}
+\entry {\code {slime-hyperspec-lookup}}{9}
+\entry {\code {\xeatspaces {slime-insert-balanced-comments}}}{34}
+\entry {\code {slime-inspect}}{14}
+\entry {\code {\xeatspaces { slime-inspect-presentation-at-point}}}{36}
+\entry {\code {slime-inspector-copy-down}}{14}
+\entry {\code {slime-inspector-describe}}{14}
+\entry {\code {slime-inspector-next}}{14}
+\entry {\code {slime-inspector-operate-on-point}}{14}
+\entry {\code {slime-inspector-pop}}{14}
+\entry {\code {slime-inspector-quit}}{14}
+\entry {\code {\xeatspaces { slime-interactive-eval}}}{13, 21}
+\entry {\code {\xeatspaces { slime-interrupt}}}{13}
+\entry {\code {slime-interrupt}}{16}
+\entry {\code {slime-list-callees}}{10}
+\entry {\code {slime-list-callers}}{10}
+\entry {\code {\xeatspaces { slime-list-connections}}}{23}
+\entry {\code {\xeatspaces { slime-list-threads}}}{23}
+\entry {\code {\xeatspaces { slime-load-file}}}{12}
+\entry {\code {\xeatspaces {slime-load-system NAME}}}{33}
+\entry {\code {slime-macroexpand-1}}{11}
+\entry {\code {\xeatspaces { slime-macroexpand-1-inplace}}}{22}
+\entry {\code {slime-macroexpand-all}}{11}
+\entry {\code {\xeatspaces { slime-mark-presentation}}}{36}
+\entry {\code {\xeatspaces { slime-next-note}}}{12}
+\entry {\code {\xeatspaces { slime-next-presentation}}}{36}
+\entry {\code {\xeatspaces { slime-nop}}}{15}
+\entry {\code {slime-pop-find-definition-stack}}{10}
+\entry {\code {\xeatspaces { slime-pprint-eval-last-expression}}}{13}
+\entry {\code {\xeatspaces { slime-previous-note}}}{12}
+\entry {\code {\xeatspaces { slime-previous-presentation}}}{36}
+\entry {\code {slime-profile-package}}{14}
+\entry {\code {\xeatspaces {slime-profile-report}}}{15}
+\entry {\code {\xeatspaces {slime-profile-reset}}}{15}
+\entry {\code {\xeatspaces {slime-profiled-functions}}}{15}
+\entry {\code {\xeatspaces { slime-reindent-defun}}}{34}
+\entry {\code {\xeatspaces { slime-remove-notes}}}{12}
+\entry {\code {\xeatspaces { slime-repl-backward-input}}}{17}
+\entry {\code {slime-repl-bol}}{16}
+\entry {\code {slime-repl-clear-buffer}}{16}
+\entry {\code {slime-repl-clear-output}}{16}
+\entry {\code {slime-repl-closing-return}}{16}
+\entry {\code {\xeatspaces { slime-repl-forward-input}}}{17}
+\entry {\code {slime-repl-newline-and-indent}}{16}
+\entry {\code {\xeatspaces { slime-repl-next-input}}}{17}
+\entry {\code {\xeatspaces { slime-repl-next-matching-input}}}{17}
+\entry {\code {\xeatspaces { slime-repl-next-prompt}}}{17}
+\entry {\code {\xeatspaces { slime-repl-previous-input}}}{17}
+\entry {\code {\xeatspaces { slime-repl-previous-matching-input}}}{17}
+\entry {\code {\xeatspaces { slime-repl-previous-prompt}}}{17}
+\entry {\code {slime-repl-return}}{16}
+\entry {\code {\xeatspaces { slime-repl-set-package}}}{13}
+\entry {\code {\xeatspaces { slime-restart-connection-at-point}}}{23}
+\entry {\code {\xeatspaces {slime-restart-inferior-lisp}}}{3}
+\entry {\code {\xeatspaces {slime-scratch}}}{38}
+\entry {\code {slime-space}}{8}
+\entry {\code {\xeatspaces { slime-switch-to-output-buffer}}}{12}
+\entry {\code {\xeatspaces { slime-sync-package-and-default-directory}}}{13}
+\entry {\code {\xeatspaces { slime-temp-buffer-quit}}}{22, 23}
+\entry {\code {slime-toggle-profile-fdefinition}}{14}
+\entry {\code {slime-toggle-trace-fdefinition}}{11}
+\entry {\code {\xeatspaces { slime-undefine-function}}}{13}
+\entry {\code {slime-unprofile-all}}{14}
+\entry {\code {slime-untrace-all}}{11}
+\entry {\code {\xeatspaces { slime-update-connection-list}}}{23}
+\entry {\code {slime-who-binds}}{10}
+\entry {\code {slime-who-calls}}{9}
+\entry {\code {slime-who-macroexpands}}{10}
+\entry {\code {slime-who-references}}{10}
+\entry {\code {slime-who-sets}}{10}
+\entry {\code {slime-who-specializes}}{10}

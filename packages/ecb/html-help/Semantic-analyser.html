@@ -1,0 +1,109 @@
+<html lang="en">
+<head>
+<title>Semantic analyser - ECB - the Emacs Code Browser</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="ECB - the Emacs Code Browser">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="ecb.html#Top">
+<link rel="up" href="Add_002don-interactors.html#Add_002don-interactors" title="Add-on interactors">
+<link rel="prev" href="Add_002don-interactors.html#Add_002don-interactors" title="Add-on interactors">
+<link rel="next" href="Symboldefinition.html#Symboldefinition" title="Symboldefinition">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Semantic-analyser"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Symboldefinition.html#Symboldefinition">Symboldefinition</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Add_002don-interactors.html#Add_002don-interactors">Add-on interactors</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Add_002don-interactors.html#Add_002don-interactors">Add-on interactors</a>
+<hr>
+</div>
+
+<h4 class="subsection">4.2.1 Displaying the current semantic context</h4>
+
+<p><a name="index-Analyse-8"></a>The cedet-suite contains the <dfn>semantic analyzer</dfn> which is a
+library tool that performs context analysis and can derive useful
+information. See the related node in the info-manual of cedet/semantic
+for more detailed informations about this tool.
+
+   <p>The analyzer output can be used through a special ECB-interactor. This
+interface lists details about the analysis, such as the current
+function, local arguments and variables, details on the prefix (the
+symbol the cursor is on), and a list of all possible completions (see
+<code>semantic-analyze-possible-completions</code> for more details about
+completions available via the semantic-analyser).
+
+   <p>Per default the content of the analyser-interactor is automatically
+synchronized and updated with current point of the current
+source-buffer in the edit-area (see <code>ecb-window-sync</code> and
+<a href="ECB_002dwindow-synchronizing.html#ECB_002dwindow-synchronizing">ECB-window synchronizing</a>).
+
+   <p>The analyser-interactor is of type tree-buffer. See <a href="Tree_002dbuffer-basics.html#Tree_002dbuffer-basics">Tree-buffer basics</a> for basic informations how to use such a tree-buffer.
+
+<h5 class="subsubsection">4.2.1.1 Usage of the analyser-interactor</h5>
+
+     <ul>
+<li>When a node-name in the &ldquo;Context&rdquo;-bucket is selected with the
+primary mouse button (see <a href="Using-the-mouse.html#Using-the-mouse">Using the mouse</a>) or RETURN (see <a href="Using-the-keyboard.html#Using-the-keyboard">Using the keyboard</a>) the buffer in the edit-window (which one depends on the
+setting in <code>ecb-mouse-click-destination</code>) will jump to the
+related entry. For strongly typed languages, this means you will jump
+to the definition of the variable, slot, or type definition.
+
+     <li>Clicking on a node-name in the &ldquo;Context&rdquo;-bucket with the secondary
+mouse button or C-RETURN (see <a href="Usage-of-ECB.html#Usage-of-ECB">Usage of ECB</a>) will jump to the
+related entry in another edit window - which one depends on the
+setting in <code>ecb-mouse-click-destination</code>.
+
+     <li>If you click on a node-name in the "Completions"-bucket, then the text
+that was recently analyzed will be replaced with the name of the tag
+that was clicked on in the analyser-interactor.
+
+     <li>Right clicking with the mouse (or with the keyboard, see <a href="Using-popup_002dmenus.html#Using-popup_002dmenus">Using popup-menus</a>) onto a tree-node opens a popup-menu which allows to
+display additional (if available) informations to the current node.
+
+<h5 class="subsubsection">4.2.1.2 Interactive commands of the analyser-interactor</h5>
+
+     <p>ECB offers the following commands for the analyser-interactor:
+
+          <ul>
+<li><code>ecb-analyse-buffer-sync</code>
+<li><code>ecb-goto-window-analyse</code>
+<li><code>ecb-maximize-window-analyse</code>
+</ul>
+
+     <p>See <a href="Interactive-ECB-commands.html#Interactive-ECB-commands">Interactive ECB commands</a> for details about these commands. 
+But you should not have any need to call
+<code>ecb-analyse-buffer-sync</code> directly because ECB automatically
+syncronizes the analyser-interactor with current active edit-buffer.
+
+     <!-- TODO: Ev. adding the interactive commands of ecb-analyse here?! -->
+</ul>
+
+<h5 class="subsubsection">4.2.1.3 Activating/Displaying the analyser-interactor</h5>
+
+<p>Either use one of the predefined layouts "left-analyse" or
+&ldquo;leftright-analyse&rdquo; (e.g. via <kbd>C-c . l c</kbd>) or create a new
+ecb-layout via the command <code>ecb-create-new-layout</code> and add a
+buffer of type &ldquo;other&rdquo; and name &ldquo;analyse&rdquo; into this new layout
+(see <a href="Creating-a-new-ECB_002dlayout.html#Creating-a-new-ECB_002dlayout">Creating a new ECB-layout</a>).
+
+<h5 class="subsubsection">4.2.1.4 Customizing the analyser interactor</h5>
+
+<p>See <a href="ecb_002danalyse.html#ecb_002danalyse">ecb-analyse</a> for a list of all options currently available
+for customizing this interactor to your needs.
+
+   </body></html>
+
