@@ -1,22 +1,11 @@
-# Ignore editor and misc backup files - anywhere
-*~
-.*~
-*.bak
-\#*\#
-.directory
-
 # Ignore all object files
 *.elc
 
-# Ignore corefiles
-core
-
-# Ignore
+# Ignore personal and temporary files
 /personal
 /save
-/lisp/save
-/lisp/pending
 /packages
 tramp
+TAGS
 
 # end-of-file
