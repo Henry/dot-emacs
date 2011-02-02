@@ -1,4 +1,4 @@
-;;; window-number.el
+;;; window-number.el --- Select windows by numbers
 
 ;; Copyright (C) 2004 Johann "Myrkraverk" Oskarsson
 ;; <myrkraverk@users.sourceforge.net>
@@ -18,6 +18,8 @@
 ;; Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ;; MA 02111-1307 USA
 
+;;; Commentary:
+
 ;; Introduction
 ;; ============
 
@@ -34,7 +36,7 @@
 ;; load-path RET will help.  Then place the following lines into your
 ;; .emacs or ~/.xemacs/init.el and uncomment them.
 
-;; -----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 ;; (autoload 'window-number-mode "window-number"
 ;;   "A global minor mode that enables selection of windows according to
@@ -48,17 +50,17 @@
 ;; the mode-line."
 ;;   t)
 
-;; -----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 ;; Then you can use M-x window-number-mode RET to turn the mode on, or
 ;; place (window-number-mode 1) and (window-number-meta-mode 1) into
 ;; your .emacs or ~/.xemacs/init.el.
 
-;; -----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 ;; Code starts here.
 
-;; -----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (require 'cl); for set-difference and loop
 

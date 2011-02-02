@@ -1,13 +1,13 @@
 ;;; esh-toggle --- toggle to and from the *eshell* buffer
 
-;; Copyright (C) 1997, 1998 Mikael Sjödin (mic@docs.uu.se)
+;; Copyright (C) 1997, 1998, 2000, 2001 Mikael Sjödin (mic@docs.uu.se)
 
 ;; Author: Mikael Sjödin <mic@docs.uu.se>
 ;;         John Wiegley <johnw@gnu.org>
 ;; Created: 19 Nov 1998
 ;; Version: 2.0
 ;; Keywords: processes
-;; X-URL: http://www.emacs.org/~johnw/eshell.html
+;; X-URL: http://www.gci-net.com/users/j/johnw/eshell.html
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as

@@ -90,11 +90,10 @@
   (interactive)
   (if (not xgtags-select-window-configuration)
       (setq xgtags-select-window-configuration (current-window-configuration)))
-  (xgtags-select-tag)
+  (xgtags-select-tag-near-point)
   (delete-other-windows)
-  (split-window-horizontally-or-vertically)
-  (other-window 1)
-  (switch-to-buffer xgtags-select-buffer-name))
+  (split-window-vertically 16)
+  (switch-to-buffer "*xgtags*"))
 
 (defun xgtags-find-rtag-no-prompt ()
   "Input tag name and move to the referenced point."

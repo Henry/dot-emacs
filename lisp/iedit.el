@@ -2,11 +2,12 @@
 
 ;; Copyright (C) 2010 Victor Ren
 
-;; Time-stamp: <2010-01-25 10:37:47 erenyin>
-;; Author: Victor Ren <victor.ren@ericsson.com>
-;; Keywords: region replace simultaneous
-;; Version: 0.31
-;; X-URL: 
+;; Time-stamp: <2010-03-13 17:17:16 Victor Ren>
+;; Author: Victor Ren <victorhge@gmail.com>
+;; Keywords: occurrence region replace simultaneous
+;; Version: 0.70
+;; X-URL: http://www.emacswiki.org/emacs/iedit.el
+;; Compatibility: GNU Emacs: 22.x, 23.x
 
 ;; This file is not part of GNU Emacs, but it is distributed under
 ;; the same terms as GNU Emacs.
@@ -27,32 +28,39 @@
 ;;; Commentary:
 
 ;; This package provides a more intuitive way of replace-string operation:
-;; - Mark the contents in the buffer
+;;
+;; - Select the occurrence in the buffer
+;;   In Transient Mark mode, just mark a region, the content of the 
+;;   region will be used as the occurrence. (if Transient Mark mode is disabled,
+;;   using C-u C-x C-x or C-SPC C-SPC to activate it just for this one time).
+;;
 ;; - Start iedit minor mode - by press C-;
-;;   All of the same contents in the buffer are highlighted
+;;   All occurrences of the content in the buffer are highlighted
+;;
 ;; - Edit one of the contents
 ;;   The change is applied to other contents simultaneously
-;; - Finish - by pressing C-; again
 ;;
-;; So I call it in-place "replace-string".
-;; 
+;; - Finish - by pressing C-; again
+
+;; If Transient Mark mode is disabled or the region is not active,
+;; the `current-word' is used as the occurrence by default.
+
+;; You can also switch to iedit mode from isearch mode directly. The current
+;; search string is used as the occurrence.
+
+;; If you would like to replace-string on certain region, use "narrowing" first.
+
 ;;; Suggested key bindings:
 ;;
 ;; (define-key global-map (kbd "C-;") 'iedit-mode)
-;;
-;; todo:
-;; - Start from isearch
-;; - Use symbol at current point by default
-;; - Toggle displaying lines except lines contains matches
-;; - Adjust region when iedit mode is active
-;; - Lazy highlight feature (from isearch)
+;; (define-key isearch-mode-map (kbd "C-;") 'iedit-mode)
+
+;;; todo:
+;; - Lazy highlight feature (from isearch)?
 ;; - Help information
-;; 
-;; Change log:
-;;
-;; 2010/01/25 Disable updating other regions when undo-in-progress since they
-;;            are already updated by undo
-;;	
+;; - face for current occurrence
+;; - blank line between matched lines
+
 ;;; Code:
 
 (eval-when-compile (require 'cl))
@@ -66,6 +74,17 @@
 (defcustom iedit-occurrence-face 'highlight
   "*Face used for the occurrences' default values."
   :type 'face
+  :group 'iedit)
+
+(defcustom iedit-current-word-default 't
+  "If no-nil, use current word by default for the occurrence."
+  :type 'boolean
+  :group 'iedit)
+
+(defcustom iedit-unmatched-lines-invisible-default nil
+  "If no-nil, hide lines that do not cover any occurrences by
+default."
+  :type 'boolean
   :group 'iedit)
 
 (defvar iedit-mode-hook nil
@@ -82,14 +101,32 @@
     (nconc minor-mode-alist
 	   (list '(iedit-mode iedit-mode))))
 
-(defvar iedit-occurrences nil
-  "The occurrences slot contains a list of overlays used to indicate
-the position of each occurrence.  In addition, the occurrence overlay is
-used to provide a different face configurable via
-`iedit-occurrence-face'."  )
+(defvar iedit-occurrences-overlays nil
+  "The occurrences slot contains a list of overlays used to
+indicate the position of each occurrence.  In addition, the
+occurrence overlay is used to provide a different face
+configurable via `iedit-occurrence-face'.")
 
-(make-variable-buffer-local 'iedit-occurrences)
+(defvar iedit-unmatched-lines-invisible nil
+  "This is buffer local variable which indicates whether
+unmatched lines are hided.")
 
+(defvar iedit-last-occurrence-in-history nil
+  "This is buffer local variable which is the occurrence when
+iedit mode is turned off last time.")
+
+(defvar iedit-forward-success t
+  "This is buffer local variable which indicate the moving
+forward or backward successful")
+
+(make-variable-buffer-local 'iedit-occurrences-overlays)
+(make-variable-buffer-local 'iedit-unmatched-lines-invisible)
+(make-variable-buffer-local 'iedit-last-occurrence-in-history)
+(make-variable-buffer-local 'iedit-forward-success)
+
+(defconst iedit-occurrence-overlay-name 'iedit-occurrence-overlay-name)
+(defconst iedit-invisible-overlay-name 'iedit-invisible-overlay-name)
+ 
 (defvar iedit-mode-map nil
   "Keymap used while iedit mode is enabled.")
 
@@ -97,78 +134,149 @@ used to provide a different face configurable via
     nil
   (setq iedit-mode-map (make-sparse-keymap))
   ;; Default key bindings
-  (define-key iedit-mode-map (kbd "TAB")             'iedit-next-occurrence)
-  (define-key iedit-mode-map (kbd "<S-tab>")         'iedit-prev-occurrence)
-  (define-key iedit-mode-map (kbd "<S-iso-lefttab>") 'iedit-prev-occurrence))
+  (define-key iedit-mode-map (kbd "TAB") 'iedit-next-occurrence)
+  (define-key iedit-mode-map (kbd "<S-tab>") 'iedit-prev-occurrence)
+  (define-key iedit-mode-map (kbd "<S-iso-lefttab>") 'iedit-prev-occurrence)
+  (define-key iedit-mode-map (kbd "C-'") 'iedit-toggle-unmatched-lines-visible))
 
 (or (assq 'iedit-mode minor-mode-map-alist)
     (setq minor-mode-map-alist
 	  (cons (cons 'iedit-mode iedit-mode-map) minor-mode-map-alist)))
 
-(defun iedit-mode (beg end)
+;;;###autoload
+(defun iedit-mode (&optional arg)
   "Toggle iedit mode.
+If iedit mode is off, turn iedit mode on, off otherwise.
+
+In Transient Mark mode, when iedit mode is turned on, all the
+occurrences of the current region are highlighted. If one
+occurrence is modified, the change are propagated to all other
+occurrences simultaneously.
+
+If Transient Mark mode is disabled or the region is not active,
+the `current-word' is used as occurrence. All the occurrences of
+the `current-word' are highlighted.
+
+You can also switch to iedit mode from isearch mode directly. The
+current search string is used as occurrence.  All occurrences of
+the current search string are highlighted.
+
+With a prefix argument, the occurrence when iedit is turned off
+last time is used as occurrence.  This is intended to recover
+last iedit which is turned off by mistake.
+
 Commands:
 \\{iedit-mode-map}"
-  (interactive "r")
+  (interactive "P")
   (if iedit-mode
       (iedit-done)
-    (progn
-      (or (and mark-active (not (equal beg end)))
-          (error "No region select, cannot enable iedit mode"))
+    (let ((occurrence nil))
+      (cond ((and arg iedit-last-occurrence-in-history)
+             (setq occurrence iedit-last-occurrence-in-history))
+            ((and transient-mark-mode mark-active (not (equal (mark) (point))))
+             (setq occurrence (buffer-substring (mark) (point))))
+            ((and isearch-mode (not (string= isearch-string "")))
+             (setq occurrence isearch-string)
+             (isearch-exit))
+            ((and iedit-current-word-default (current-word t))
+             (setq occurrence (current-word)))
+            (t (error "No candidate of the occurrence, cannot enable iedit mode.")))
       (deactivate-mark)
-      (iedit-start (buffer-substring beg end)))))
+      (iedit-start occurrence))))
 
 (defun iedit-start (occurrence-exp)
   "Start an iedit for the occurrence-exp in the current buffer."
   (setq	iedit-mode " Iedit")
-  (setq iedit-occurrences nil)
+  (setq iedit-occurrences-overlays nil)
+  (setq iedit-unmatched-lines-invisible iedit-unmatched-lines-invisible-default)
   (force-mode-line-update)
   (run-hooks 'iedit-mode-hook)
   (add-hook 'mouse-leave-buffer-hook 'iedit-done)
   (add-hook 'kbd-macro-termination-hook 'iedit-done)
   ;; Find and record each occurrence's markers and add the overlay to the occurrences
+  (let ((counter 0))
   (save-excursion
     (goto-char (point-min))
     (while (search-forward occurrence-exp nil t)
-      (let ((start (copy-marker (match-beginning 0) t))
-            (end (copy-marker (point) t)))
-        (let ((occurrence (iedit-make-occurrence-overlay)))
-          (push occurrence iedit-occurrences)
-          (move-overlay occurrence start end))))))
-
+      (push (iedit-make-occurrence-overlay (match-beginning 0) (match-end 0))
+            iedit-occurrences-overlays)
+      (setq counter (1+ counter)))      ; at less 1
+      (setq iedit-occurrences-overlays (nreverse iedit-occurrences-overlays))
+      (if iedit-unmatched-lines-invisible
+          (iedit-hide-unmatched-lines))
+      (message "%d matches for \"%s\"" 
+               counter 
+               (if (> (length occurrence-exp) 50)
+                   (concat (substring occurrence-exp 0 50) "...")
+                 occurrence-exp)))))
+    
+(defun iedit-hide-unmatched-lines ()
+  "Hide unmatched lines using invisible overlay."
+  (let ((prev-occurrence-end 0)
+        (unmatched-lines nil))
+    (save-excursion
+      (dolist (overlay iedit-occurrences-overlays)
+        (let ((match-start (overlay-start overlay))
+              (match-end (overlay-end overlay)))
+          (goto-char match-start)
+          (if (> (line-beginning-position) (1+ prev-occurrence-end))
+              (let ((unmatch-start (1+ prev-occurrence-end))
+                    (unmatch-end (1- (line-beginning-position))))
+                (push  (list unmatch-start unmatch-end) unmatched-lines)))
+          (goto-char match-end)
+          (setq prev-occurrence-end (line-end-position))))
+      (if (< prev-occurrence-end (point-max))
+          (push (list (1+ prev-occurrence-end) (point-max)) unmatched-lines))
+      (when unmatched-lines
+        (dolist (unmatch unmatched-lines)
+          (iedit-make-unmatched-lines-overlay (car unmatch) (cadr unmatch)))))))
+        
 (defun iedit-done ()
   "Exit iedit mode."
-  (when iedit-occurrences
-    (dolist (occurrence iedit-occurrences)
-      (delete-overlay occurrence))
-    (setq iedit-occurrences nil))
+  (let ((ov (car iedit-occurrences-overlays)))
+    (if ov 
+        (setq iedit-last-occurrence-in-history 
+              (buffer-substring (overlay-start ov) (overlay-end ov)))))
+  (remove-overlays (point-min) (point-max) iedit-occurrence-overlay-name t)
+  (remove-overlays (point-min) (point-max) iedit-invisible-overlay-name t)
+  (setq iedit-occurrences-overlays nil)
   (remove-hook 'mouse-leave-buffer-hook 'iedit-done)
   (remove-hook 'kbd-macro-termination-hook 'iedit-done)
   (setq iedit-mode nil)
   (force-mode-line-update)
   (run-hooks 'iedit-mode-end-hook))
 
-(defun iedit-make-occurrence-overlay (&optional name)
-  "Create an overlay for an occurrence in a iedit.
-Add the appropriate properties for the overlay to provide: a face
-used to display a occurrence's default value, and modification hooks
-to update occurrences if the user starts typing."
-  (let ((occurrence (make-overlay (point) (point) (current-buffer) nil t)))
+(defun iedit-make-occurrence-overlay (begin end)
+  "Create an overlay for an occurrence in iedit mode.
+Add the properties for the overlay: a face used to display a
+occurrence's default value, and modification hooks to update
+occurrences if the user starts typing."
+  (let ((occurrence (make-overlay begin end (current-buffer) nil t)))
+    (overlay-put occurrence iedit-occurrence-overlay-name t)
     (overlay-put occurrence 'face iedit-occurrence-face)
     (overlay-put occurrence 'insert-in-front-hooks '(iedit-occurrence-update))
     (overlay-put occurrence 'insert-behind-hooks '(iedit-occurrence-update))
     (overlay-put occurrence 'modification-hooks '(iedit-occurrence-update))
     occurrence))
 
+(defun iedit-make-unmatched-lines-overlay (begin end)
+  "Create an overlay for lines between two occurrences in iedit mode."
+  (let ((unmatched-lines-overlay (make-overlay begin end (current-buffer) nil t)))
+    (overlay-put unmatched-lines-overlay iedit-invisible-overlay-name t)
+    (overlay-put unmatched-lines-overlay 'invisible t)
+    (overlay-put unmatched-lines-overlay 'intangible t)
+    unmatched-lines-overlay))
+
 (defun iedit-occurrence-update (occurrence after beg end &optional change)
   "Update all occurrences.
-This modification hook is triggered when a user edits any occurrence
-and is responsible for updating all other occurrences."
+This modification hook is triggered when a user edits any
+occurrence and is responsible for updating all other
+occurrences."
   (when (and after (not undo-in-progress)) ; undo will do all the work
     (let ((value (buffer-substring (overlay-start occurrence) (overlay-end occurrence)))
           (inhibit-modification-hooks t))
       (save-excursion
-        (dolist (like-occurrence iedit-occurrences)
+        (dolist (like-occurrence iedit-occurrences-overlays)
           (if (not (eq like-occurrence occurrence))
               (progn
               (goto-char (overlay-start like-occurrence))
@@ -177,29 +285,67 @@ and is responsible for updating all other occurrences."
               (insert value))))))))
 
 (defun iedit-next-occurrence ()
-  "Move point forward to the next occurrence in the `iedit'.
-If there are no more occurrences in the iedit, point is moved to the
-last occurrence."
+  "Move forward to the next occurrence in the `iedit'.
+If the point is already in the last occurrences, you ask to type
+another `iedit-next-occurrence', it starts again from the
+beginning of the buffer."
   (interactive)
-  (let* ((occurrences iedit-occurrences)
-         (next-pos (loop for occurrence in (reverse occurrences)
-                         for start = (overlay-start occurrence)
-                         when (< (point) start)
-                         return start)))
-    (if (not (null next-pos))
-        (goto-char next-pos))))
+  (let ((pos (point))
+        (in-occurrence (get-char-property (point) 'iedit-occurrence-overlay-name)))
+    (when in-occurrence
+      (setq pos  (next-single-char-property-change pos 'iedit-occurrence-overlay-name)))
+    (setq pos (next-single-char-property-change pos 'iedit-occurrence-overlay-name))
+    
+    (if (/= pos (point-max))
+        (setq iedit-forward-success t)
+      (if (and iedit-forward-success in-occurrence)
+          (progn (message "This is the last occurrence.")
+                 (setq iedit-forward-success nil))
+        (progn 
+          (if (get-char-property (point-min) 'iedit-occurrence-overlay-name)
+              (setq pos (point-min))
+            (setq pos (next-single-char-property-change (point-min) 'iedit-occurrence-overlay-name)))
+          (setq iedit-forward-success t)
+          (message "Located the first occurrence."))))
+    (when iedit-forward-success
+      (goto-char pos))))
 
 (defun iedit-prev-occurrence ()
-  "Move point backward to the previous occurrence in the `iedit'.
-If there are no more occurrences in the iedit, point is moved to the first occurrence."
+  "Move backward to the previous occurrence in the `iedit'.
+If the point is already in the first occurrences, you ask to type
+another `iedit-prev-occurrence', it starts again from the end of
+the buffer."
   (interactive)
-  (let* ((occurrences iedit-occurrences)
-         (prev-pos (loop for occurrence in occurrences
-                         for end = (overlay-end occurrence)
-                         when  (> (point) end)
-                         return (overlay-start occurrence))))
-    (if (not (null prev-pos))
-        (goto-char prev-pos))))
+  (let ((pos (point))
+        (in-occurrence (get-char-property (point) 'iedit-occurrence-overlay-name)))
+    (when in-occurrence
+      (setq pos (previous-single-char-property-change pos 'iedit-occurrence-overlay-name)))
+    (setq pos (previous-single-char-property-change pos 'iedit-occurrence-overlay-name))
+    ;; at the start of the first occurrence
+    (if (or (and (eq pos (point-min))
+                 (not (get-char-property (point-min) 'iedit-occurrence-overlay-name)))
+            (and (eq (point) (point-min)) 
+                 in-occurrence))
+        (if (and iedit-forward-success in-occurrence)
+            (progn (message "This is the first occurrence.")
+                   (setq iedit-forward-success nil))
+          (progn 
+            (setq pos (previous-single-char-property-change (point-max) 'iedit-occurrence-overlay-name))
+            (if (not (get-char-property (- (point-max) 1) 'iedit-occurrence-overlay-name))
+                (setq pos (previous-single-char-property-change pos 'iedit-occurrence-overlay-name)))
+            (setq iedit-forward-success t)
+            (message "Located the last occurrence.")))
+      (setq iedit-forward-success t))
+    (when iedit-forward-success
+      (goto-char pos))))
+
+(defun iedit-toggle-unmatched-lines-visible ()
+  "Toggle whether to display unmatched lines."
+  (interactive)
+  (setq iedit-unmatched-lines-invisible (not iedit-unmatched-lines-invisible))
+  (if iedit-unmatched-lines-invisible
+      (iedit-hide-unmatched-lines)
+    (remove-overlays (point-min) (point-max) iedit-invisible-overlay-name t)))
 
 (provide 'iedit)
 

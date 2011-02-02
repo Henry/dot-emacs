@@ -1,7 +1,7 @@
 ;;; accelerate.el --- pump numeric arg for auto-repeated interactive commands
 ;; ---------------------------------------------------------------------------
 ;;
-;; Copyright (C) 2006, David Andersson <david(at)symsoft.se>
+;; Copyright (C) 2006, David Andersson
 ;;
 ;; This file is NOT part of Emacs.
 ;;
@@ -22,7 +22,7 @@
 ;;
 ;;-------------------------------------------------------------------
 ;;
-;; Author: David Andersson <david(at)symsoft.se>
+;; Author: David Andersson <l.david.andersson(at)sverige.nu>
 ;; Created: 2006-06-30
 ;; Version: 0.2
 ;;

@@ -4,15 +4,15 @@
 ;; Description: Extensions to standard library finder.el
 ;; Author: Drew Adams
 ;; Maintainer: Drew Adams
-;; Copyright (C) 2008, Drew Adams, all rights reserved.
+;; Copyright (C) 2008-2011, Drew Adams, all rights reserved.
 ;; Created: Wed Mar 12 10:00:16 2008 (Pacific Standard Time)
 ;; Version: 21.0
-;; Last-Updated: Sat Mar 22 18:58:36 2008 (Pacific Daylight Time)
+;; Last-Updated: Tue Jan  4 09:30:50 2011 (-0800)
 ;;           By: dradams
-;;     Update #: 67
+;;     Update #: 107
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/finder+.el
 ;; Keywords: help
-;; Compatibility: GNU Emacs 20.x, GNU Emacs 21.x, GNU Emacs 22.x
+;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x
 ;;
 ;; Features that might be required by this library:
 ;;
@@ -28,6 +28,17 @@
 ;;
 ;;; Change log:
 ;;
+;; 2011/01/04 dadams
+;;     Added autoload cookie for command.
+;; 2010/08/28 dadams
+;;     finder-exit, finder-mode: Redefine only for Emacs < 23. 
+;; 2010/02/28 dadams
+;;     finder-commentary: Delete any trailing blank lines.
+;; 2009/05/02 dadams
+;;     finder-commentary: Fixed typo: foundp -> fboundp.
+;; 2009/02/12 dadams
+;;     Added redefinition of finder-commentary.  See also Emacs bug #2291.
+;;     finder-mode: Protect finder-font-lock-keywords, run-mode-hooks (Emacs 20).
 ;; 2008/03/22 dadams
 ;;     finder-mode: Don't also use lisp font-locking.
 ;; 2008/03/21 dadams
@@ -80,35 +91,102 @@
 ;; Wraps `delete-window' in `condition-case'.
 ;; Kills also buffer `*Finder-package*'.
 ;;
-(defun finder-exit ()
-  "Exit Finder mode.
+(when (< emacs-major-version 23)
+  (defun finder-exit ()
+    "Exit Finder mode.
 Delete the window and kill the buffer."
-  (interactive)
-  (condition-case nil (delete-window) (error nil))
-  (when (get-buffer "*Finder*") (kill-buffer "*Finder*"))
-  (when (get-buffer "*Finder-package*") (kill-buffer "*Finder-package*"))
-  (when (get-buffer "*Finder Category*") (kill-buffer "*Finder Category*")))
+    (interactive)
+    (condition-case nil (delete-window) (error nil))
+    (when (get-buffer "*Finder*") (kill-buffer "*Finder*"))
+    (when (get-buffer "*Finder-package*") (kill-buffer "*Finder-package*"))
+    (when (get-buffer "*Finder Category*") (kill-buffer "*Finder Category*"))))
 
 
 ;; REPLACES ORIGINAL in `finder.el'.
 ;; Uses `finder-mode-syntax-table', not `emacs-lisp-mode-syntax-table'.
 ;; Adds font-lock keywords for `...' highlighting.
 ;;
-(defun finder-mode ()
-  "Major mode for browsing package documentation.
+(when (< emacs-major-version 23)
+  (defun finder-mode ()
+    "Major mode for browsing package documentation.
 \\<finder-mode-map>
 \\[finder-select]	more help for the item on the current line
 \\[finder-exit]	exit Finder mode and kill the Finder buffer."
-  (interactive)
-  (kill-all-local-variables)
-  (use-local-map finder-mode-map)
-  (set-syntax-table finder-mode-syntax-table)
-  (setq font-lock-defaults '(finder-font-lock-keywords nil nil
-                             (("+-*/.<>=!?$%_&~^:@" . "w")) nil))
-  (setq mode-name "Finder")
-  (setq major-mode 'finder-mode)
-  (set (make-local-variable 'finder-headmark) nil)
-  (run-mode-hooks 'finder-mode-hook))
+    (interactive)
+    (kill-all-local-variables)
+    (use-local-map finder-mode-map)
+    (set-syntax-table finder-mode-syntax-table)
+    (when (boundp 'finder-font-lock-keywords) ; Emacs 23.
+      (setq font-lock-defaults '(finder-font-lock-keywords nil nil
+                                 (("+-*/.<>=!?$%_&~^:@" . "w")) nil)))
+    (setq mode-name "Finder")
+    (setq major-mode 'finder-mode)
+    (set (make-local-variable 'finder-headmark) nil)
+    (when (and (fboundp 'run-mode-hooks) (boundp 'finder-mode-hook))
+      (run-mode-hooks 'finder-mode-hook))))
+
+
+;; REPLACES ORIGINAL in `finder.el'.
+;; Names the buffer *Commentary, <file>*, not *Finder-package*.
+;; Fits the frame and raises it afterward.
+;;
+;;;###autoload
+(defun finder-commentary (file)
+  "Display FILE's commentary section.
+FILE should be in a form suitable for passing to `locate-library'."
+  (interactive
+   (list
+    (cond ((fboundp 'locate-file-completion-table) ; Emacs 23.
+           (completing-read "Library name: "
+                            (apply-partially 'locate-file-completion-table
+                                             (or find-function-source-path load-path)
+                                             (find-library-suffixes))))
+          ((fboundp 'locate-file-completion) ; Emacs 22.
+           (completing-read "Library name: "
+                            'locate-file-completion
+                            (cons (or find-function-source-path load-path)
+                                  (find-library-suffixes))))
+          (t
+           (read-string "Library name: ")))))
+  (let ((str  (lm-commentary
+               (if (fboundp 'find-library-name)
+                   (find-library-name file)
+                 (or (finder-find-library file)
+                     (finder-find-library (concat file ".el"))
+                     (error "Can't find library %s" file))))))
+    (unless str	(error "No Commentary section in `%s'" file))
+    (pop-to-buffer (concat "*Commentary, " (file-name-sans-extension file) "*"))
+    (setq buffer-read-only nil)
+    (erase-buffer)
+    (insert str)
+    (goto-char (point-min))
+    (delete-blank-lines)
+    (goto-char (point-max))
+    (delete-blank-lines)
+    (goto-char (point-min))
+    (while (re-search-forward "^;+ ?" nil t) (replace-match "" nil nil))
+    (goto-char (point-max))             ; Delete any trailing blank lines.
+    (when (re-search-backward "\\S-" nil t)
+      (forward-line 1)
+      (delete-blank-lines))
+    (goto-char (point-min))
+    (when (and (fboundp 'make-text-button) ; Emacs 23.
+               (get 'finder-xref 'button-category-symbol))
+      (while (re-search-forward "\\<\\([-[:alnum:]]+\\.el\\)\\>" nil t)
+        (if (locate-library (match-string 1))
+            (make-text-button (match-beginning 1) (match-end 1)
+                              'xref (match-string-no-properties 1)
+                              'help-echo "Read this file's commentary"
+                              :type 'finder-xref))))
+    (goto-char (point-min))
+    (setq buffer-read-only t)
+    (set-buffer-modified-p nil)
+    (shrink-window-if-larger-than-buffer)
+    (when (and (require 'fit-frame nil t) (require 'autofit-frame nil t))
+      (fit-frame-if-one-window))
+    (finder-mode)
+    (finder-summary))
+  (raise-frame))
 
 ;;;;;;;;;;;;;;;;;;;
 

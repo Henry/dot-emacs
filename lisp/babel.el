@@ -1,6 +1,8 @@
-
 ;;; babel.el --- interface to web translation services such as Babelfish
-;; $Id: babel.el,v 1.12 2008/11/02 11:55:48 juergen Exp $
+;; $Id: babel.el,v 1.22 2008/11/09 19:49:35 juergen Exp $
+;;;
+;;;Note, the following program will produce error
+;;;"Babelfish HTML has changed ; please look for a new version of babel.el" as of 4/2010
 ;;;
 ;;; Author: Eric Marsden <emarsden@laas.fr>
 ;;;         Juergen Hoetzel <juergen@hoetzel.info> 
@@ -127,10 +129,18 @@
 ;; `babel-preferred-to-language'. David Masterson suggested adding a
 ;; menu item.
 ;;
-;; User quotes: Dieses ist die größte Sache seit geschnittenem Brot.
+;; User quotes: Dieses ist die grÃ¶ÃŸte Sache seit geschnittenem Brot.
 ;;                 -- Stainless Steel Rat <ratinox@peorth.gweep.net> 
 
 ;;; History
+
+;;    0.7  * error handling if no backend is available for translating
+;;           the supplied languages
+;;	   * rely on url-* functions (for charset decoding) on GNU emacs
+;;         * increased chunk size for better performance
+;;         * added support for all Google languages
+;;         * `babel-region' with prefix argument inserts the translation 
+;;            output at point.
 
 ;;    0.6  * get rid of w3-region (implementend basic html entity parsing)
 ;;         * get rid of w3-form-encode-xwfu (using mm-url-form-encode-xwfu)
@@ -169,40 +179,46 @@
   :group 'applications)
 
 
-(defconst babel-version 0.6
+(defconst babel-version 0.7
   "The version number of babel.el")
 
 (defconst babel-languages
-  '(("English" . "eng")
-    ("Brazilian Portuguese" . "pob")
-    ("German" . "ger")
-    ("Dutch" . "dut")
-    ("Latin American Spanish" . "spl")
-    ("Spanish" . "spa")
-    ("European Spanish" . "spe")
-    ("French" . "fre")
-    ("Japanese (Shift JIS)" . "jpn")
-    ("Danish" . "dan")
-    ("Icelandic" . "ice")
-    ("Finnish" . "fin")
-    ("Italian" . "ita")
-    ("Norwegian" . "nor")
-    ("Swedish" . "swe")
-    ("Portuguese" . "poe")
-    ("Russian" . "rus")
-    ("Croatian (CP 1250)" . "cro")
-    ("Hungarian (CP 1250)" . "hun")
-    ("Polish (CP 1250)" . "pol")
-    ("Czech (CP 1250)" . "che")
-    ("Serbian (Latin)" . "sel")
-    ("Slovenian (CP 1250)" . "slo")
-    ("Greek" . "grk")
-    ("Welsh" . "wel")
-    ("Esperanto" . "esp")
-    ("Lojban" . "loj")
-    ("Simplified Chinese" . "schi")
-    ("Traditional Chinese" . "tchi")
-    ))
+  '(("Arabic" . "ar")
+    ("Bulgarian" . "bg")
+    ("Catalan" . "ca")
+    ("Czech" . "cs")
+    ("Danish" . "da")
+    ("German" . "de")
+    ("Greek" . "el")
+    ("English" . "en")
+    ("Spanish" . "es")
+    ("Finnish" . "fi")
+    ("French" . "fr")
+    ("Hindi" . "hi")
+    ("Croatian" . "hr")
+    ("Indonesian" . "id")
+    ("Italian" . "it")
+    ("Hebrew" . "iw")
+    ("ja" . "Japanese")
+    ("Korean" . "ko")
+    ("lt" . "Lithuanian")
+    ("Latvian" . "lv")
+    ("nl" . "Dutch")
+    ("Norwegian" . "no")
+    ("pl" . "Polish")
+    ("Portuguese" . "pt")
+    ("ro" . "Romanian")
+    ("Russian" . "ru")
+    ("sk" . "Slovak")
+    ("Slovenian" . "sl")
+    ("sr" . "Serbian")
+    ("Swedish" . "sv")
+    ("tl" . "Filipino")
+    ("Ukrainian" . "uk")
+    ("Vietnamese" . "vi")
+    ("Chinese (Simplified)" . "zh-CN")
+    ("Chinese" . "zh-CN")
+    ("Chinese (Traditional)" . "zh-TW")))
 
 (defcustom babel-preferred-to-language "German"
   "*Default target translation language.
@@ -254,16 +270,23 @@ function, not available on other emacsen"
       (sentence-end)
     sentence-end))	
 
-(defun babel-url-retrieve (url charset)
-  "Retrieve URL and decode to charset" 
-  (let ((current (current-buffer))
-	(tmp (url-retrieve-synchronously url)))
-    (with-current-buffer tmp
-      (mm-decode-coding-region (point-min) (point-max) charset)
-      (set-buffer-file-coding-system charset)
-      (mm-enable-multibyte)
-      (copy-to-buffer current (point-min) (point-max)))
-    (kill-buffer tmp)))
+;; xemacs compatibility
+(eval-and-compile
+  (if (featurep 'xemacs)
+      ;; XEmacs
+      (defun babel-url-retrieve (url)
+	"Retrieve URL and decode"
+	(let ((current (current-buffer))
+	      (tmp (url-retrieve-synchronously url)))
+	  (with-current-buffer tmp
+	    ;;shrug: we asume utf8 
+	    ;; (mm-decode-coding-region (point-min) (point-max) 'utf-8)
+	    (copy-to-buffer current (point-min) (point-max)))))
+    ;; GNUs Emacs
+    (require 'url-handlers)
+    (defun babel-url-retrieve (url)
+      (let ((tmp (url-retrieve-synchronously url)))
+	(url-insert tmp)))))
 
 (defun babel-wash-regex (regex)
   "Extract the useful information from the HTML returned by fetch function
@@ -300,40 +323,48 @@ NO-DISPLAY is nil."
                            'babel-to-history))
          (from (cdr (assoc from-long babel-languages)))
          (to   (cdr (assoc to-long babel-languages)))
-         (backends (babel-get-backends from to))
-         (backend-str
-          (completing-read "Using translation service: "
-                           backends nil t 
-                           (cons (or (member (first babel-backend-history) backends) (caar backends)) 0) ;TOD also check rest of babel-backend-history
-                           'babel-backend-history))
-         (backend (symbol-name (cdr (assoc backend-str babel-backends))))
-         (fetcher (intern (concat "babel-" backend "-fetch")))
-         (washer  (intern (concat "babel-" backend "-wash")))
-         (chunks (babel-chunkify msg 700))
-         (translated-chunks '())
-         (view-read-only nil))
-    (loop for chunk in chunks 
-          do (push (babel-work chunk from to) translated-chunks))
-    (if no-display
-        (apply #'concat (nreverse translated-chunks))
-      (with-output-to-temp-buffer "*babel*"
-        (message "Translating...")
-        (loop for tc in (nreverse translated-chunks)
-              do (princ tc))
-        (save-excursion
-          (set-buffer "*babel*")
-          (babel-mode))
-        (message "Translating...done")))))
+         (backends (babel-get-backends from to)))
+    (if (not backends)
+	(error "No Backend available for translating %s to %s" 
+	       from-long to-long)
+      (let* ((backend-str
+	     (completing-read "Using translation service: "
+			      backends nil t 
+			      (cons (or (member (first babel-backend-history) 
+						backends) (caar backends)) 0) 
+			      'babel-backend-history))
+	     (backend (symbol-name (cdr (assoc backend-str babel-backends))))
+	     (fetcher (intern (concat "babel-" backend "-fetch")))
+	     (washer  (intern (concat "babel-" backend "-wash")))
+	     (chunks (babel-chunkify msg 7000))
+	     (translated-chunks '())
+	     (view-read-only nil))
+	(loop for chunk in chunks 
+	      do (push (babel-work chunk from to fetcher washer)
+		       translated-chunks))
+	(if no-display
+	    (apply #'concat (nreverse translated-chunks))
+	  (with-output-to-temp-buffer "*babel*"
+	    (message "Translating...")
+	    (loop for tc in (nreverse translated-chunks)
+		       do (princ tc))
+	    (save-excursion
+	      (set-buffer "*babel*")
+		   (babel-mode))
+	    (message "Translating...done")))))))
 
 ;;;###autoload
-(defun babel-region (start end)
-  "Use a web translation service to translate the current region."
-  (interactive "r")
-  (babel (buffer-substring-no-properties start end)))
+(defun babel-region (start end &optional arg)
+  "Use a web translation service to translate the current region.
+With prefix argument, insert the translation output at point."
+  (interactive "r\nP")
+  (if arg
+      (insert (babel (buffer-substring-no-properties start end) t))
+    (babel (buffer-substring-no-properties start end))))
 
 ;;;###autoload
 (defun babel-as-string (msg)
-  "Use a web translation service to translate MSG, returning a string."SysTran
+  "Use a web translation service to translate MSG, returning a string."
   (interactive "sTranslate phrase: ")
   (babel msg t))
 
@@ -357,7 +388,7 @@ translated text."
           (t
            (babel-region (point-min) (point-max))))))
 
-(defun babel-work (msg from to)
+(defun babel-work (msg from to fetcher washer)
   (save-excursion
       (set-buffer (get-buffer-create " *babelurl*"))
       (erase-buffer)
@@ -407,7 +438,7 @@ language FROM into language TO."
 	     (entity (buffer-substring start end))
 	     (replacement (babel-decode-html-entitiy entity)))
 	(delete-region start end)
-	(insert-string replacement)))))
+	(insert replacement)))))
 
 (defun babel-mode ()
   (interactive)
@@ -457,7 +488,11 @@ language FROM into language TO."
 (defun babel-simple-html-parse () 
   "Replace basic html markup"
   (goto-char (point-min))
-  (replace-regexp "<\\(br\\|p\\)/?>" "\n"))
+  (while (re-search-forward  "<\\(br\\|p\\)/?>" nil t)
+    (replace-match "\n"))
+  (goto-char (point-min))
+  (while (re-search-forward  "^[ \t]+"  nil t)
+    (replace-match "")))
 
 ;; split STR into chunks of around LENGTH characters, trying to
 ;; maintain sentence structure (this is used to send big requests in
@@ -495,14 +530,14 @@ If optional argument HERE is non-nil, insert version number at point."
 ;; Babelfish (which uses the SysTran engine) is only able to translate
 ;; between a limited number of languages.
 
-;; translation from 3-letter names to Babelfish 2-letter names
+;; translation from generic  names to Babelfish 2-letter names
 (defconst babel-fish-languages
-  '(("eng" . "en")
-    ("ger" . "de")
-    ("ita" . "it")
-    ("poe" . "pt")
-    ("spe" . "es")
-    ("fre" . "fr")))
+  '(("en" . "en")
+    ("de" . "de")
+    ("it" . "it")
+    ("pt" . "pt")
+    ("es" . "es")
+    ("fr" . "fr")))
 
 ;; those inter-language translations that Babelfish is capable of
 (defconst babel-fish-translations
@@ -519,8 +554,7 @@ If optional argument HERE is non-nil, insert version number at point."
 
 (defun babel-fish-fetch (msg from to)
   "Connect to the Babelfish server and request the translation."
-  (let ((coding-system-for-read 'utf-8)
-	(translation (babel-fish-translation from to)))
+  (let ((translation (babel-fish-translation from to)))
     (unless translation
       (error "Babelfish can't translate from %s to %s" from to))
     (let* ((pairs `(("trtext" . ,(mm-encode-coding-string msg 'utf-8))
@@ -535,7 +569,7 @@ If optional argument HERE is non-nil, insert version number at point."
              (url-request-method "POST")
              (url-request-extra-headers
               '(("Content-Type" . "application/x-www-form-urlencoded"))))
-      (babel-url-retrieve "http://babelfish.yahoo.com/translate_txt" 'utf-8))))
+      (babel-url-retrieve "http://babelfish.yahoo.com/translate_txt" ))))
 
 (defun babel-fish-wash ()
   "Extract the useful information from the HTML returned by Babelfish."
@@ -546,19 +580,19 @@ If optional argument HERE is non-nil, insert version number at point."
 
 ;; FreeTranslation.com stuff ===========================================
 
-;; translation from 3-letter names to FreeTranslation names
+;; translation from  generic letter names to FreeTranslation names
 (defconst babel-free-languages
-  '(("eng" . "English")
-    ("ger" . "German")
-    ("ita" . "Italian")
-    ("dut" . "Dutch")
-    ("poe" . "Portuguese")
-    ("spe" . "Spanish")
-    ("nor" . "Norwegian")
-    ("rus" . "Russian")  
-    ("schi" . "SimplifiedChinese")
-    ("tchi" . "TraditionalChinese")
-    ("fre" . "French")))
+  '(("en" . "English")
+    ("de" . "German")
+    ("it" . "Italian")
+    ("nl" . "Dutch")
+    ("pt" . "Portuguese")
+    ("es" . "Spanish")
+    ("no" . "Norwegian")
+    ("ru" . "Russian")  
+    ("zh-CN" . "SimplifiedChinese")
+    ("zh-TW" . "TraditionalChinese")
+    ("fr" . "French")))
 
 ;; those inter-language translations that FreeTranslation is capable of
 (defconst babel-free-translations
@@ -576,14 +610,9 @@ If optional argument HERE is non-nil, insert version number at point."
   "Connect to the FreeTranslation server and request the translation."
   (let ((coding-system-for-read 'utf-8)
 	(translation (babel-free-translation from to))
-	url)
+	(url "http://ets.freetranslation.com/"))
     (unless translation
       (error "FreeTranslation can't translate from %s to %s" from to))
-    (setq url
-	  (cond ((string= translation "English/Russian") "http://ets6.freetranslation.com/")
-		((string= translation "English/SimplifiedChinese") "http://ets6.freetranslation.com/")
-		((string= translation "English/TraditionalChinese") "http://ets6.freetranslation.com/")
-		(t "http://ets.freetranslation.com/")))
     (let* ((pairs `(("sequence"  . "core")
                     ("mode"      . "html")
                     ("template"  . "results_en-us.htm")
@@ -591,10 +620,14 @@ If optional argument HERE is non-nil, insert version number at point."
 		    ("charset"   . "UTF-8")
                     ("language"  . ,translation)))
            (url-request-data (babel-form-encode pairs))
+	   (url-mime-accept-string "text/html")
            (url-request-method "POST")
+	   (url-privacy-level '(email agent))
+	   (url-mime-charset-string "utf-8")
            (url-request-extra-headers
-            '(("Content-Type" . "application/x-www-form-urlencoded"))))
-      (babel-url-retrieve url 'utf-8))))
+            '(("Content-Type" . "application/x-www-form-urlencoded")
+	      ("Referer" . "http://ets.freetranslation.com/"))))
+      (babel-url-retrieve url))))
 
 (defun babel-free-wash ()
   "Extract the useful information from the HTML returned by FreeTranslation."
@@ -604,52 +637,36 @@ If optional argument HERE is non-nil, insert version number at point."
 
 
 ;; Google stuff ===========================================
-;;
-;; Contributed by Juergen Hoetzel <juergen@hoetzel.info> 
 
-;; translation from 3-letter names to Google 2-letter names
+;; Google supports all languages
 (defconst babel-google-languages
-  '(("eng" . "en")
-    ("ger" . "de")
-    ("spe" . "es")
-    ("fre" . "fr")
-    ("ita" . "it")
-    ("pob" . "pt")
-    ("jpn" . "ja")
-    ;TODO:  "en|ko"English to Korean BETA 
-    ;TODO:  "en|zh-CN"English to Chinese&nbsp;(Simplified) BETA      
-    ))
+  babel-languages)
 
-;; those inter-language translations that Google is capable of
-(defconst babel-google-translations
-  '("en|de" "en|es" "en|fr" "en|it" "en|pt" "en|ja" "en|ko" "en|zh-CN"
-    "de|en" "de|fr" "es|en" "fr|en" "fr|de" "it|en" "pt|en" "ja|en" "ko|en" "zh-CN|en"))
-
-;; if Google is able to translate from language FROM to language
-;; TO, then return the corresponding string, otherwise return nil
 (defun babel-google-translation (from to)
-  (let* ((fromb (cdr (assoc from babel-google-languages)))
-         (tob   (cdr (assoc to babel-google-languages)))
-         (comb (and fromb tob (concat fromb "|" tob))))
-    (find comb babel-google-translations :test #'string=)))
+  ;; Google can always translate in both directions
+  (find to babel-google-languages 
+	:test '(lambda (st el) 
+		 (string= (cdr el) st))))
 
 (defun babel-google-fetch (msg from to)
   "Connect to google server and request the translation."
-  (let ((coding-system-for-read 'utf-8)
-	(translation (babel-google-translation from to)))
-    (unless translation
-      (error "Google can't translate from %s to %s" from to))
+  ;; Google can always translate in both directions
+  (if (not (find to babel-google-languages 
+	    :test '(lambda (st el) 
+		     (string= (cdr el) st))))
+      (error "Google can't translate from %s to %s" from to)
     (let* ((pairs `(("text"       . ,(mm-encode-coding-string msg 'utf-8))
                     ("hl"         . "en")
                     ("Language"   . "English")
 		    ("ie"         . "UTF-8")
 		    ("oe"         . "UTF-8")
-		    ("langpair" . ,translation)))
+		    ("sl" . ,from)
+		    ("tl" . ,to)))
            (url-request-data (babel-form-encode pairs))
 	   (url-request-method "POST")
 	   (url-request-extra-headers
 	    '(("Content-Type" . "application/x-www-form-urlencoded"))))
-      (babel-url-retrieve "http://translate.google.com/translate_t" 'utf-8))))
+      (babel-url-retrieve "http://translate.google.com/translate_t" ))))
 
 (defun babel-google-wash ()
   "Extract the useful information from the HTML returned by google."

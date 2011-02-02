@@ -1,10 +1,10 @@
-;; htmlize.el -- Convert buffer text and decorations to HTML.
+;;; htmlize.el -- Convert buffer text and decorations to HTML.
 
-;; Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2005,2006,2009 Hrvoje Niksic
+;; Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2005,2006 Hrvoje Niksic
 
 ;; Author: Hrvoje Niksic <hniksic@xemacs.org>
+;; Modified by: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: hypermedia, extensions
-;; Version: 1.37
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@
 ;; User quotes: "You sir, are a sick, sick, _sick_ person. :)"
 ;;                  -- Bill Perry, author of Emacs/W3
 
-
+ 
 ;;; Code:
 
 (require 'cl)
@@ -97,7 +97,7 @@
     ;; `cl' is loaded.
     (load "cl-extra")))
 
-(defconst htmlize-version "1.37")
+(defconst htmlize-version "1.34")
 
 ;; Incantations to make custom stuff work without customize, e.g. on
 ;; XEmacs 19.14 or GNU Emacs 19.34.
@@ -305,7 +305,7 @@ output.")
   "Hook run by `htmlize-file' after htmlizing a file, but before saving it.")
 
 (defvar htmlize-buffer-places)
-
+ 
 ;;; Some cross-Emacs compatibility.
 
 ;; I try to conditionalize on features rather than Emacs version, but
@@ -395,7 +395,7 @@ output.")
 	      (> res limit))
 	  limit
 	res)))))
-
+ 
 ;;; Transformation of buffer text: HTML escapes, untabification, etc.
 
 (defvar htmlize-basic-character-table
@@ -635,7 +635,7 @@ without modifying their meaning."
   (while (search-forward "Local Variables:" nil t)
     (replace-match "Local Variables&#58;" nil t)))
   
-
+ 
 ;;; Color handling.
 
 (if (fboundp 'locate-file)
@@ -707,7 +707,7 @@ If no rgb.txt file is found, return nil."
 ;; missing, the value of the variable will be nil, and rgb.txt will
 ;; not be used.
 (defvar htmlize-color-rgb-hash (htmlize-get-color-rgb-hash))
-
+ 
 ;;; Face handling.
 
 (defun htmlize-face-specifies-property (face prop)
@@ -1202,7 +1202,7 @@ property and by buffer overlays that specify `face'."
 	     ;; faces specified by text properties.
 	     (setq all-faces (nconc all-faces list)))
 	   all-faces))))
-
+ 
 ;; htmlize supports generating HTML in two several fundamentally
 ;; different ways, one with the use of CSS and nested <span> tags, and
 ;; the other with the use of the old <font> tags.  Rather than adding
@@ -1250,7 +1250,7 @@ it's called with the same value of KEY.  All other times, the cached
 	 (setq ,value ,generator)
 	 (setf (gethash ,key htmlize-memoization-table) ,value))
        ,value)))
-
+ 
 ;;; Default methods.
 
 (defun htmlize-default-doctype ()
@@ -1284,7 +1284,7 @@ it's called with the same value of KEY.  All other times, the cached
 (defun htmlize-default-body-tag (face-map)
   nil					; no doc-string
   "<body>")
-
+ 
 ;;; CSS based output support.
 
 ;; Internal function; not a method.
@@ -1360,7 +1360,7 @@ it's called with the same value of KEY.  All other times, the cached
   (dolist (fstruct fstruct-list)
     (ignore fstruct)			; shut up the byte-compiler
     (princ "</span>" buffer)))
-
+ 
 ;; `inline-css' output support.
 
 (defun htmlize-inline-css-body-tag (face-map)
@@ -1382,7 +1382,7 @@ it's called with the same value of KEY.  All other times, the cached
     (princ text buffer)
     (when style
       (princ "</span>" buffer))))
-
+ 
 ;;; `font' tag based output support.
 
 (defun htmlize-font-body-tag (face-map)
@@ -1414,7 +1414,7 @@ it's called with the same value of KEY.  All other times, the cached
     (princ (car markup) buffer)
     (princ text buffer)
     (princ (cdr markup) buffer)))
-
+ 
 (defun htmlize-buffer-1 ()
   ;; Internal function; don't call it from outside this file.  Htmlize
   ;; current buffer, writing the resulting HTML to a new buffer, and
@@ -1589,7 +1589,7 @@ it's called with the same value of KEY.  All other times, the cached
      ;; just saves it to an external cache so it's not done twice.
      )))
 
-
+ 
 ;;;###autoload
 (defun htmlize-buffer (&optional buffer)
   "Convert BUFFER to HTML, preserving colors and decorations.

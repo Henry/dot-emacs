@@ -15,11 +15,9 @@
 
 (require 'cl)
 
-(defvar lively-overlays nil "List of all overlays representing lively
-text.")
+(defvar lively-overlays nil "List of all overlays representing lively text.")
 (defvar lively-timer    nil "Idle timer for updating lively text.")
-(defvar lively-interval 0.25 "Idle time before lively text update in
-seconds.")
+(defvar lively-interval 0.25 "Idle time before lively text update in seconds.")
 
 (defun lively ()
   "Make the expression before point lively."
@@ -48,7 +46,7 @@ seconds.")
   (setq lively-overlays (remove o lively-overlays)))
 
 (defun lively-update-overlay (o)
-  "Update the text of O if it is both lively and visible."
+  "Evaluate the lively code for O and update its display text."
   (with-current-buffer (overlay-buffer o)
     (let ((expr (buffer-substring (overlay-start o) (overlay-end o))))
       (overlay-put o 'display (format "%s" (eval (read expr)))))))

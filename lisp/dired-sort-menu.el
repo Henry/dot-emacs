@@ -108,8 +108,8 @@
 (require 'easymenu)
 ;; Silence compiler:
 (eval-when-compile
-  ;(defvar ls-lisp-ignore-case)		; not in current standard version
-  ;(defvar ls-lisp-dirs-first)		; not in current standard version
+  (defvar ls-lisp-ignore-case)		; not in current standard version
+  (defvar ls-lisp-dirs-first)		; not in current standard version
   (require 'ange-ftp))
 
 (defun dired-sort-menu-remote-p ()
@@ -192,7 +192,7 @@ it if you change the remote host or ls program used by `dired'.
   "Return non-nil if dialogues should and can pop up in their own frames."
   (and dired-sort-dialogue-own-frame dired-sort-display-graphic-p))
 
-
+ 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun ls-lisp-var-p (var)
@@ -363,7 +363,7 @@ it if you change the remote host or ls program used by `dired'.
 ;; Mnemonic *T*oggle Current/Saved:
 (define-key dired-mode-map "T" 'dired-sort-menu-swap-config)
 
-
+ 
 
 (defun dired-sort-menu-switch-p (switch &optional r)
   "Return true if regexp SWITCH matches (case sensitive) ls switch string.
@@ -475,7 +475,7 @@ Does not affect other sort switches."
     (dired-sort-set-modeline)
     (dired-sort-menu-revert-buffer "R")))
 
-
+ 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Code to save and restore dired sort configurations.  This has a lot
@@ -588,7 +588,7 @@ saved and current configurations."
   (dired-sort-set-modeline)
   (revert-buffer))
 
-
+ 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Code to provide a customize-style dialogue-box that allows all sort
@@ -863,7 +863,7 @@ This command *must* be run in the Dired buffer!"
   (dired-sort-dialogue-apply)
   (dired-sort-dialogue-close))
 
-
+ 
 ;; Code to keep dialogue buffers tidy.
 
 (defadvice show-paren-function (around show-paren-function-advice activate)

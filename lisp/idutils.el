@@ -1,5 +1,5 @@
 ;;; idutils.el --- emacs interface to `lid -R grep', a.k.a. `gid'
-;;; Copyright (C) 1995, 1996, 2006, 2007 Free Software Foundation, Inc.
+;;; Copyright (C) 1995-1996, 2006-2010 Free Software Foundation, Inc.
 ;;; Greg McGary <gkm@gnu.ai.mit.edu>.
 
 ;; This file is part of GNU idutils.
@@ -24,7 +24,7 @@
 ;;; To install, merely put this file somewhere GNU Emacs will find it,
 ;;; then add the following lines to your .emacs file:
 ;;;
-;;;   (autoload 'gid "idutils")
+;;;   (autoload 'gid "idutils" "run idutils' gid command" t)
 ;;;
 ;;; You may also adjust some customizations variables, below, by defining
 ;;; them in your .emacs file.
@@ -51,7 +51,7 @@
 While gid runs asynchronously, you can use the \\[next-error] command to
 find the text that gid hits refer to. The command actually run is
 defined by the gid-command variable."
-  (interactive (list (read-input
+  (interactive (list (read-shell-command
      (concat "Run " gid-command " (with args): ") (thing-at-point 'symbol))))
   (let (compile-command
 	(compilation-error-regexp-alist grep-regexp-alist)

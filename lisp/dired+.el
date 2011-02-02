@@ -165,7 +165,7 @@
 ;;                              not flagged, files will be deleted.
 ;;  `dired-do-flagged-delete' - Display message to warn that flagged,
 ;;                              not marked, files will be deleted.
-;;  `dired-find-file'         - Allow `.' and `..' (Emacs 20 only).
+;;  `dired-find-file'         - Allow `.' and `..' (Emacs 20 only). 
 ;;  `dired-get-filename'      - Test `./' and `../' (like `.', `..').
 ;;  `dired-goto-file'         - Fix Emacs bug #7126.
 ;;                              Remove `/' from dir before compare.
@@ -184,7 +184,7 @@
 ;;  The following functions are included here with NO CHANGES to their
 ;;  definitions.  They are here only to take advantage of the new
 ;;  definition of macro `dired-map-over-marks':
-;;
+;;  
 ;;  `dired-do-redisplay', `dired-get-marked-files',
 ;;  `dired-map-over-marks-check',
 ;;  `image-dired-dired-insert-marked-thumbs' (from `image-dired.el').
@@ -302,7 +302,7 @@
 ;; 2009/10/13 dadams
 ;;     Added: direp(-do)-bookmark.  Added to Multiple menu, and bound to M-b.
 ;; 2009/10/11 dadams
-;;     diredp-menu-bar-immediate-menu:
+;;     diredp-menu-bar-immediate-menu: 
 ;;       Added items: image display items, dired-maybe-insert-subdir.
 ;;       Test dired-do-relsymlink, not diredp-relsymlink-this-file.
 ;;     diredp-menu-bar-operate-menu:
@@ -386,7 +386,7 @@
 ;;     Added: dired-display-msg.  Replace blue-foreground-face with it.
 ;;     Alias dired-do-toggle to dired-toggle-marks, if defined.
 ;; 2005/11/02 dadams
-;;     Added: dired-get-file-for-visit, dired(-mouse)-find-alternate-file*,
+;;     Added: dired-get-file-for-visit, dired(-mouse)-find-alternate-file*, 
 ;;            toggle-dired-find-file-reuse-dir, dired+-subst-find-*.
 ;;     Use defface for all faces.  Renamed without "-face".  No longer require def-face-const.
 ;;     dired-simultaneous-find-file: Minor bug fix (typo).
@@ -490,7 +490,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 
-
+ 
 ;;; Variables
 
 ;; `dired-do-toggle' was renamed to `dired-toggle-marks' after Emacs 20.
@@ -528,7 +528,7 @@ name and DESCRIPTION describes DRIVE."
 ;;; The default value is designed to recognize dates and times
 ;;; regardless of the language."))
 
-
+ 
 ;;; Macros
 
 
@@ -638,7 +638,7 @@ Argument ARG:
     (forward-line -1)
     fname))
 
-
+ 
 ;;; UNALTERED vanilla Emacs code to be reloaded, to use the new definition
 ;;; of `dired-map-over-marks'.  Unless otherwise noted, these are from the Emacs 23+ libraries.
 ;;; These definitions should be IDENTICAL to what's in vanilla Emacs.
@@ -889,7 +889,7 @@ If HDR is non-nil, insert a header line with the directory name."
      nil)
     (add-hook 'dired-after-readin-hook 'image-dired-dired-after-readin-hook nil t)))
 
-
+ 
 ;;; Key Bindings.
 
 
@@ -1412,7 +1412,7 @@ If HDR is non-nil, insert a header line with the directory name."
 (define-key dired-mode-map "\r" 'dired-find-file)
 (when (fboundp 'mkhtml-dired-files)
   (define-key dired-mode-map [?\M-h] 'mkhtml-dired-files))
-;(define-key dired-mode-map [?\M-u] 'diredp-upcase-this-file)
+(define-key dired-mode-map [?\M-u] 'diredp-upcase-this-file)
 (define-key dired-mode-map [?\M-l] 'diredp-downcase-this-file)
 (define-key dired-mode-map [?\M-c] 'diredp-capitalize-this-file)
 (define-key dired-mode-map [?\M-m] 'diredp-chmod-this-file)
@@ -1459,11 +1459,11 @@ Don't forget to mention your Emacs and library versions."))
   :link '(emacs-commentary-link :tag "Commentary" "dired+")
   )
 
-
+ 
 ;;; Face Definitions
 
 ;;; Miscellaneous faces.
-(defface diredp-display-msg
+(defface diredp-display-msg 
 '((t (:foreground "Blue")))
   "*Face used for message display."
   :group 'Dired-Plus)
@@ -1672,7 +1672,7 @@ In particular, inode number, number of hard links, and file size."
             (set (make-local-variable 'font-lock-defaults)
              (cons '(dired-font-lock-keywords diredp-font-lock-keywords-1) ; Two levels.
               (cdr font-lock-defaults)))))
-
+ 
 ;;; Function Definitions
 
 ;;;###autoload
@@ -1849,8 +1849,8 @@ Read names of Dired buffers to include, and then the new, Dired-union
                                          (expand-file-name file)
                                        file))
                                    files))))))
-
-
+  
+         
 
 ;;; `diredp-marked(-other-window)' tries to treat SWITCHES, but SWITCHES seems to be ignored
 ;;; by `dired' when the DIRNAME arg is a cons, at least on MS Windows.  I filed Emacs bug #952
@@ -2151,17 +2151,17 @@ As a side effect, killed dired buffers for DIR are removed from
     "`find-file', but use file on current line as default (`M-n')."
     (interactive (diredp-find-a-file-read-args "Find file: " nil))
     (find-file filename wildcards))
-
+  
   (defun diredp-find-a-file-other-frame (filename &optional wildcards)
     "`find-file-other-frame', but use file under cursor as default (`M-n')."
     (interactive (diredp-find-a-file-read-args "Find file: " nil))
     (find-file-other-frame filename wildcards))
-
+  
   (defun diredp-find-a-file-other-window (filename &optional wildcards)
     "`find-file-other-window', but use file under cursor as default (`M-n')."
     (interactive (diredp-find-a-file-read-args "Find file: " nil))
     (find-file-other-window filename wildcards))
-
+  
   (defun diredp-find-a-file-read-args (prompt mustmatch)
     (list (let ((find-file-default  (abbreviate-file-name (dired-get-file-for-visit))))
             (minibuffer-with-setup-hook
@@ -2424,7 +2424,7 @@ choice described for `diredp-do-grep'."
 (defun diredp-w32-list-mapped-drives ()
   "List network connection information for shared MS Windows resources.
 This just invokes the Windows `NET USE' command."
-  (interactive)
+  (interactive) 
   (unless (eq system-type 'windows-nt)
     (error "This command is only for use on MS Windows"))
   (shell-command "net use"))

@@ -192,7 +192,7 @@ i.e. the headings under the single top-level heading."
 ;;   Allows copying HTML into org, transforming links.
 ;;   Default key binding: M-w
 
-(eval-after-load "w3m" '(load "manatee"))
+(eval-after-load "w3m" '(load "org-w3m"))
 
 ;; -----------------------------------------------------------------------------
 ;;; LaTeX export

@@ -2,7 +2,8 @@
 ;; $Id: oddmuse.el,v 2.3 2008/04/21 06:06:08 rubikitch Exp $
 
 ;; Copyright (C) 2006  Alex Schroeder
-;;           (C) 2007  rubikitch <rubikitch@ruby-lang.org>
+;;           (C) 2007, 2008, 2009  rubikitch <rubikitch@ruby-lang.org>
+;;           (C) 2009  Xavier Maillard <xma@gnu.org>
 
 ;; Latest version: http://www.emacswiki.org/cgi-bin/wiki/download/oddmuse.el
 ;; Discussion, feedback: http://www.emacswiki.org/cgi-bin/wiki/OddmuseMode
@@ -29,7 +30,7 @@
 ;; Since text formatting rules depend on the wiki you're writing for,
 ;; the font-locking can only be an approximation.
 
-;; Put this file in a directory on your `load-path' and 
+;; Put this file in a directory on your `load-path' and
 ;; add this to your init file:
 ;; (require 'oddmuse)
 ;; (setq url-proxy-services '(("http" . "your.proxy.host:portnumber")) ; if needed
@@ -165,6 +166,18 @@ This can be changed for each edition using `oddmuse-toggle-minor'."
  :type '(boolean)
  :group 'oddmuse)
 
+(defvar oddmuse-not-exist-text "^This page does not exist"
+  "Text to search for in a new wiki page.")
+
+(defvar oddmuse-new-page-warn
+  "Page %s does not exist (yet) on %s wiki."
+  "*Message displayed in a new Oddmuse buffer when page does not exist.")
+
+(defvar oddmuse-warn-on-new-page t
+  "*When non-nil, user will be warned when creating a non existent page.
+Message `oddmuse-new-page-warn' will be displayed in the new page buffer
+and user will have to confirm this is correct when posting onto the wiki.")
+
 (defvar oddmuse-get
   "action=browse;raw=1;id=%t"
   "Command to use for publishing pages.
@@ -197,6 +210,7 @@ Must match a key from `oddmuse-wikis'.")
 
 (defvar oddmuse-page-name nil
   "Pagename of the current buffer.")
+(make-variable-buffer-local 'oddmuse-page-name)
 
 (defvar oddmuse-pages-hash (make-hash-table :test 'equal)
   "The wiki-name / pages pairs.")
@@ -216,6 +230,16 @@ Must match a key from `oddmuse-wikis'.")
 
 (defvar oddmuse-minor nil
   "Is this editing a minor change ?")
+
+(defvar oddmuse-new-page-p nil
+  "Non-nil means new page edition.
+When non-nil and `oddmuse-warn-on-new-page' is t, ask user confirmation before posting.")
+(make-variable-buffer-local 'oddmuse-new-page-p)
+
+(defface oddmuse-new-page-face
+  '((((type x)) (:background "DarkRed"))
+    (t (:bold t :inverse-video t)))
+  "Face")
 
 (defun oddmuse-mode-initialize ()
   (add-to-list 'auto-mode-alist
@@ -272,6 +296,8 @@ Customize `oddmuse-wikis' to add more wikis to the list.
 (define-key oddmuse-mode-map (kbd "C-c C-m") 'oddmuse-toggle-minor)
 (define-key oddmuse-mode-map (kbd "C-c C-c") 'oddmuse-post)
 (define-key oddmuse-mode-map (kbd "C-x C-v") 'oddmuse-revert)
+(define-key oddmuse-mode-map (kbd "C-c C-r") 'oddmuse-redirect)
+(define-key oddmuse-mode-map (kbd "C-c C-d") 'oddmuse-delete)
 (define-key oddmuse-mode-map (kbd "C-c C-f") 'oddmuse-edit)
 (define-key oddmuse-mode-map (kbd "C-c C-i") 'oddmuse-insert-pagename)
 
@@ -376,7 +402,20 @@ Use a prefix argument to force a reload of the page."
         (set-buffer buf)
         (unless (equal name (buffer-name)) (rename-buffer name))
         (erase-buffer)
+
         (oddmuse-retrieve url "GET" buf coding)
+
+        ;; WARN user it is a new page
+        (if oddmuse-warn-on-new-page
+            (when (looking-at (regexp-quote oddmuse-not-exist-text))
+              (let ((overlay (make-overlay 1 1 nil t nil)))
+                (erase-buffer)
+                (overlay-put overlay 'before-string
+                             (propertize
+                              (format oddmuse-new-page-warn pagename wiki)
+                              'face 'oddmuse-new-page-face))
+                (setq oddmuse-new-page-p t))))
+
         (set-buffer-modified-p nil)
         (pop-to-buffer buf)))
     (oddmuse-mode)))
@@ -499,6 +538,31 @@ This command is used to reflect new pages to `oddmuse-pages-hash'."
   (insert pagename))
 
 ;;;###autoload
+(defun oddmuse-redirect (pagename)
+  "Insert a #REDIRECT directive to `pagename' for current `oddmuse-page-name'."
+  (interactive (list (oddmuse-read-pagename oddmuse-wiki)))
+  (unless oddmuse-page-name
+    (error "Not in a valid oddmuse-page-name buffer."))
+  (erase-buffer)
+  (insert "#REDIRECT [[" pagename "]]")
+  (oddmuse-post (concat "Redirect to " pagename)))
+
+;;;###autoload
+(defun oddmuse-delete (summary)
+  "Add a page name to the DeletedPage stack.
+User will be asked to confirm it is correct."
+  (interactive "sSummary: ")
+  (unless oddmuse-page-name
+    (let*  ((wiki-and-page (oddmuse-read-wiki-and-pagename))
+            (wiki (car wiki-and-page))
+            (pagename (cadr wiki-and-page)))
+      (oddmuse-edit wiki pagename)))
+  (erase-buffer)
+  (insert "DeletedPage")
+  (setq oddmuse-dangerous-p t)
+  (oddmuse-post (concat "DeletedPage - reason: " summary)))
+
+;;;###autoload
 (defun emacswiki-post (&optional pagename summary)
   "Post the current buffer to the EmacsWiki.
 If this command is invoked interactively: with prefix argument, prompts pagename,
@@ -547,5 +611,5 @@ PAGENAME is the pagename of the page you want to browse."
 (provide 'oddmuse)
 
 ;; How to save (DO NOT REMOVE!!)
-;; (emacswiki-post "oddmuse.el")
+;; (emacswiki-post "oddmuse.el" "oddmuse-redirect, oddmuse-delete, naive new page detection")
 ;;; oddmuse.el ends here

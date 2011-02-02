@@ -46,9 +46,9 @@
 ;;        #endif
 ;;        #endif
 ;;        #endif
-
+          
 ;; After "M-x ppindent-c" becomes:
-
+          
 ;;        #ifdef WOO
 ;;        ....
 ;;        #  if defined(X) && !defined(Y)
@@ -75,8 +75,6 @@
 ;; 2007-01-19 WCM Initial version
 
 ;;; Code:
-
-(eval-when-compile (require 'cl))
 
 (provide 'ppindent)
 
