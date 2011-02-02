@@ -1,9 +1,149 @@
 #                            -*- mode: org; -*-
-#+TITLE:     *My emacs extensions, configuration and image dump scripts*
+#+TITLE:     *Emacs packages, extensions, configuration and image dump scripts*
 #+AUTHOR: Henry Weller
 #+EMAIL: no-reply
 #+OPTIONS: author:nil email:nil ^:{}
 
-Many of the code snippets and ideas collated here were obtained originally from
-the [[http://www.emacswiki.org][EmacsWiki]] and I am indebted to all those who contribute to this excellent
-resource.
+This is the contents of my /.emacs.d/ directory.  Many of the code snippets and
+ideas collated here were obtained originally from the [[http://www.emacswiki.org][EmacsWiki]] and I am
+indebted to all those who contribute to this excellent resource.
+
+* Emacs Version
+  + For GNU Emacs 23.2.1
+  + May work with GNU Emacs 23.1 but not earlier versions.
+  + Untested with GNU Emacs 24 but will be upgraded as soon as this version is
+    released.
+
+* My Packages (in /my-lisp/ directory)
+*** anything-config-ext
+*** completion-selection
+*** completion-ui-more-sources
+*** eulisp-mode
+*** inf-eulisp
+*** org-pua
+*** thingatpt-ext
+*** tooltip-help (taken over from Tamas Patrovics)
+*** wn-org
+
+* Other Packages without permanent home (in /my-lisp/ directory)
+*** em-last
+*** file-journal (This is already on GitHub)
+*** git-grep
+*** rw-acronyms
+
+* Major Packages (in the /packages/ directory)
+*** anything-config
+*** apel
+*** auctex
+*** auctex-11.86
+*** babel
+*** bbdb
+*** bin
+*** cl-lookup
+*** completion-ui
+*** doremi
+*** ebib
+*** ecb
+*** ectags
+*** emms
+*** emsane
+*** flim
+*** gnuplot
+*** icicles
+*** imaxima
+*** ioccur
+*** latexrefman
+*** magit
+*** mo-git-blame
+*** org-mode
+*** save
+*** semi
+*** slime
+*** undo-tree
+*** w3m
+*** wanderlust
+*** wget
+*** yasnippet
+
+* Minor Packages (in the lisp directory)
+*** accelerate
+*** autoinfo
+*** babel
+*** bm
+*** boxquote
+*** browse-kill-ring
+*** browse-kill-ring+
+*** cdlatex
+*** cldoc
+*** color-grep
+*** color-moccur
+*** color-occur
+*** completing-help
+*** constants
+*** dired-details
+*** dired-details+
+*** dired+
+*** dired-explore
+*** dired-sort-menu
+*** dired-sort-menu+
+*** dired-tar
+*** ediff-trees
+*** eiv
+*** esh-toggle
+*** etags-select
+*** etags-table
+*** filladapt
+*** finder+
+*** find-recursive
+*** fsdired
+*** goto-chg
+*** grep-edit
+*** gtags
+*** header2
+*** highlight-parentheses
+*** hl-sexp
+*** htmlize
+*** htmlr
+*** idutils
+*** iedit
+*** igrep
+*** igrep-next-error
+*** iman
+*** info+
+*** isearch-all
+*** isearch+
+*** iterator
+*** lively
+*** markdown-mode
+*** mcomplete
+*** mcomplete-history
+*** mediawiki
+*** menu-bar+
+*** mgrep
+*** moccur-edit
+*** multi-eshell
+*** multi-shell
+*** multi-term
+*** no-word
+*** oddmuse
+*** openwith
+*** oprofile-mode
+*** org-fstree
+*** outline-magic
+*** paredit
+*** pos-tip
+*** ppindent
+*** rect-mark
+*** replace+
+*** sequential-command-config
+*** sequential-command
+*** sr-speedbar
+*** stumpwm-mode
+*** synonyms
+*** traverselisp
+*** w3m-session
+*** whole-line-or-region
+*** window-number
+*** xgtags
+*** xgtags-extension
+*** yaoddmuse
