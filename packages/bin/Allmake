@@ -9,7 +9,6 @@
 (cd doremi && make)
 (cd ebib/src && make)
 (cd ecb && make)
-(cd ectags && make)
 (cd emms && make)
 #(cd emsane && make)
 (cd flim && make)

@@ -26,6 +26,7 @@ indebted to all those who contribute to this excellent resource.
 *** wn-org
 
 * Other Packages without permanent home (in /my-lisp/ directory)
+*** ectags
 *** em-last
 *** file-journal (This is already on GitHub)
 *** git-grep
@@ -44,7 +45,6 @@ indebted to all those who contribute to this excellent resource.
 *** doremi
 *** ebib
 *** ecb
-*** ectags
 *** emms
 *** emsane
 *** flim

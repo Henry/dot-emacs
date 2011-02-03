@@ -1,4 +1,4 @@
-;;; ectags-select.el --- Select from multiple tags
+;;; ectags.el --- Select from multiple exuberant-ctags
 
 ;; Copyright (C) 2007  Scott Frazer and (C) 2008 John Connors
 
@@ -25,89 +25,38 @@
 
 ;;; Commentary:
 
-
-;; Reworking of etags-select to work with exuberant-ctags and eldoc.
-;; ectags-tag-directory will generate a tag file in the current directory
-;; with the specified language using exuberant-ctags extended tag format
-;; which contains useful information about the current tag such as
-;; the signature, it's parent class, which class it is a member of. Eldoc
-;; displays this information. At present it does not do a very good job
-;; of finding the best candidate tag in an OO language where there may
-;; be multiple tags with the same name. It tries, however. The tag file
-;; needs to be in a specific format, hence the ectags-tag-directory-command.
-;; ectags-visit-tags-table is used to load in a tag table.
+;; Reworking of etags-select to work with exuberant-ctags.  ectags-tag-directory
+;; will generate a tag file in the current directory with the specified language
+;; using exuberant-ctags extended tag format which contains useful information
+;; about the current tag such as the signature, it's parent class, which class
+;; it is a member of.  The tag file needs to be in a specific format, hence the
+;; ectags-tag-directory-command.  ectags-visit-tags-table is used to load in a
+;; tag table.
 
 ;; Open a buffer with file/lines of exact-match tags shown.  Select one by
 ;; going to a line and pressing return.  pop-tag-mark still works with this
 ;; code.
-;;
-;;
-;; An up to date version of this code lives on repo.or.cz
-;; at git://repo.or.cz/ectags.git
+
+;;; TODO
+
+;; TODO : do sthing about ginormous tag files
+;; TODO : .. use abbreviated info
+;; TODO : .. use gzipped tag files
+;; TODO : use search for locating tag rather than line #
+;; TODO : Additional highlighting for select buffer
+;; TODO : include line matched when searching for references
 
 ;;; Code:
 
-;
-;; TO DO : tag completion DONE
-;; TO DO : tags search DONE
-;; TO DO : eldoc integration DONE
-;; TO DO : more than one lang per dir DONE
-;; TO DO : compile window for ectags DONE
-;; TO DO : do sthing about ginormous tag files
-;; TO DO : .. use abbreviated info
-;; TO DO : .. use gzipped tag files
-;; TO DO : use search for locating tag rather than line #
-;; TO DO : some kind of higlighting for select buffer WHY DOESN'T IT WORK!?
-;; TO DO : include line matched when searching for references
-;; TO DO : investigate CEDET to see if it can guide eldoc to a better
-;;        match for the  tag under the cursor
-
-(require 'cl)
-(require 'custom)
-(require 'easymenu)
-
-;; Asm      *.asm *.ASM *.s *.S *.A51 *.29[kK] *.[68][68][kKsSxX] *.[xX][68][68]
-;; Asp      *.asp *.asa
-;; Awk      *.awk *.gawk *.mawk
-;; BETA     *.bet
-;; C        *.c
-;; C++      *.c++ *.cc *.cp *.cpp *.cxx *.h *.h++ *.hh *.hp *.hpp *.hxx *.C *.H
-;; C#       *.cs
-;; Cobol    *.cbl *.cob *.CBL *.COB
-;; Eiffel   *.e
-;; Erlang   *.erl *.ERL *.hrl *.HRL
-;; Fortran  *.f *.for *.ftn *.f77 *.f90 *.f95 *.F *.FOR *.FTN *.F77 *.F90 *.F95
-;; HTML     *.htm *.html
-;; Java     *.java
-;; JavaScript *.js
-;; Lisp     *.cl *.clisp *.el *.l *.lisp *.lsp *.ml
-;; Lua      *.lua
-;; Make     *.mak *.mk [Mm]akefile
-;; Pascal   *.p *.pas
-;; Perl     *.pl *.pm *.plx *.perl
-;; PHP      *.php *.php3 *.phtml
-;; Python   *.py *.python
-;; REXX     *.cmd *.rexx *.rx
-;; Ruby     *.rb *.ruby
-;; Scheme   *.SCM *.SM *.sch *.scheme *.scm *.sm
-;; Sh       *.sh *.SH *.bsh *.bash *.ksh *.zsh
-;; SLang    *.sl
-;; SML      *.sml *.sig
-;; SQL      *.sql
-;; Tcl      *.tcl *.tk *.wish *.itcl
-;; Vera     *.vr *.vri *.vrh
-;; Verilog  *.v
-;; Vim      *.vim
-;; YACC     *.y
+(eval-when-compile (require 'cl))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Custom stuff
 
-
 ;;;###autoload
 (defgroup ectags nil
   "Exuberant Ctags Support for Emacs"
-  :version "22.1.1"
+  :version "23"
   :group 'tools)
 
 ;;;###autoload
@@ -127,7 +76,8 @@
   '(( "asp"    .  ( "*.asp" "*.asa" ))
     ( "awk"    .  ( "*.awk" "*.gawk" "*.mawk"))
     ( "c"      .  ( "*.c" "*.h" ))
-    ( "c++"    .  ( "*.c++" "*.cc" "*.cp" "*.cpp"  "*.cxx" "*.h" "*.h++" "*.hh" "*.hp" "*.hpp" "*.hxx" "*.c"  "*.C" "*.h" "*.H"))
+    ( "c++"    .  ( "*.c++" "*.cc" "*.cp" "*.cpp"  "*.cxx" "*.h" "*.h++" "*.hh"
+                    "*.hp" "*.hpp" "*.hxx" "*.c" "*.C" "*.h" "*.H"))
     ( "c#"     .  ( "*.cs" ))
     ( "java"   .  ( "*.java " ))
     ( "lisp"   .  (  "*.cl" "*.clisp" "*.el" "*.l" "*.lisp" "*.lsp" "*.ml"))
@@ -153,66 +103,84 @@
   :type 'alist
   :group 'ectags)
 
-
 ;;;###autoload
 (defcustom ectags-select-mode-hook nil
   "*List of functions to call on entry to ectags-select-mode mode."
   :group 'ectags
   :type 'hook)
 
+;;;###autoload
+(defcustom ectags-window-split-function 'split-window-vertically
+  "*Function to call to split the window when displaying tags."
+  :group 'ectags
+  :type 'symbol)
+
+;;;###autoload
+(defcustom ectags-select-highlight-tag-after-jump t
+  "*If non-nil, temporarily highlight the tag after you jump to it."
+  :group 'ectags-select-mode
+  :type 'boolean)
+
+;;;###autoload
+(defcustom ectags-select-highlight-delay 1.0
+  "*How long to highlight the tag."
+  :group 'ectags-select-mode
+  :type 'number)
+
+;;;###autoload
+(defface ectags-select-highlight-tag-face
+  '((t (:foreground "white" :background "cadetblue4" :bold t)))
+  "Font Lock mode face used to highlight tags."
+  :group 'ectags-select-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Variables
 
-(defvar *ectags-matches* nil
+(defvar ectags-matches nil
   "List of candiate tag matches")
 
-(defvar *ectags-regexp* nil
+(defvar ectags-regexp nil
   "Holds regexp currently being sought in tags")
 
-(defvar *ectags-max-candidates* 7
+(defvar ectags-max-candidates 7
   "How many candidates to select between")
 
-(defvar *ectags-case-sensitive* t
+(defvar ectags-case-sensitive t
   "Is the tag matching case sensitive?")
 
-(defvar *ectags-autopop-tag* t
-  "If non-nil, automatically pop the tag off the tag stack when jumped to")
-
-(defvar *ectags-tag-stack* nil
-  "Stack of tag positions for browsing.")
-
-(defvar *ectags-obarray* nil
+(defvar ectags-obarray nil
   "Obarray used for ectags completions.")
 
-(defvar *ectags-select-buffer-name* "*ectags-select*"
+(defvar ectags-select-buffer-name "*ectags-select*"
   "ectags-select buffer name.")
 
-(defvar *ectags-reference-buffer-name* "*ectag References*"
+(defvar ectags-reference-buffer-name "*ectag References*"
   "ectags-reference buffer-name")
-
 
 (defvar ectags-select-mode-font-lock-keywords nil
   "ectags-select font-lock-keywords.")
 
-(defvar *ectags-select-source-buffer* nil
+(defvar ectags-select-source-buffer nil
   "ectags-select source buffer tag was found from.")
 
-(defvar *ectags-reference-source-buffer* nil
+(defvar ectags-reference-source-buffer nil
   "ectags-reference source buffer tag was found from.")
 
-(defvar *ectags-select-opened-window* nil
+(defvar ectags-select-opened-window nil
   "ectags-select opened a select window.")
 
-(defvar *ectags-reference-opened-window* nil
+(defvar ectags-reference-opened-window nil
   "ectags-referecnce opened a reference window.")
 
-
-(defvar *ectags-scan-marks* nil
+(defvar ectags-scan-marks nil
   "Holds markers where matches found.")
 
-(defconst ectags-select-non-tag-regexp "\\(\\s-*$\\|In:\\|Finding tag:\\)"
-  "ectags-select non-tag regex.")
+(defvar ectags-current-overlay nil
+  "Currently displayed tag highlight overlay.")
+(make-variable-buffer-local 'ectags-current-overlay)
 
+(defconst ectags-select-non-tag-regexp "\\(^ \\|In:\\|Finding tag:\\)"
+  "ectags-select non-tag regex.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Functions
@@ -237,37 +205,49 @@
   "Applies `ectags-right-trim' and `ectags-left-trim' to STR."
   (ectags-left-trim (ectags-right-trim str)))
 
-(defun ectags-full-trim (str)
-  "Applies `ectags-trim' and `ectags-middle-trim' to STR."
-  (ectags-excessive-trim (ectags-trim str)))
+(defun insert-with-face (face string)
+  "Insert STRING with face FACE."
+  (let ((pt (point)))
+    (insert string)
+    (put-text-property pt (point) 'face face)))
 
-;; creating tag files  ------------------------------------------------------------------------------------
+(defun insert-with-faces (&rest args)
+  "Insert ARGS with optional faces provided as the previous argument."
+  (while args
+    (if (facep (car args))
+        (insert-with-face (pop args) (pop args))
+      (insert (pop args)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Creating tag files
 
-(defun make-suffix-clauses (languages)
+(defun ectags-make-suffix-clauses (languages)
   (mapcar (lambda (l)
             (mapcar (lambda (s)
                       (concat  " -iname \"" s "\""))
                     (cdr (assoc-string l ectags-language-file-suffix-alist))))
           (split-string languages)))
 
-(defun make-shell-command-prefix (directory)
+(defun ectags-make-shell-command-prefix (directory)
   (concat "find " (expand-file-name directory)))
 
-(defun make-tag-file-name (directory)
-  (expand-file-name (concat directory (string directory-sep-char) "tags")))
+(defun ectags-make-tag-file-name (directory)
+  (expand-file-name (concat directory "/tags")))
 
 (defun ectag-directory-command (directory languages)
   "Produce a command needed to scan the given directory for files
    of the given language and produce tags"
   (let*
       ((suffix-clauses
-        (car (make-suffix-clauses languages)))
+        (car (ectags-make-suffix-clauses languages)))
        (shell-command-prefix
-        (make-shell-command-prefix directory))
+        (ectags-make-shell-command-prefix directory))
        (shell-command-suffix
-        (concat " | " ectags-command " -o "  (make-tag-file-name directory) " --options="
-                (expand-file-name ectags-config-file) " --verbose --excmd=n --extra=+fq --fields=+afiKlmnsSzt --file-scope=no -L -")))
+        (concat " | " ectags-command
+                " -o "  (ectags-make-tag-file-name directory)
+                " --options=" (expand-file-name ectags-config-file)
+                " --verbose --excmd=n --extra=+fq --fields=+afiKlmnsSzt"
+                " --file-scope=no -L -")))
     (concat shell-command-prefix
             (car suffix-clauses)
             (apply 'concat
@@ -276,8 +256,6 @@
                            (cdr suffix-clauses)))
             shell-command-suffix)))
 
-
-
 ;;;###autoload
 (defun ectags-tag-directory ()
   "Prompt for a directory and a langage and create a tag file."
@@ -285,32 +263,36 @@
   ;; prompt for directory
   (let ((tag-directory
          (read-directory-name "Directory to tag? " default-directory))
-        (tag-languages (completing-read "Languages to tag? " ectags-language-file-suffix-alist nil nil)))
-    (add-to-list 'compilation-error-regexp-alist
-		 '("^\\([^:]+\\) confusing argument declarations beginning at line \\([0-9]+\\))" 1 2))
+        (tag-languages
+         (completing-read "Languages to tag? "
+                          ectags-language-file-suffix-alist nil nil)))
+    (add-to-list
+     'compilation-error-regexp-alist
+     '("^\\([^:]+\\) confusing argument declarations beginning at line \\([0-9]+\\))" 1 2))
     (compile (ectag-directory-command tag-directory tag-languages) t)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Building tag completion obarray
 
-;; building tag completion obarray --------------------------------------------------
-
-(defun extract-ectags (&optional tag-buffer obarray)
-  "Extract a list of tags from a buffer"
+(defun ectags-extract-tags (&optional tag-buffer obarray)
+  "Extract the list of tags from the TAG-BUFFER if provided otherwise the
+current buffer.
+Add the tags to OBARRAY if provided otherwise to a new obarray and return it."
   (save-excursion
     (when tag-buffer
       (set-buffer tag-buffer))
     (goto-char (point-min))
     (forward-line 5)
-    ;; now point is at first tag
+    ;; Now point is at first tag,
+    ;; Read the tags as the first word of each line
     (while (/= (point) (point-max))
       (forward-line)
-      (beginning-of-line)
-      (let* ((start (point-marker))
-             (end (progn (forward-word) (point-marker))))
-        (intern-soft (buffer-substring-no-properties start end) obarray)
-      (end-of-line))))
+      (intern
+       (buffer-substring-no-properties (point) (progn (forward-word) (point)))
+       obarray)))
   obarray)
 
-(defun extract-ectags-files (&optional tag-buffer)
+(defun ectags-extract-files (&optional tag-buffer)
   "Extract a list of tags from a tag-buffer"
   (let ((result nil))
     (save-excursion
@@ -330,19 +312,18 @@
                         (point-marker))))
             (add-to-list 'result (buffer-substring-no-properties start end)))
           (end-of-line))))
-      result))
+    result))
 
+(defun ectags-make-obarray ()
+  (let ((result (make-vector 511 0)))
+    (mapc (lambda (b)
+            (when (bufferp b)
+              (save-excursion
+                (ectags-extract-tags b result))))
+          (ectags-table-list))
+    (setq ectags-obarray result)))
 
-(defun make-ectags-obarray ()
-  (let ((result (make-vector 65535 0)))
-    (mapcar (lambda (b)
-              (when (bufferp b)
-                (save-excursion
-                  (extract-ectags b result))))
-              (ectags-table-list))
-    (setq *ectags-obarray* result)))
-
-(defun flatten-file-list (l)
+(defun ectags-flatten-file-list (l)
   (let (result stack)
     (while (or stack l)
       (if l
@@ -356,14 +337,15 @@
               stack (cdr stack))))
     result))
 
-(defun make-ectags-file-list ()
+(defun ectags-make-tags-file-list ()
   "Create a list of all files in the tags"
   (let ((result nil))
     (setq result
-           (mapcar (lambda (b) (extract-ectags-files b)) (ectags-table-list)))
-    (flatten-file-list result)))
+          (mapcar (lambda (b) (ectags-extract-files b)) (ectags-table-list)))
+    (ectags-flatten-file-list result)))
 
-;; tags table mode ------------------------------------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Tags table mode
 
 (defun ectags-table-list ()
   "Return a list of available tag tables."
@@ -373,9 +355,8 @@
         (push buffer tags-table-list)))
     tags-table-list))
 
-
 (defvar ectags-table-mode-syntax-table
-  (let ((ectags-syntax-table (copy-syntax-table text-mode-syntax-table)))
+  (let ((ectags-syntax-table (make-syntax-table text-mode-syntax-table)))
     (modify-syntax-entry ?_ "w" ectags-syntax-table)
     (modify-syntax-entry ?- "w" ectags-syntax-table)
     (modify-syntax-entry ?# "w" ectags-syntax-table)
@@ -403,6 +384,8 @@
     ectags-syntax-table)
   "Punctuation free table")
 
+(defvar is-ectag-table nil
+  "ectag-table predicate.")
 
 ;;;###autoload
 (defun ectags-table-mode ()
@@ -414,21 +397,20 @@
   (setq mode-name "ECTags Tags Table")
   (set (make-local-variable 'is-ectag-table) t))
 
-
-
-;; removing tags tables ------------------------------------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Removing tags tables
 
 (defun ectags-wipe-tag-tables ()
   "Wipe out all ectags tables"
   (interactive)
-  (mapcar
+  (mapc
    (lambda (x)
      (when (bufferp x) (progn (bury-buffer x) (kill-buffer x))))
    (ectags-table-list))
-  (setq *ectags-obarray* nil))
+  (setq ectags-obarray nil))
 
-;; -- adding tags tables ---------------------------------------------------------------------------------
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Adding tags tables
 
 ;; Expand tags table name FILE into a complete file name.
 (defun ectags-expand-table-name (file)
@@ -437,7 +419,7 @@
       (expand-file-name "tags" file)
     file))
 
-;; Return non-nil iff the current buffer is a valid etags TAGS file.
+;; Return non-nil iff the current buffer is a valid ectags TAGS file.
 (defun ectags-verify-tags-table ()
   "Is current buffer actually an ectags table."
   ;; Use eq instead of = in case char-after returns nil.
@@ -465,28 +447,27 @@
   "Visit an exuberant ctags file and add it to the current list of tags tables."
   (interactive
    (list (read-file-name "Visit tags table (default tags): "
-				     default-directory
-				     (expand-file-name "tags"
-						       default-directory)
-				     t)))
+                         default-directory
+                         (expand-file-name "tags"
+                                           default-directory)
+                         t)))
   (let ((curbuf (current-buffer))
         (local-tags-filename (ectags-expand-table-name name)))
     (if (ectags-verify-table local-tags-filename)
         ;; We have a valid tags table.
         (progn (message "Valid tags table")
-               (setq *ectags-obarray* (make-ectags-obarray)))
+               (setq ectags-obarray (ectags-make-obarray)))
       ;; The buffer was not valid.  Don't use it again.
       (progn (error "Not a valid tags table")))))
 
-
-;; -- saving and reloading sets of tag tables ------------------------------------------------
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Saving and reloading sets of tag tables
 
 (defun ectags-output (tag-buffer)
   "Output a line needed to restore this table to the tags buffer list"
   (insert "(add-working-ectags-table " (buffer-file-name tag-buffer) ")\n"))
 
-(defun save-working-ectags-tables (fname)
+(defun ectags-save-working-tables (fname)
   "Save the current working list of ectags tables in a file"
   (interactive "fFile to save tags tables in?:")
   (save-excursion
@@ -498,15 +479,15 @@
        (dolist (tagbuff (ectags-table-list))
          (ectags-output tagbuff))
        "\;;")
-      (write-region (point min) (point-max) fname nil 'nomessage))))
+      (write-region (point-min) (point-max) fname nil 'nomessage))))
 
-(defun read-working-ectags-tables (fname)
+(defun ectags-read-working-tables (fname)
   "Read the current working list of ectags tables in a file"
   (interactive "fFile to read tags tables from?:")
   (load fname))
 
-
-;; actually finding tags and so forth ------------------------------------------------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Actually finding tags and so forth
 
 (defun ectags-match-tagname (tag-match)
   (nth 1 tag-match))
@@ -520,21 +501,18 @@
 (defun ectags-match-tag-info (tag-match)
   (nth 4 tag-match))
 
-(defun ectags-fname (tag-match))
-
-
-(defun match-ectags (tag fname lnumber info)
+(defun ectags-match-tags (tag fname lnumber info)
   "Given a tags match, rank it (via regexp match length) and
 plonk it in the match candidates."
   (let*
       ((saved-fold-search case-fold-search)
-       (case-fold-search (not *ectags-case-sensitive*))
-       (match-rank (string-match *ectags-regexp* tag)))
+       (case-fold-search (not ectags-case-sensitive))
+       (match-rank (string-match ectags-regexp tag)))
     (when match-rank
       (let
-         ((full-match-rank (- (length tag) (length *ectags-regexp*))))
-;;        (message (format "Found %s ranking %d " tag full-match-rank))
-        (add-to-list '*ectags-matches*
+          ((full-match-rank (- (length tag) (length ectags-regexp))))
+        ;;        (message (format "Found %s ranking %d " tag full-match-rank))
+        (add-to-list 'ectags-matches
                      (list
                       full-match-rank
                       tag
@@ -543,72 +521,49 @@ plonk it in the match candidates."
                       (ectags-trim info)))))
     (setq case-fold-search saved-fold-search)))
 
-(defun scan-ectag (fn tag-buffer)
+(defun ectags-scan-tag (fn tag-buffer)
   "Scan a tag table buffer for a match with a tag. Applies fn to all matches."
   (save-excursion
     (set-buffer tag-buffer)
     (goto-char (point-min))
-    (while (re-search-forward (format "^\\([^	]*%s[^	]*\\)	\\([^	]+\\)	\\([0-9]+\\);\"\\(.+\\)$" *ectags-regexp*)  nil t)
+    (while (re-search-forward
+            (format "^\\([^	]*%s[^	]*\\)	\\([^	]+\\)	\\([0-9]+\\);\"\\(.+\\)$"
+                    ectags-regexp)  nil t)
       (apply fn (list (match-string-no-properties 1)
                       (match-string-no-properties 2)
                       (match-string-no-properties 3)
                       (match-string-no-properties 4))))))
 
-(defun find-ectag (fn tag-buffer)
+(defun ectags-find-tag (fn tag-buffer)
   "Scan a tag table buffer for an exact match with a tag"
   (save-excursion
     (set-buffer tag-buffer)
     (goto-char (point-min))
-    (while (re-search-forward (format "^\\(%s\\)	\\([^	]+\\)	\\([0-9]+\\);\"\\(.+\\)$" *ectags-regexp*)  nil t)
+    (while (re-search-forward
+            (format "^\\(%s\\)	\\([^	]+\\)	\\([0-9]+\\);\"\\(.+\\)$"
+                    ectags-regexp)  nil t)
       (apply fn (list (match-string-no-properties 1)
                       (match-string-no-properties 2)
                       (match-string-no-properties 3)
                       (match-string-no-properties 4))))))
 
-(defun seek-ectag  (regexp locate-fn)
-  "Seek a match for the current regexp with the tags in the current tag table buffer"
-  (setq *ectags-matches* nil)
-  (setq *ectags-regexp* regexp)
+(defun ectags-seek-tag  (regexp locate-fn)
+  "Seek a match for the current regexp with the tags in the current
+tag table buffer"
+  (setq ectags-matches nil)
+  (setq ectags-regexp regexp)
   (dolist (tags-buffer (ectags-table-list))
-    (funcall locate-fn 'match-ectags tags-buffer)
-    (setq *ectags-matches*
-          (sort *ectags-matches* '(lambda (x y)
+    (funcall locate-fn 'ectags-match-tags tags-buffer)
+    (setq ectags-matches
+          (sort ectags-matches '(lambda (x y)
                                     (< (car x) (car y)))))))
 
-
- ;; hiipe expand tag ----------------------------------------------------------
-(defun he-ectag-beg ()
-  (let ((p
-         (save-excursion
-           (backward-word 1)
-           (point))))
-     p))
-
-;;;###autoload
-(defun try-expand-ectag (old)
-  (unless  old
-    (he-init-string (he-tag-beg) (point))
-    (setq he-expand-list
-          (sort
-           (all-completions he-search-string *ectags-obarray*) 'string-lessp))
-    (while (and he-expand-list
-                (he-string-member (car he-expand-list) he-tried-table))
-      (setq he-expand-list (cdr he-expand-list))))
-  (if (null he-expand-list)
-      (progn
-        (when old (he-reset-string))
-        ())
-    (he-substitute-string (car he-expand-list))
-    (setq he-expand-list (cdr he-expand-list))
-    t))
-
-
-
-;; ectags search  ---------------------------------------------------------------------------------------------
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Ectags search
 
 (defun ectags-file-scan (file-list tag)
-  "Scan the list of files for the tag and return a list of markers where it is found"
+  "Scan the list of files for the tag and return a list of markers
+where it is found"
   (let ((result)
         (found))
     (loop
@@ -624,150 +579,211 @@ plonk it in the match candidates."
           (kill-buffer nil)))
     result))
 
-(defun reference-ectag (tag)
+(defun ectags-reference-tag (tag)
   "Scan all currently tagged files for a tag and return a list of markers"
-  (let*  ((file-list (make-ectags-file-list)))
-    (setq *ectags-scan-marks* (ectags-file-scan file-list tag))))
+  (let*  ((file-list (ectags-make-tags-file-list)))
+    (setq ectags-scan-marks (ectags-file-scan file-list tag))))
 
-(defun next-ectag-reference ()
+(defun ectags-next-tag-reference ()
   "Goto next ectag reference in current list, used as with tags-loop-continue"
   (interactive)
-  (if (not (zerop (length *ectags-scan-marks*)))
-    (let ((mark (car *ectags-scan-marks*)))
-      (find-file (car mark))
-      (forward-line (cadr mark))
-      (setq *ectags-scan-marks* (cdr *ectags-scan-marks*)))
-    (let ((ref-tag
-           (or  (find-tag-default)
-                (completing-read "Tag to reference " *ectags-obarray*))))
-      (reference-ectag (tag))
-      (when (not (zerop (length *ectags-scan-marks*)))
-        (next-ectag-reference)))))
+  (if (not (zerop (length ectags-scan-marks)))
+      (let ((mark (car ectags-scan-marks)))
+        (find-file (car mark))
+        (forward-line (cadr mark))
+        (setq ectags-scan-marks (cdr ectags-scan-marks)))
+    (let ((tag
+           (or (find-tag-default)
+               (completing-read "Tag to reference " ectags-obarray))))
+      (ectags-reference-tag tag)
+      (when (not (zerop (length ectags-scan-marks)))
+        (ectags-next-tag-reference)))))
 
-
-(defun insert-ectag-references (tagname)
+(defun ectags-insert-tag-references (tagname)
   "Insert a refererence to a tag in an ectags-select buffer"
   (loop
-   for index from 0 below (length *ectags-scan-marks*)
+   for index from 0 below (length ectags-scan-marks)
    do
-   (let ((mark (nth index *ectags-scan-marks*)))
-     (insert "<" (int-to-string index) ">:["
-             tagname " in "
-             (car mark) "@"
-             (int-to-string (cadr mark))  "]\n"
-             "*"  "\n"))))
+   (let ((mark (nth index ectags-scan-marks)))
+     (insert-with-faces
+      "<"
+      'font-lock-warning-face (int-to-string index)
+      ">:["
+      'font-lock-keyword-face tagname
+      " in "
+      'font-lock-string-face (car mark)
+      "@"
+      'font-lock-warning-face (int-to-string (cadr mark))
+      "]\n" "    "  "\n"))))
 
-(defun list-ectag-references (tag)
+(defun ectags-list-tag-references (tag)
   "List all references to the tag in a suitable buffer"
-  (setq *ectags-scan-marks* nil)
-  (setq *ectags-reference-source-buffer* (buffer-name))
-  (get-buffer-create *ectags-reference-buffer-name*)
-  (set-buffer *ectags-reference-buffer-name*)
+  (setq ectags-scan-marks nil)
+  (setq ectags-reference-source-buffer (buffer-name))
+  (get-buffer-create ectags-reference-buffer-name)
+  (set-buffer ectags-reference-buffer-name)
   (setq buffer-read-only nil)
   (erase-buffer)
-  (insert "Finding tag: " tagname "\n")
-  (reference-ectag tag)
-  (if (not (zerop  (length *ectags-scan-marks*)))
+  (insert "Finding tag: " tag "\n")
+  (ectags-reference-tag tag)
+  (if (not (zerop  (length ectags-scan-marks)))
       (progn
-        (insert-ectag-references tag)
-        (set-buffer *ectags-reference-buffer-name*)
+        (ectags-insert-tag-references tag)
+        (set-buffer ectags-reference-buffer-name)
         (goto-char (point-min))
         (set-buffer-modified-p nil)
         (setq buffer-read-only t)
-        (setq *ectags-reference-opened-window* (selected-window))
-        (unless (get-buffer-window *ectags-reference-buffer-name*)
+        (setq ectags-reference-opened-window (selected-window))
+        (unless (get-buffer-window ectags-reference-buffer-name)
           (select-window (split-window-vertically))
-          (switch-to-buffer *ectags-reference-buffer-name*)
+          (switch-to-buffer ectags-reference-buffer-name)
           (ectags-select-mode))
         (shrink-window-if-larger-than-buffer))
     (progn
-      (message "Failed to find any references to tag %s " tagname)
+      (message "Failed to find any references to tag %s " tag)
       (ding))))
 
-
-;; ectags mode ------------------------------------------------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Ectags mode
 
 (defun ectags-select-case-fold-search ()
+  "Get case-fold search."
   (when (boundp 'tags-case-fold-search)
     (if (memq tags-case-fold-search '(nil t))
         tags-case-fold-search
       case-fold-search)))
 
 (defun ectags-select-insert-matches (tagname)
-  (when *ectags-matches*
-    (set-buffer *ectags-select-buffer-name*)
-    (loop for index from 0 below (min (length *ectags-matches*) *ectags-max-candidates*)
+  "Insert matches to TAGNAME."
+  (when ectags-matches
+    (set-buffer ectags-select-buffer-name)
+    (loop for index from 0 below
+          (min (length ectags-matches) ectags-max-candidates)
           do
-          (let ((mtch (nth index *ectags-matches*)))
-            (insert "<" (int-to-string index) ">:["
-                    (ectags-match-tagname mtch) " in "
-                    (ectags-match-filename mtch) "@"
-                    (int-to-string (ectags-match-linenumber mtch))  "]\n"
-                    "*" (ectags-match-tag-info mtch) "\n")))))
+          (let ((mtch (nth index ectags-matches)))
+            (insert-with-faces
+             "<"
+             'font-lock-warning-face (int-to-string index)
+             ">:["
+             'font-lock-keyword-face (ectags-match-tagname mtch)
+             " in "
+             'font-lock-string-face (ectags-match-filename mtch)
+             "@"
+             'font-lock-warning-face (int-to-string (ectags-match-linenumber mtch))
+             "]\n" "    "
+             (replace-regexp-in-string
+              "signature:" "\n    signature:"
+              (ectags-match-tag-info mtch))
+             "\n")))))
+
+       ;; (list "\\s \\(\\w+\\):\\w"
+       ;;       '(1 font-lock-keyword-face))
+       ;; (list "\\(signature\\):\\(.*\\)"
+       ;;       '(1 font-lock-keyword-face)
+       ;;       '(2 font-lock-comment-face))
 
 (defun ectags-select-find (tagname)
   "Actually find a list of tags and push them into the tags select buffer"
-  (setq *ectags-select-source-buffer* (buffer-name))
-  (get-buffer-create *ectags-select-buffer-name*)
-  (set-buffer *ectags-select-buffer-name*)
+  (setq ectags-select-source-buffer (buffer-name))
+  (get-buffer-create ectags-select-buffer-name)
+  (set-buffer ectags-select-buffer-name)
   (setq buffer-read-only nil)
   (erase-buffer)
   (insert "Finding tag: " tagname "\n")
-  (seek-ectag tagname 'scan-ectag)
-  (if (>  (length *ectags-matches*) 0)
+  (ectags-seek-tag tagname 'ectags-scan-tag)
+  (if (>  (length ectags-matches) 0)
       (progn  (ectags-select-insert-matches tagname)
-              (set-buffer *ectags-select-buffer-name*)
+              (set-buffer ectags-select-buffer-name)
               (goto-char (point-min))
               (ectags-select-next-tag)
               (set-buffer-modified-p nil)
               (setq buffer-read-only t)
-              (setq *ectags-select-opened-window* (selected-window))
-              (unless (get-buffer-window *ectags-select-buffer-name*)
-                (select-window (split-window-vertically))
-                (switch-to-buffer *ectags-select-buffer-name*)
+              (setq ectags-select-opened-window (selected-window))
+              (unless (get-buffer-window ectags-select-buffer-name)
+                (when ectags-window-split-function
+                  (select-window (funcall ectags-window-split-function)))
+                (switch-to-buffer ectags-select-buffer-name)
                 (ectags-select-mode))
               (shrink-window-if-larger-than-buffer))
     (progn
       (message "Failed to find tag: %s " tagname)
       (ding))))
 
-
-(defun ectags-select-goto-tag ()
-  "Goto the tag we currently have the point over in an ectags select mode window"
-  (interactive)
-  (let ((case-fold-search (not *ectags-case-sensitive*)))
+(defun ectags-select-goto-tag (&optional arg other-window)
+  "Goto the file/line of the tag under the cursor.
+Use the C-u prefix to prevent the etags-select window from closing."(interactive)
+  (let ((case-fold-search (not ectags-case-sensitive)))
     (save-excursion
       (goto-char (point-min))
-      (re-search-forward "Finding tag: \\(.*\\)$")
-      (setq tagname (match-string-no-properties 1)))
+      (re-search-forward "Finding tag: \\(.*\\)$"))
     (beginning-of-line)
     (if (not (looking-at "<"))
         (message "Please put the cursor on a line with a tag")
-      (setq tag-point (point))
       (setq overlay-arrow-position (point-marker))
       (re-search-forward "\\[\\([^ ]+\\) in \\([^@]+\\)@\\([0-9]+\\)")
+      (beginning-of-line)
       (let ((tag (match-string-no-properties 1))
             (fname (match-string-no-properties 2))
             (lnno (match-string-no-properties 3)))
-        (ring-insert find-tag-marker-ring (point-marker))
-        (find-file-other-window fname)
+        (unless arg
+          (kill-buffer ectags-select-buffer-name)
+          (when ectags-select-opened-window
+            (delete-window (selected-window))
+            (select-window ectags-select-opened-window)))
+        (switch-to-buffer ectags-select-source-buffer)
+        ;;(ring-insert find-tag-marker-ring (point-marker))
+        (if other-window
+            (find-file-other-window fname)
+          (find-file fname))
         (goto-char (point-min))
-        (forward-line (1- (string-to-int lnno)))))))
+        (forward-line (1- (string-to-number lnno)))
+        (when (re-search-forward
+               (replace-regexp-in-string
+                "\\(.*\\s.\\)\\(\\w\\|\\s_\\)+" "" tag nil nil 1)
+               (line-end-position) t)
+          (goto-char (match-beginning 0))
+          (when ectags-select-highlight-tag-after-jump
+            (ectags-select-highlight (match-beginning 0) (match-end 0))))))))
 
+(defun ectags-select-highlight (beg end)
+  "Highlight a region temporarily.
+If `ectags-select-highlight-delay' = 0 maintain the highlight
+until another tag is selected.
+If `ectags-select-highlight-delay' > 0 maintain the highlight
+for `ectags-select-highlight-delay' seconds."
+  (when ectags-current-overlay
+    (delete-overlay ectags-current-overlay)
+    (setq ectags-current-overlay nil))
+  (setq ectags-current-overlay (make-overlay beg end))
+  (overlay-put ectags-current-overlay 'face 'ectags-select-highlight-tag-face)
+  (unless (= ectags-select-highlight-delay 0)
+    (sit-for ectags-select-highlight-delay)
+    (delete-overlay ectags-current-overlay)
+    (setq ectags-current-overlay nil)))
 
 (defun ectags-select-next-tag ()
   "Move to next tag in buffer."
   (interactive)
   (beginning-of-line)
-  (forward-line))
-
+  (when (not (eobp))
+    (forward-line))
+  (while (and (looking-at ectags-select-non-tag-regexp) (not (eobp)))
+    (forward-line))
+  (when (eobp)
+    (goto-char (point-min))
+    (ectags-select-next-tag)))
 
 (defun ectags-select-previous-tag ()
   "Move to previous tag in buffer."
   (interactive)
   (beginning-of-line)
-  (forward-line -1))
-
+  (when (not (bobp))
+    (forward-line -1))
+  (while (and (looking-at ectags-select-non-tag-regexp) (not (bobp)))
+    (forward-line -1))
+  (when (bobp)
+    (goto-char (point-max))
+    (ectags-select-previous-tag)))
 
 (defun ectags-select-quit ()
   "Quit ectags-select buffer."
@@ -780,40 +796,58 @@ plonk it in the match candidates."
         (current-point (point)))
     (goto-char (point-min))
     (if (re-search-forward (concat "^<" tag-num ">") nil t)
-;; TODO -- need to push tag and close window
+        ;; TODO -- need to push tag and close window
         (ectags-select-goto-tag)
       (goto-char current-point)
       (message (concat "Couldn't find tag number " tag-num))
       (ding))))
 
+(defun ectags-select-tag-show-other-window ()
+  "Select tag and show in other window."
+  (interactive)
+  (save-selected-window (ectags-select-goto-tag 4 t))
+  (switch-to-buffer ectags-select-buffer-name))
 
-;; user commands ------------------------------------------------------------------------------------------------------
+(defun ectags-select-next-tag-show ()
+  "Move next tag and show in other window."
+  (interactive)
+  (ectags-select-next-tag)
+  (ectags-select-tag-show-other-window))
+
+(defun ectags-select-previous-tag-show ()
+  "Move previous tag and show in other window."
+  (interactive)
+  (ectags-select-previous-tag)
+  (ectags-select-tag-show-other-window))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  User commands
 
 ;;;###autoload
 (defun ectags-select-find-tag-at-point ()
   "Do a find-tag-at-point, and display all exact matches.  If only one match is
-found, see the `etags-select-no-select-for-one-match' variable to decide what
+found, see the `ectags-select-no-select-for-one-match' variable to decide what
 to do."
   (interactive)
   (let ((tag-to-find
          (or (find-tag-default)
-             (completing-read "Tag to find" *ectags-obarray*))))
-  (ectags-select-find tag-to-find)))
+             (completing-read "Tag to find" ectags-obarray))))
+    (ectags-select-find tag-to-find)))
 
 ;;;###autoload
 (defun ectags-select-reference-tag-at-point ()
   "Do a search for tag in all files in tags tables and list all hits"
   (interactive)
-  (let ((tag-to-find
+  (let ((tagname
          (or (find-tag-default)
-             (completing-read "Tag to find" *ectags-obarray*))))
-    (list-ectag-references tag-to-find)))
+             (completing-read "Tag to find" ectags-obarray))))
+    (ectags-list-tag-references tagname)))
 
 
 ;;;###autoload
 (defun ectags-select-find-tag ()
   "Do a find-tag, and display all exact matches.  If only one match is
-found, see the `etags-select-no-select-for-one-match' variable to decide what
+found, see the `ectags-select-no-select-for-one-match' variable to decide what
 to do."
   (interactive)
   (let ((tagname (read-from-minibuffer
@@ -826,7 +860,7 @@ to do."
 ;;;###autoload
 (defun ectags-select-reference-tag ()
   "Do a find-tag, and display all exact matches.  If only one match is
-found, see the `etags-select-no-select-for-one-match' variable to decide what
+found, see the `ectags-select-no-select-for-one-match' variable to decide what
 to do."
   (interactive)
   (let ((tagname (read-from-minibuffer
@@ -834,108 +868,25 @@ to do."
                   nil 'find-tag-history)))
     (when (string= tagname "")
       (setq tagname (find-tag-default)))
-    (list-ectag-references tagname)))
-
-;; eldoc mode ------------------------------------------------------------------------------------------------
-
-
-;;;###autoload
-(defun c-eldoc-scope ()
-  "Try to figure out our scope"
-  (save-excursion
-    (c-end-of-defun)
-    (c-beginning-of-defun-1)
-    (forward-line -1)
-    (c-syntactic-re-search-forward "::")
-    (backward-char 2)
-    (when (c-on-identifier)
-      (let* ((id-end (point))
-             (id-start (progn (backward-char 1) (c-beginning-of-current-token) (point))))
-            (buffer-substring-no-properties id-start id-end)))))
-
-;; finds the current function and position in argument list
-;;;###autoload
-(defun c-eldoc-function (&optional limit)
-  (let* ((literal-limits (c-literal-limits))
-         (literal-type (c-literal-type literal-limits)))
-    (save-excursion
-      ;; if this is a string, move out to function domain
-      (when (eq literal-type 'string)
-        (goto-char (car literal-limits))
-        (setq literal-type nil))
-      (if literal-type
-          nil
-        (when (c-on-identifier)
-          (let* ((id-on (point-marker))
-                 (id-start
-                  (progn (c-beginning-of-current-token)
-                         ;; are we looking at a double colon?
-                         (if (and (= (char-before)  ?:)
-                                  (= (char-before (1- (point))) ?:))
-                             (progn
-                               (backward-char 3)
-                               (c-beginning-of-current-token)
-                               (point-marker))
-                           (point-marker))))
-                 (id-end
-                  (progn
-                    (goto-char id-on)
-                    (forward-char)
-                    (c-end-of-current-token)
-                    (point-marker))))
-            (buffer-substring-no-properties id-start id-end)))))))
-
-;; non scoped verison for more conservative languages
-;;;###autoload
-(defun ectags-eldoc-print-current-symbol-info ()
-  "Print the ectags info associated with the current eldoc symbol"
-  (let* ((eldoc-sym (c-eldoc-function (- (point) 1000))))
-    (seek-ectag eldoc-sym 'find-ectag)
-    (if (> (length *ectags-matches*) 0)
-        (ectags-match-tag-info (car *ectags-matches*))
-      (format "Unknown %s " eldoc-sym))))
-
-;; scoped version for cpp and the like : tries to find symbol in current scope first
-;; scope format is a format string that concatenates the cureend scope and the symbol with the scope operator
-;; eg "%s::%s" for c++
-;;;###autoload
-(defun ectags-eldoc-print-current-scoped-symbol-info ()
-  "Try to find the meaning of the symbol in the current scope. Probably only useful for cpp mode"
-  (let* ((eldoc-scope (c-eldoc-scope))
-         (eldoc-sym (c-eldoc-function (- (point) 1000))))
-    (when eldoc-sym
-      (seek-ectag (format "%s::%s" eldoc-scope eldoc-sym) 'find-ectag)
-      (if (> (length *ectags-matches*) 0)
-          (format "%s::%s %s" eldoc-scope eldoc-sym (ectags-match-tag-info (car *ectags-matches*)))
-        (progn
-          (seek-ectag eldoc-sym 'find-ectag)
-          (if (> (length *ectags-matches*) 0)
-              (format "%s %s" eldoc-sym (ectags-match-tag-info (car *ectags-matches*)))
-            (if eldoc-scope
-                (format "Scope %s " eldoc-scope))
-            (format "Unknown %s " eldoc-sym)))))))
-
-;;;###autoload
-(defun ectags-turn-on-eldoc-mode (&optional scope-format)
-  (interactive)
-  (if scope-format
-      (set (make-local-variable 'eldoc-documentation-function)
-           'ectags-eldoc-print-current-scoped-symbol-info)
-      (set (make-local-variable 'eldoc-documentation-function)
-           'ectags-eldoc-print-current-symbol-info)
-  (turn-on-eldoc-mode)))
-
+    (ectags-list-tag-references tagname)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Keymap
-
 
 (defvar ectags-select-mode-map nil "'ectags-select-mode' keymap.")
 (if (not ectags-select-mode-map)
     (let ((map (make-keymap)))
       (define-key map [(return)] 'ectags-select-goto-tag)
+      (define-key map [(? )] 'ectags-select-goto-tag)
+      (define-key map [(?n)] 'ectags-select-next-tag)
       (define-key map [(down)] 'ectags-select-next-tag)
+      (define-key map [(?p)] 'ectags-select-previous-tag)
       (define-key map [(up)] 'ectags-select-previous-tag)
+
+      (define-key map [(control return)] 'ectags-select-tag-show-other-window)
+      (define-key map [(control down)] 'ectags-select-next-tag-show)
+      (define-key map [(control up)] 'ectags-select-previous-tag-show)
+
       (define-key map [(q)] 'ectags-select-quit)
       (define-key map "0" (lambda () (interactive) (ectags-select-by-tag-number "0")))
       (define-key map "1" (lambda () (interactive) (ectags-select-by-tag-number "1")))
@@ -949,31 +900,23 @@ to do."
       (define-key map "9" (lambda () (interactive) (ectags-select-by-tag-number "9")))
       (setq ectags-select-mode-map map)))
 
-
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Mode startup
+
 (defun ectags-select-mode ()
   "ectags-select-mode is a mode for browsing through exuberant ctags.\n\n
 \\{ectags-select-mode-map}"
   (interactive)
   (kill-all-local-variables)
   (setq major-mode 'ectags-select-mode)
-  (setq mode-name "Ectags Select")
+  (setq mode-name "Ectags")
   (set-syntax-table text-mode-syntax-table)
   (use-local-map ectags-select-mode-map)
-  (make-local-variable 'font-lock-defaults)
-  (setq ectags-select-mode-font-lock-keywords
-        (list
-         (list "^<\\([0-9]+\\)>:\\[\\([^ ]+\\) in \\([^@]+\\)@\\([0-9]+)\\)\\]"
-               '(1 font-lock-warning-face) '(2 font-lock-function-name-face) '(3 font-lock-keyword-face) '(4 font-lock-warning-face))))
-  (setq font-lock-defaults '(ectags-select-mode-font-lock-keywords))
   (setq overlay-arrow-position nil)
   (run-hooks 'ectags-select-mode-hook))
 
 
 (provide 'ectags)
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ectags.el ends here

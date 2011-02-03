@@ -137,7 +137,6 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; Ectags
-(add-to-list 'load-path (expand-file-name  "~/.emacs.d/packages/ectags"))
 (require 'ectags)
 
 (setq ectags-window-split-function 'split-window-horizontally-or-vertically
