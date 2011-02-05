@@ -1,4 +1,0 @@
-find /usr/local/share/emacs/23.0.92/lisp -type f -name "*.el.gz" > files.$$
-find `pwd` -type f -name "*.el" >> files.$$
-cat files.$$ | etags -
-rm files.$$

@@ -1,0 +1,5 @@
+find /usr/local/share/emacs/23.2/lisp -name "*.el.gz" > files.$$
+find . -name "*.el" >> files.$$
+#cat files.$$ | etags -
+cat files.$$ | ectags -e -L -
+rm files.$$

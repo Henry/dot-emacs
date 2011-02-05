@@ -26,3 +26,5 @@ make
 $EMACS --batch -q \
     --load load-eemacs.el \
     --execute "(dump-emacs \"~/bin/eemacs\" \"$EMACS\")"
+
+bin/makeTAGS
