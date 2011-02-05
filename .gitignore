@@ -6,6 +6,7 @@
 /save
 /packages/auctex
 /packages/save
+my-lisp/save
 .svn
 CVS
 .cvs*
