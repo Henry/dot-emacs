@@ -40,8 +40,18 @@
 
 ;;;  Bind the tooltip menu cycling into the `completion-overlay-map'
 ;;  so that the up-down keys cause the tooltip to pop-up
-(define-key completion-overlay-map [down] 'completion-tooltip-cycle)
-(define-key completion-overlay-map [up] 'completion-tooltip-cycle-backwards)
+;;(define-key completion-overlay-map [down] 'completion-tooltip-cycle)
+;;(define-key completion-overlay-map [up] 'completion-tooltip-cycle-backwards)
+
+;;;  Bind the menu and browser pop-up into the `completion-overlay-map'
+(define-key completion-overlay-map [down]
+  (lambda ()
+    (interactive)
+    (completion-activate-menu nil nil)))
+(define-key completion-overlay-map [up]
+  (lambda ()
+    (interactive)
+    (completion-activate-menu nil t)))
 
 ;;;  Accept parts of the current completion candidate using the left, right keys
 (define-key completion-overlay-map [left]
