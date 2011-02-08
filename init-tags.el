@@ -11,7 +11,8 @@
 
 (setq etags-table-alist
       `((".*\\.el$"
-         ,(expand-file-name "~/.emacs.d/TAGS"))
+         ,(expand-file-name "~/.emacs.d/TAGS")
+         ,(expand-file-name "~/.emacs.d/systemTAGS"))
         (,(concat OPENFOAM_DIR "/.*\\.[CH]$")
          ,(concat OPENFOAM_TAGS_DIR "/etags"))
         ))
