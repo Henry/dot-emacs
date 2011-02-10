@@ -70,7 +70,7 @@
   "Follow the link under the mouse pointer."
   (interactive "e")
   (mouse-set-point event)
-  (w3m-view-url-with-external-browser))
+  (w3m-external-view-this-url))
 
 (define-key w3m-minor-mode-map "g" 'w3m-view-url-with-external-browser)
 (define-key w3m-minor-mode-map "f" 'my-w3m-visit-linknum)
