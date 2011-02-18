@@ -238,7 +238,7 @@
 ;; `anything-eval-expression'
 ;; Preconfigured anything for `anything-c-source-evaluation-result'.
 ;; `anything-eval-expression-with-eldoc'
-;; Preconfigured anything for `anything-c-source-evaluation-result' with `eldoc' support. 
+;; Preconfigured anything for `anything-c-source-evaluation-result' with `eldoc' support.
 ;; `anything-surfraw'
 ;; Preconfigured `anything' to search PATTERN with search ENGINE.
 ;; `anything-call-source'
@@ -539,7 +539,7 @@
 (require 'ffap)
 (require 'cl)
 (require 'dired-aux)
-(require 'tramp)
+;;(require 'tramp)
 (require 'grep)
 
 ;;; Code:
@@ -1898,7 +1898,7 @@ buffer that is not the current buffer."
               (setq ffap-newfile-prompt t)
               ;; This is needed when connecting with emacsclient -t
               ;; on remote host that have an anything started on a window-system.
-              ;; i.e when `C-.' is already loaded. 
+              ;; i.e when `C-.' is already loaded.
               (unless window-system
                 (define-key anything-map (kbd "C-l") 'anything-find-files-down-one-level))))
     (candidates . anything-find-files-get-candidates)
@@ -2634,7 +2634,7 @@ Use it for non--interactive calls of `anything-find-files'."
     (cond (lib)
           (file-p (expand-file-name tap def-dir))
           (t fap))))
-    
+
 (defun anything-c-current-directory ()
   "Return current-directory name at point.
 Useful in dired buffers when there is inserted subdirs."
@@ -2918,7 +2918,7 @@ ACTION is a key that can be one of 'copy, 'rename, 'symlink, 'relsymlink."
                              basename-src)
                      dest)
      ;; Needed in case we rename a dir on itself. (e.g foo=>foo1)
-     when (file-exists-p fname) 
+     when (file-exists-p fname)
      collect fname into tmp-list
      finally return (sort tmp-list 'string<)))
 
@@ -3003,21 +3003,21 @@ You can put (anything-dired-binding 1) in init file to enable anything bindings.
       ;; Replace dired bindings.
       (progn
         (substitute-key-definition
-         'dired-do-copy 'anything-dired-copy-file dired-mode-map)    
+         'dired-do-copy 'anything-dired-copy-file dired-mode-map)
         (substitute-key-definition
          'dired-do-rename 'anything-dired-rename-file dired-mode-map)
         (substitute-key-definition
-         'dired-do-symlink 'anything-dired-symlink-file dired-mode-map) 
+         'dired-do-symlink 'anything-dired-symlink-file dired-mode-map)
         (substitute-key-definition
          'dired-do-hardlink 'anything-dired-hardlink-file dired-mode-map)
         (setq anything-dired-bindings t))
       ;; Replace anything bindings.
       (substitute-key-definition
-       'anything-dired-copy-file 'dired-do-copy dired-mode-map)    
+       'anything-dired-copy-file 'dired-do-copy dired-mode-map)
       (substitute-key-definition
        'anything-dired-rename-file 'dired-do-rename dired-mode-map)
       (substitute-key-definition
-       'anything-dired-symlink-file 'dired-do-symlink dired-mode-map) 
+       'anything-dired-symlink-file 'dired-do-symlink dired-mode-map)
       (substitute-key-definition
        'anything-dired-hardlink-file 'dired-do-hardlink dired-mode-map)
       (setq anything-dired-bindings nil)))
@@ -3184,7 +3184,7 @@ The \"-r\" option must be the last option.")
   (let ((args (replace-regexp-in-string
                "grep" "" anything-c-grep-default-command)))
     (string-match-p "r\\|recurse" args)))
-  
+
 (defun anything-c-grep-init (only-files &optional include)
   "Start an asynchronous grep process in ONLY-FILES list."
   (let* ((fnargs        (anything-c-grep-prepare-candidates
@@ -3195,7 +3195,7 @@ The \"-r\" option must be the last option.")
                          #'(lambda (x)
                              (concat "--exclude=" (shell-quote-argument x)))
                          grep-find-ignored-files " "))
-         (ignored-dirs  (mapconcat ; Need grep version 2.5.4 of Gnuwin32 on windoze. 
+         (ignored-dirs  (mapconcat ; Need grep version 2.5.4 of Gnuwin32 on windoze.
                          #'(lambda (x)
                              (concat "--exclude-dir=" (shell-quote-argument x)))
                          grep-find-ignored-directories " "))
@@ -3243,7 +3243,7 @@ WHERE can be one of other-window, elscreen, other-frame."
     (set-marker (mark-marker) (point))
     (when mark
       (push-mark (point) 'nomsg))))
-              
+
 
 (defun anything-c-grep-persistent-action (candidate)
   "Persistent action for `anything-do-grep'.
@@ -3324,7 +3324,7 @@ See also `anything-do-grep1'."
                   "Search in file(s): " :marked-candidates t))
         (prefarg current-prefix-arg))
     (anything-do-grep1 only prefarg)))
-  
+
 (defun anything-c-grep-split-line (line)
   "Split a grep output line."
     (let (beg fname lineno str)
@@ -3384,7 +3384,7 @@ If N is positive go forward otherwise go backward."
           (let* ((current-line-list  (split-string
                                       (buffer-substring
                                        (point-at-bol)
-                                       (point-at-eol)) ":"))  
+                                       (point-at-eol)) ":"))
                  (current-fname      (nth 0 current-line-list))
                  (fn-b-o-f           (if (eq n 1) 'eobp 'bobp)))
             (catch 'break
@@ -3534,7 +3534,7 @@ Try to find tag file in upper directory if haven't found in CURRENT-DIR."
                        (progress-reporter-update progress-reporter count)))))
 
 (defun anything-c-etags-init ()
-  (let ((tagfile (anything-c-etags-get-tag-file))) 
+  (let ((tagfile (anything-c-etags-get-tag-file)))
     (when tagfile
       (with-current-buffer (anything-candidate-buffer 'global)
        (anything-aif (gethash tagfile anything-c-etags-cache)
@@ -3713,7 +3713,7 @@ Then
  (setq anything-grep-candidates-fast-directory-regexp \"^/tmp/\")
  (setq anything-c-filelist-file-name \"/tmp/all.filelist\")
 "
-  :type 'string  
+  :type 'string
   :group 'anything-config)
 (defvar anything-c-source-filelist
   '((name . "FileList")
@@ -4220,7 +4220,7 @@ Return nil if no mode-map found."
      while (not mode-map)
      for count downfrom (length mode-name)
      ;; Return when no result after parsing entire string.
-     when (eq count 0) return nil 
+     when (eq count 0) return nil
      for sub-name = (substring mode-name 0 count)
      do (setq mode-map (intern-soft (format "%s-map" (concat sub-name "-mode"))))
      finally return mode-map))
@@ -5764,7 +5764,7 @@ replace with STR as yanked string."
     (candidate-number-limit . 9999)
     (candidates . anything-c-latex-math-candidates)
     (action . (lambda (candidate)
-                (call-interactively candidate))))) 
+                (call-interactively candidate)))))
 
 ;;;; <Headline Extraction>
 (defvar anything-c-source-fixme
@@ -7525,7 +7525,7 @@ Ask to kill buffers associated with that file, too."
         ;; so use `delete-directory' and `delete-file'
         ;; that handle it.
         (if (file-directory-p file)
-            (if (directory-files file t dired-re-no-dot)     
+            (if (directory-files file t dired-re-no-dot)
                 (when (y-or-n-p (format "Recursive delete of `%s'? " file))
                   (delete-directory file 'recursive))
                 (delete-directory file))
