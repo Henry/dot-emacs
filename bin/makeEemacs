@@ -30,6 +30,6 @@ make
 
 $EMACS --batch -q \
     --load load-eemacs.el \
-    --execute "(dump-emacs \"~/bin/eemacs\" \"`which emacs`\")"
+    --execute "(dump-emacs \"~/bin/linux/eemacs\" \"`which emacs`\")"
 
 bin/makeTAGS
