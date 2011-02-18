@@ -48,13 +48,15 @@
 ;;
 ;;; Currently Implemented Block Types
 ;;
-;; ditaa :: Convert ascii pictures to actual images using ditaa
+;; ditaa :: (DEPRECATED--use "#+begin_src ditaa" code blocks) Convert
+;;          ascii pictures to actual images using ditaa
 ;;          http://ditaa.sourceforge.net/.  To use this set
 ;;          `org-ditaa-jar-path' to the path to ditaa.jar on your
 ;;          system (should be set automatically in most cases) .
 ;;
-;; dot :: Convert graphs defined using the dot graphing language to
-;;        images using the dot utility.  For information on dot see
+;; dot :: (DEPRECATED--use "#+begin_src dot" code blocks) Convert
+;;        graphs defined using the dot graphing language to images
+;;        using the dot utility.  For information on dot see
 ;;        http://www.graphviz.org/
 ;;
 ;; comment :: Wrap comments with titles and author information, in
@@ -73,11 +75,6 @@
 (eval-when-compile
   (require 'cl))
 (require 'org)
-
-(defvar htmlp)
-(defvar latexp)
-(defvar docbookp)
-(defvar asciip)
 
 (defun org-export-blocks-set (var value)
   "Set the value of `org-export-blocks' and install fontification."
@@ -218,11 +215,13 @@ which defaults to the value of `org-export-blocks-witheld'."
   "Path to the ditaa jar executable.")
 
 (defun org-export-blocks-format-ditaa (body &rest headers)
-  "Pass block BODY to the ditaa utility creating an image.
+  "DEPRECATED: use begin_src ditaa code blocks
+
+Pass block BODY to the ditaa utility creating an image.
 Specify the path at which the image should be saved as the first
 element of headers, any additional elements of headers will be
 passed to the ditaa utility as command line arguments."
-  (message "ditaa-formatting...")
+  (message "begin_ditaa blocks are DEPRECATED, use begin_src blocks")
   (let* ((args (if (cdr headers) (mapconcat 'identity (cdr headers) " ")))
          (data-file (make-temp-file "org-ditaa"))
 	 (hash (progn
@@ -241,8 +240,9 @@ passed to the ditaa utility as command line arguments."
 		 (mapconcat (lambda (x) (substring x (if (> (length x) 1) 2 1)))
 			    (org-split-string body "\n")
 			    "\n")))
+    (prog1
     (cond
-     ((or htmlp latexp docbookp)
+     ((member backend '(html latex docbook))
       (unless (file-exists-p out-file)
         (mapc ;; remove old hashed versions of this file
          (lambda (file)
@@ -262,13 +262,16 @@ passed to the ditaa utility as command line arguments."
      (t (concat
 	 "\n#+BEGIN_EXAMPLE\n"
 	 body (if (string-match "\n$" body) "" "\n")
-	 "#+END_EXAMPLE\n")))))
+	 "#+END_EXAMPLE\n")))
+    (message "begin_ditaa blocks are DEPRECATED, use begin_src blocks"))))
 
 ;;--------------------------------------------------------------------------------
 ;; dot: create graphs using the dot graphing language
 ;;      (require the dot executable to be in your path)
 (defun org-export-blocks-format-dot (body &rest headers)
-  "Pass block BODY to the dot graphing utility creating an image.
+  "DEPRECATED: use \"#+begin_src dot\" code blocks
+
+Pass block BODY to the dot graphing utility creating an image.
 Specify the path at which the image should be saved as the first
 element of headers, any additional elements of headers will be
 passed to the dot utility as command line arguments.  Don't
@@ -284,7 +287,7 @@ digraph data_relationships {
   \"data_requirement\" -> \"data_product\"
 }
 #+end_dot"
-  (message "dot-formatting...")
+  (message "begin_dot blocks are DEPRECATED, use begin_src blocks")
   (let* ((args (if (cdr headers) (mapconcat 'identity (cdr headers) " ")))
          (data-file (make-temp-file "org-ditaa"))
 	 (hash (progn
@@ -296,28 +299,30 @@ digraph data_relationships {
 				   (match-string 2 raw-out-file))
 			   (cons raw-out-file "png")))
 	 (out-file (concat (car out-file-parts) "_" hash "." (cdr out-file-parts))))
+    (prog1
     (cond
-     ((or htmlp latexp docbookp)
+     ((member backend '(html latex docbook))
       (unless (file-exists-p out-file)
-        (mapc ;; remove old hashed versions of this file
-         (lambda (file)
-           (when (and (string-match (concat (regexp-quote (car out-file-parts))
-                                            "_\\([[:alnum:]]+\\)\\."
-                                            (regexp-quote (cdr out-file-parts)))
-                                    file)
-                      (= (length (match-string 1 out-file)) 40))
-             (delete-file (expand-file-name file
-                                            (file-name-directory out-file)))))
-         (directory-files (or (file-name-directory out-file)
-                              default-directory)))
-        (with-temp-file data-file (insert body))
-        (message (concat "dot " data-file " " args " -o " out-file))
-        (shell-command (concat "dot " data-file " " args " -o " out-file)))
+	(mapc ;; remove old hashed versions of this file
+	 (lambda (file)
+	   (when (and (string-match (concat (regexp-quote (car out-file-parts))
+					    "_\\([[:alnum:]]+\\)\\."
+					    (regexp-quote (cdr out-file-parts)))
+				    file)
+		      (= (length (match-string 1 out-file)) 40))
+	     (delete-file (expand-file-name file
+					    (file-name-directory out-file)))))
+	 (directory-files (or (file-name-directory out-file)
+			      default-directory)))
+	(with-temp-file data-file (insert body))
+	(message (concat "dot " data-file " " args " -o " out-file))
+	(shell-command (concat "dot " data-file " " args " -o " out-file)))
       (format "\n[[file:%s]]\n" out-file))
      (t (concat
 	 "\n#+BEGIN_EXAMPLE\n"
 	 body (if (string-match "\n$" body) "" "\n")
-	 "#+END_EXAMPLE\n")))))
+	 "#+END_EXAMPLE\n")))
+    (message "begin_dot blocks are DEPRECATED, use begin_src blocks"))))
 
 ;;--------------------------------------------------------------------------------
 ;; comment: export comments in author-specific css-stylable divs
@@ -328,7 +333,7 @@ other backends, it converts the comment into an EXAMPLE segment."
   (let ((owner (if headers (car headers)))
 	(title (if (cdr headers) (mapconcat 'identity (cdr headers) " "))))
     (cond
-     (htmlp ;; We are exporting to HTML
+     ((eq backend 'html) ;; We are exporting to HTML
       (concat "#+BEGIN_HTML\n"
 	      "<div class=\"org-comment\""
 	      (if owner (format " id=\"org-comment-%s\" " owner))

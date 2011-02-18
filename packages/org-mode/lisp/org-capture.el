@@ -120,6 +120,10 @@ target       Specification of where the captured item should be placed.
              (file \"path/to/file\")
                  Text will be placed at the beginning or end of that file
 
+             (currentfile)
+                 Text will be placed at the beginning or end of the file
+                 org-capture is called from
+
              (id \"id of existing org entry\")
                  File as child of this entry, or in the body of the entry
 
@@ -266,6 +270,8 @@ calendar                |  %:type %:date"
 		   (list :tag "File"
 			 (const :format "" file)
 			 (file :tag "  File"))
+		   (list :tag "Current file"
+			 (const :format "" currentfile))
 		   (list :tag "ID"
 			 (const :format "" id)
 			 (string :tag "  ID"))
@@ -632,6 +638,12 @@ already gone.  Any prefix argument will be passed to the refile comand."
 	(set-buffer (org-capture-target-buffer (nth 1 target)))
 	(setq target-entry-p nil))
 
+       ((eq (car target) 'currentfile)
+	(if (not (and (buffer-file-name) (org-mode-p)))
+	    (error "Cannot call this capture template outside of an Org buffer")
+	  (set-buffer (org-capture-target-buffer (buffer-file-name)))
+	  (setq target-entry-p nil)))
+
        ((eq (car target) 'id)
 	(let ((loc (org-id-find (nth 1 target))))
 	  (if (not loc)
@@ -815,14 +827,14 @@ already gone.  Any prefix argument will be passed to the refile comand."
     (if (org-capture-get :prepend)
 	(progn
 	  (goto-char beg)
-	  (if (org-search-forward-unenclosed org-item-beginning-re end t)
+	  (if (org-list-search-forward (org-item-beginning-re) end t)
 	      (progn
 		(goto-char (match-beginning 0))
 		(setq ind (org-get-indentation)))
 	    (goto-char end)
 	    (setq ind 0)))
       (goto-char end)
-      (if (org-search-backward-unenclosed org-item-beginning-re beg t)
+      (if (org-list-search-backward (org-item-beginning-re) beg t)
 	  (progn
 	    (setq ind (org-get-indentation))
 	    (org-end-of-item))

@@ -70,8 +70,8 @@ configure:1852: result: /usr/bin/install -c
 configure:1915: checking for /usr/local/bin/emacs
 configure:1945: result: /usr/local/bin/emacs
 configure:1961: checking if /usr/local/bin/emacs is XEmacs
-/usr/local/bin/emacs -batch -no-site-file -eval (let* ((x (if (featurep (quote xemacs)) "yes" "no"))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-29147"))
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-29147
+/usr/local/bin/emacs -batch -no-site-file -eval (let* ((x (if (featurep (quote xemacs)) "yes" "no"))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-26068"))
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-26068
 => no
 configure:1981: result: no
 configure:1985: checking for Emacs prefix
@@ -82,21 +82,21 @@ configure:1985: checking for Emacs prefix
         (setq prefix parent)
       (if (string= (file-name-nondirectory parent) "bin")
          (setq prefix (directory-file-name (file-name-directory parent)))))
-    prefix) (error NONE)))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-29147")) /usr/local/bin/emacs
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-29147
+    prefix) (error NONE)))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-26068")) /usr/local/bin/emacs
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-26068
 => /usr/local
 configure:2004: result: "/usr/local"
 configure:2034: checking if Emacs is recent enough
 /usr/local/bin/emacs -batch -no-site-file -eval (let* ((x (cond ((< emacs-major-version 21) "no")
 			 ((> emacs-major-version 21) "yes")
 			 ((< emacs-minor-version 01) "no")
-			 (t "yes")))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-29147"))
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-29147
+			 (t "yes")))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-26068"))
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-26068
 => yes
 configure:2048: result: yes
 configure:2086: checking if build directory is valid
-/usr/local/bin/emacs -batch -eval (let* ((x (if (or (member (directory-file-name default-directory) load-path)	      (member (file-name-as-directory default-directory) load-path))	 "no" "yes"))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-29147"))
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-29147
+/usr/local/bin/emacs -batch -eval (let* ((x (if (or (member (directory-file-name default-directory) load-path)	      (member (file-name-as-directory default-directory) load-path))	 "no" "yes"))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-26068"))
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-26068
 => yes
 configure:2102: result: yes
 configure:2192: checking where lisp files go
@@ -129,8 +129,8 @@ configure:2309: checking where the package lisp files go
               (t
 	       `(expand-file-name
                    ,(file-relative-name path startupdir)
-	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-29147")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/preview-latex.el
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-29147
+	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-26068")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/preview-latex.el
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-26068
 => (expand-file-name "auctex" (file-name-directory load-file-name))
 configure:2390: result: /home/dm2/henry/.emacs.d/packages/auctex/auctex
 configure:2393: checking where the data files go
@@ -159,8 +159,8 @@ configure:2393: checking where the data files go
               (t
 	       `(expand-file-name
                    ,(file-relative-name path startupdir)
-	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-29147")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/preview-latex.el
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-29147
+	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-26068")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/preview-latex.el
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-26068
 => (expand-file-name "auctex" (file-name-directory load-file-name))
 configure:2474: result: /home/dm2/henry/.emacs.d/packages/auctex/auctex
 configure:2481: checking for the location of AUCTeX's tex-site.el
@@ -168,8 +168,8 @@ configure:2530: result: ..
 configure:2541: checking for gs
 configure:2557: found /usr/bin/gs
 configure:2568: result: gs
-/usr/local/bin/emacs -batch -no-site-file -eval (let* ((dir(pop command-line-args-left))(x (if (member dir (list "NONE" (if (eq system-type 'windows-nt) "GSWIN32C.EXE" "gs"))) "" `(defvar preview-gs-command ,dir)))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-29147")) gs
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-29147
+/usr/local/bin/emacs -batch -no-site-file -eval (let* ((dir(pop command-line-args-left))(x (if (member dir (list "NONE" (if (eq system-type 'windows-nt) "GSWIN32C.EXE" "gs"))) "" `(defvar preview-gs-command ,dir)))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-26068")) gs
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-26068
 => 
 configure:2596: checking for latex
 configure:2614: found /usr/bin/latex
@@ -196,8 +196,8 @@ configure:3287: checking for glaring installation conflicts
     (and (setq tmp (locate-library "preview-latex.el"))
          (not (string= (file-truename tmp)
                        (file-truename previewstartfile)))
-         (format "Conflicting previous startup file `%s' found!\n" tmp))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-29147")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex/preview-latex.el
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-29147
+         (format "Conflicting previous startup file `%s' found!\n" tmp))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-26068")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex/preview-latex.el
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/preview/conftest-26068
 => 
 configure:3349: result: probably none
 configure:3571: creating ./config.status

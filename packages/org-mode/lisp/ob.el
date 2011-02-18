@@ -76,7 +76,9 @@
 (declare-function org-in-item-p "org-list" ())
 (declare-function org-list-parse-list "org-list" (&optional delete))
 (declare-function org-list-to-generic "org-list" (LIST PARAMS))
-(declare-function org-list-bottom-point "org-list" ())
+(declare-function org-list-struct "org-list" ())
+(declare-function org-list-prevs-alist "org-list" (struct))
+(declare-function org-list-get-list-end "org-list" (item struct prevs))
 
 (defgroup org-babel nil
   "Code block evaluation and management in `org-mode' documents."
@@ -286,7 +288,7 @@ then run `org-babel-pop-to-session'."
 
 (defconst org-babel-header-arg-names
   '(cache cmdline colnames dir exports file noweb results
-	  session tangle var eval noeval comments)
+    session tangle var eval noeval comments no-expand)
   "Common header arguments used by org-babel.
 Note that individual languages may define their own language
 specific header arguments as well.")
@@ -297,7 +299,7 @@ specific header arguments as well.")
   "Default arguments to use when evaluating a source block.")
 
 (defvar org-babel-default-inline-header-args
-  '((:session . "none") (:results . "silent") (:exports . "results"))
+  '((:session . "none") (:results . "replace") (:exports . "results"))
   "Default arguments to use when evaluating an inline source block.")
 
 (defvar org-babel-current-buffer-properties nil
@@ -863,10 +865,8 @@ may be specified in the properties of the current outline entry."
 	    (mapcar
 	     (lambda (header-arg)
 	       (and (setq val
-			  (or (condition-case nil
-				  (org-entry-get (point) header-arg t)
-				(error nil))
-			      (cdr (assoc header-arg org-file-properties))))
+			  (or (org-entry-get (point) header-arg t)
+			      (org-entry-get (point) (concat ":" header-arg) t)))
 		    (cons (intern (concat ":" header-arg))
 			  (org-babel-read val))))
 	     (mapcar
@@ -893,7 +893,8 @@ may be specified in the current buffer."
 		    (org-babel-merge-params
 		     org-babel-current-buffer-properties
 		     (org-babel-parse-header-arguments
-		      (org-match-string-no-properties 2))))))))))
+		      (org-match-string-no-properties 2)))))
+	    org-babel-current-buffer-properties)))))
 
 (defvar org-src-preserve-indentation)
 (defun org-babel-parse-src-block-match ()
@@ -1160,8 +1161,7 @@ org-babel-named-src-block-regexp."
     (when file (find-file file)) (goto-char (point-min))
     (let (names)
       (while (re-search-forward org-babel-src-name-w-name-regexp nil t)
-	(setq names (cons (org-babel-clean-text-properties (match-string 4))
-			  names)))
+	(setq names (cons (match-string 4) names)))
       names)))
 
 ;;;###autoload
@@ -1194,8 +1194,7 @@ buffer or nil if no such result exists."
     (when file (find-file file)) (goto-char (point-min))
     (let (names)
       (while (re-search-forward org-babel-result-w-name-regexp nil t)
-	(setq names (cons (org-babel-clean-text-properties (match-string 4))
-			  names)))
+	(setq names (cons (match-string 4) names)))
       names)))
 
 ;;;###autoload
@@ -1560,7 +1559,7 @@ code ---- the results are extracted in the syntax of the source
 	    (org-babel-examplize-region beg end results-switches)
 	    (setq end (point)))))
 	;; possibly indent the results to match the #+results line
-	(when (and (not inlinep) indent (> indent 0)
+	(when (and (not inlinep) (numberp indent) indent (> indent 0)
 		   ;; in this case `table-align' does the work for us
 		   (not (and (listp result)
 			     (member "append" result-params))))
@@ -1585,7 +1584,9 @@ code ---- the results are extracted in the syntax of the source
   (save-excursion
     (cond
      ((org-at-table-p) (progn (goto-char (org-table-end)) (point)))
-     ((org-at-item-p) (- (org-list-bottom-point) 1))
+     ((org-at-item-p) (let* ((struct (org-list-struct))
+			     (prvs (org-list-prevs-alist struct)))
+			(1- (org-list-get-list-end (point-at-bol) struct prvs))))
      (t
       (let ((case-fold-search t)
 	    (blocks-re (regexp-opt
@@ -1858,7 +1859,10 @@ block but are passed literally to the \"example-block\"."
   "Safely convert tables into elisp lists."
   (let (in-single in-double out)
     (org-babel-read
-     (if (and (stringp str) (string-match "^\\[.+\\]$" str))
+     (if (and (stringp str)
+	      (> (length str) 2)
+	      (string-equal "[" (substring str 0 1))
+	      (string-equal "]" (substring str -1)))
 	 (org-babel-read
 	  (concat
 	   "'"

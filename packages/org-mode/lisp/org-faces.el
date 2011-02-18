@@ -1,6 +1,6 @@
 ;;; org-faces.el --- Face definitions for Org-mode.
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
+;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;   Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
@@ -137,7 +137,7 @@ color of the frame."
   :group 'org-faces)
 
 (defface org-special-keyword ;; originally copied from font-lock-string-face
-  (org-compatible-face nil
+  (org-compatible-face 'font-lock-keyword-face
     '((((class color) (min-colors 16) (background light)) (:foreground "RosyBrown"))
       (((class color) (min-colors 16) (background dark)) (:foreground "LightSalmon"))
       (t (:italic t))))
@@ -247,9 +247,10 @@ column view defines special faces for each outline level.  See the file
   :group 'org-faces)
 
 (defface org-link
-  '((((class color) (background light)) (:foreground "Purple" :underline t))
-    (((class color) (background dark)) (:foreground "Cyan" :underline t))
-    (t (:underline t)))
+  (org-compatible-face 'link
+    '((((class color) (background light)) (:foreground "Purple" :underline t))
+      (((class color) (background dark)) (:foreground "Cyan" :underline t))
+      (t (:underline t))))
   "Face for links."
   :group 'org-faces)
 
@@ -509,6 +510,15 @@ follows a #+DATE:, #+AUTHOR: or #+EMAIL: keyword."
   "Face text in #+begin ... #+end blocks."
   :group 'org-faces
   :version "22.1")
+
+(defface org-block-background '((t ()))
+  "Face used for the source block background.")
+
+(org-copy-face 'org-meta-line 'org-block-begin-line
+  "Face used for the line delimiting the begin of source blocks.")
+
+(org-copy-face 'org-meta-line 'org-block-end-line
+  "Face used for the line delimiting the end of source blocks.")
 
 (defface org-verbatim
   (org-compatible-face 'shadow

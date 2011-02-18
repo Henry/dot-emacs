@@ -64,7 +64,8 @@
            #:default-directory
            #:set-default-directory
            #:quit-lisp
-           #:eval-for-emacs))
+           #:eval-for-emacs
+           #:eval-in-emacs))
 
 (in-package :swank)
 
@@ -1818,7 +1819,8 @@ converted to lower case."
               (princ-to-string form)))))
 
 (defun eval-in-emacs (form &optional nowait)
-  "Eval FORM in Emacs."
+  "Eval FORM in Emacs.
+`slime-enable-evaluate-in-emacs' should be set to T on the Emacs side."
   (cond (nowait 
          (send-to-emacs `(:eval-no-wait ,(process-form-for-emacs form))))
         (t
@@ -1829,6 +1831,7 @@ converted to lower case."
 	   (let ((value (caddr (wait-for-event `(:emacs-return ,tag result)))))
 	     (destructure-case value
 	       ((:ok value) value)
+               ((:error kind . data) (error "~a: ~{~a~}" kind data))
 	       ((:abort) (abort))))))))
 
 (defvar *swank-wire-protocol-version* nil
@@ -2032,7 +2035,8 @@ considered to represent a symbol internal to some current package.)"
                  (char-upcase char)))))
 
 
-(defun find-symbol-with-status (symbol-name status &optional (package *package*))
+(defun find-symbol-with-status (symbol-name status 
+                                &optional (package *package*))
   (multiple-value-bind (symbol flag) (find-symbol symbol-name package)
     (if (and flag (eq flag status))
         (values symbol flag)
@@ -3303,9 +3307,10 @@ Include the nicknames if NICKNAMES is true."
 (defslimefun find-definitions-for-emacs (name)
   "Return a list ((DSPEC LOCATION) ...) of definitions for NAME.
 DSPEC is a string and LOCATION a source location. NAME is a string."
-  (multiple-value-bind (sexp error) (ignore-errors (from-string name))
-    (unless error
-      (mapcar #'xref>elisp (find-definitions sexp)))))
+  (multiple-value-bind (symbol found) (with-buffer-syntax () 
+                                        (parse-symbol name))
+    (when found
+      (mapcar #'xref>elisp (find-definitions symbol)))))
 
 ;;; Generic function so contribs can extend it.
 (defgeneric xref-doit (type thing)

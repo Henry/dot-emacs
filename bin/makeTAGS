@@ -1,5 +1,10 @@
+if which ectags >& /dev/null
+then
+
 #tag=etags -
 tag="ectags -e -L -"
 
 find /usr/local/share/emacs/23.2/lisp -name "*.el" | $tag -f systemTAGS
 find . -name save -prune -o -name pending -prune -o \( -name "*.el" -print \) | $tag
+
+fi

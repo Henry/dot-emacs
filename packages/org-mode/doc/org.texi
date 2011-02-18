@@ -1370,6 +1370,8 @@ sorting will be case-sensitive.  With two @kbd{C-u C-u} prefixes, duplicate
 entries will also be removed.
 @orgcmd{C-x n s,org-narrow-to-subtree}
 Narrow buffer to current subtree.
+@orgcmd{C-x n b,org-narrow-to-block}
+Narrow buffer to current block.
 @orgcmd{C-x n w,widen}
 Widen buffer to remove narrowing.
 @orgcmd{C-c *,org-toggle-heading}
@@ -1491,38 +1493,41 @@ visually indistinguishable from true headlines.  In short: even though
 as bullets.
 @item
 @vindex org-plain-list-ordered-item-terminator
+@vindex org-alphabetical-lists
 @emph{Ordered} list items start with a numeral followed by either a period or
 a right parenthesis@footnote{You can filter out any of them by configuring
 @code{org-plain-list-ordered-item-terminator}.}, such as @samp{1.} or
-@samp{1)}.  If you want a list to start with a different value (e.g.@: 20), start
-the text of the item with @code{[@@20]}@footnote{If there's a checkbox in the
-item, the cookie must be put @emph{before} the checkbox.}.  Those constructs
-can be used in any item of the list in order to enforce a particular
-numbering.
+@samp{1)}@footnote{You can also get @samp{a.}, @samp{A.}, @samp{a)} and
+@samp{A)} by configuring @code{org-alphabetical-lists}.  To minimize
+confusion with normal text, those are limited to one character only.  Beyond
+that limit, items will automatically fallback to numbers.}.  If you want a
+list to start with a different value (e.g.@: 20), start the text of the item
+with @code{[@@20]}@footnote{If there's a checkbox in the item, the cookie
+must be put @emph{before} the checkbox.  If you have activated alphabetical
+lists, you can also use counters like @code{[@@b}.}.  Those constructs can be
+used in any item of the list in order to enforce a particular numbering.
 @item
 @emph{Description} list items are unordered list items, and contain the
-separator @samp{ :: } to separate the description @emph{term} from the
+separator @samp{ :: } to distinguish the description @emph{term} from the
 description.
 @end itemize
 
 Items belonging to the same list must have the same indentation on the first
 line.  In particular, if an ordered list reaches number @samp{10.}, then the
 2--digit numbers must be written left-aligned with the other numbers in the
-list.
+list.  An item ends before the next line that is less or equally indented
+than the bullet/number.
 
 @vindex org-list-ending-method
 @vindex org-list-end-regexp
 @vindex org-empty-line-terminates-plain-lists
 Two methods@footnote{To disable either of them, configure
 @code{org-list-ending-method}.} are provided to terminate lists.  A list ends
-before the next line that is indented like the bullet/number or less, or it
-ends before two blank lines@footnote{See also
-@code{org-empty-line-terminates-plain-lists}.}.  In both cases, all levels of
-the list are closed@footnote{So you cannot have a sublist, some text and then
-another sublist while still in the same top-level list item.  This used to be
-possible, but it was only supported in the HTML exporter and difficult to
-manage with automatic indentation.}.  For finer control, you can end lists
-with any pattern set in @code{org-list-end-regexp}.  Here is an example:
+whenever every item has ended, which means before any line less or equally
+indented than items at top level.  It also ends before two blank
+lines@footnote{See also @code{org-empty-line-terminates-plain-lists}.}.  In
+that case, all items are closed.  For finer control, you can end lists with
+any pattern set in @code{org-list-end-regexp}.  Here is an example:
 
 @example
 @group
@@ -1533,8 +1538,8 @@ with any pattern set in @code{org-list-end-regexp}.  Here is an example:
       + this was already my favorite scene in the book
       + I really like Miranda Otto.
    3. Peter Jackson being shot by Legolas
-      He makes a really funny face when it happens.
       - on DVD only
+      He makes a really funny face when it happens.
    But in the end, no individual scenes matter but the film as a whole.
    Important actors in this film are:
    - @b{Elijah Wood} :: He plays Frodo
@@ -1649,14 +1654,20 @@ depending on @code{org-plain-list-ordered-item-terminator}, the type of list,
 and its position@footnote{See @code{bullet} rule in
 @code{org-list-automatic-rules} for more information.}.  With a numeric
 prefix argument N, select the Nth bullet from this list.  If there is an
-active region when calling this, all lines will be converted to list items.
-If the first line already was a list item, any item markers will be removed
-from the list.  Finally, even without an active region, a normal line will be
+active region when calling this, selected text will be changed into an item.
+With a prefix argument, all lines will be converted to list items.  If the
+first line already was a list item, any item markers will be removed from the
+list.  Finally, even without an active region, a normal line will be
 converted into a list item.
 @kindex C-c *
 @item C-c *
 Turn a plain list item into a headline (so that it becomes a subheading at
 its location). @xref{Structure editing}, for a detailed explanation.
+@kindex C-c C-*
+@item C-c C-*
+Turn the whole plain list into a subtree of the current heading.  Checkboxes
+(@pxref{Checkboxes}) will become TODO (resp. DONE) keywords when unchecked
+(resp. checked).
 @kindex S-@key{left}
 @kindex S-@key{right}
 @item S-@key{left}/@key{right}
@@ -3089,7 +3100,7 @@ gnus:group                                @r{Gnus group link}
 gnus:group#id                             @r{Gnus article link}
 bbdb:R.*Stallman                          @r{BBDB link (with regexp)}
 irc:/irc.com/#emacs/bob                   @r{IRC link}
-info:org:External%20links                 @r{Info node link (with encoded space)}
+info:org#External%20links                 @r{Info node link (with encoded space)}
 shell:ls *.org                            @r{A shell command}
 elisp:org-agenda                          @r{Interactive Elisp command}
 elisp:(find-file-other-frame "Elisp.org") @r{Elisp form to evaluate}
@@ -4280,9 +4291,8 @@ this headline and the next (so @emph{not} the entire subtree).
 If there is no active region, just toggle the checkbox at point.
 @end itemize
 @orgcmd{M-S-@key{RET},org-insert-todo-heading}
-Insert a new item with a checkbox.
-This works only if the cursor is already in a plain list item
-(@pxref{Plain lists}).
+Insert a new item with a checkbox.  This works only if the cursor is already
+in a plain list item (@pxref{Plain lists}).
 @orgcmd{C-c C-x o,org-toggle-ordered-property}
 @vindex org-track-ordered-property-with-tag
 @cindex property, ORDERED
@@ -4565,7 +4575,7 @@ Once a system of tags has been set up, it can be used to collect related
 information into special lists.
 
 @table @kbd
-@orgcmdkkc{C-c / m,C-c \,org-match-sparse-tree}
+@orgcmdkkc{C-c / m,C-c \\,org-match-sparse-tree}
 Create a sparse tree with all headlines matching a tags search.  With a
 @kbd{C-u} prefix argument, ignore headlines that are not a TODO line.
 @orgcmd{C-c a m,org-tags-view}
@@ -5557,8 +5567,8 @@ happen in the line directly following the headline.  Any CLOSED timestamp
 will be removed.  When called with a prefix argument, remove the scheduling
 date from the entry.  Depending on the variable
 @code{org-log-reschedule}@footnote{with corresponding @code{#+STARTUP}
-keywords @code{logredeadline}, @code{lognoteredeadline}, and
-@code{nologredeadline}}, a note will be taken when changing an existing
+keywords @code{logreschedule}, @code{lognotereschedule}, and
+@code{nologreschedule}}, a note will be taken when changing an existing
 scheduling time.
 @c
 @orgcmd{C-c C-x C-k,org-mark-entry-for-agenda-action}
@@ -5857,6 +5867,7 @@ options are interpreted by the function @code{org-clocktable-write-default},
 but you can specify your own function using the @code{:formatter} parameter.
 @example
 :emphasize   @r{When @code{t}, emphasize level one and level two items.}
+:lang        @r{Language@footnote{Language terms can be set through the variable @code{org-clock-clocktable-language-setup}.} to use for descriptive cells like "Task".}
 :link        @r{Link the item headlines in the table to their origins.}
 :narrow      @r{An integer to limit the width of the headline column in}
              @r{the org table.  If you write it like @samp{50!}, then the}
@@ -6312,6 +6323,10 @@ Valid values are:
 @item (file "path/to/file")
 Text will be placed at the beginning or end of that file.
 
+@item (currentfile)
+Text will be placed at the beginning or end of the file 
+@code{org-capture} is called from.
+
 @item (id "id of existing org entry")
 Filing as child of this entry, or in the body of the entry.
 
@@ -6512,7 +6527,7 @@ Create a new attachment as an Emacs buffer.
 Synchronize the current task with its attachment directory, in case you added
 attachments yourself.
 
-@orgcmdtkc{p,C-c C-a o,org-attach-open}
+@orgcmdtkc{o,C-c C-a o,org-attach-open}
 @vindex org-file-apps
 Open current task's attachment.  If there is more than one, prompt for a
 file name first.  Opening will follow the rules set by @code{org-file-apps}.
@@ -6878,7 +6893,7 @@ the easiest way to maintain it is through the following commands
 
 @cindex files, adding to agenda list
 @table @kbd
-@orgcmd{C-c [,org-agenda-to-front}
+@orgcmd{C-c [,org-agenda-file-to-front}
 Add current file to the list of agenda files.  The file is added to
 the front of the list.  If it was already in the list, it is moved to
 the front.  With a prefix argument, file is added/moved to the end.
@@ -7096,14 +7111,15 @@ following to one your your agenda files:
 
 You can then go ahead and define anniversaries for a BBDB record.  Basically,
 you need to press @kbd{C-o anniversary @key{RET}} with the cursor in a BBDB
-record and then add the date in the format @code{YYYY-MM-DD}, followed by a
-space and the class of the anniversary (@samp{birthday} or @samp{wedding}, or
-a format string).  If you omit the class, it will default to @samp{birthday}.
-Here are a few examples, the header for the file @file{org-bbdb.el} contains
-more detailed information.
+record and then add the date in the format @code{YYYY-MM-DD} or @code{MM-DD},
+followed by a space and the class of the anniversary (@samp{birthday} or
+@samp{wedding}, or a format string).  If you omit the class, it will default to
+@samp{birthday}. Here are a few examples, the header for the file
+@file{org-bbdb.el} contains more detailed information.
 
 @example
 1973-06-22
+06-22
 1955-08-02 wedding
 2008-04-14 %s released version 6.01 of org-mode, %d years ago
 @end example
@@ -7449,12 +7465,14 @@ will still be searched for stuck projects.
 @cindex presentation, of agenda items
 
 @vindex org-agenda-prefix-format
-Before displaying items in an agenda view, Org-mode visually prepares
-the items and sorts them.  Each item occupies a single line.  The line
-starts with a @emph{prefix} that contains the @emph{category}
-(@pxref{Categories}) of the item and other important information.  You can
-customize the prefix using the option @code{org-agenda-prefix-format}.
-The prefix is followed by a cleaned-up version of the outline headline
+@vindex org-agenda-tags-column
+Before displaying items in an agenda view, Org-mode visually prepares the
+items and sorts them.  Each item occupies a single line.  The line starts
+with a @emph{prefix} that contains the @emph{category} (@pxref{Categories})
+of the item and other important information.  You can customize in which
+column tags will be displayed through @code{org-agenda-tags-column}.  You can
+also customize the prefix using the option @code{org-agenda-prefix-format}.
+This prefix is followed by a cleaned-up version of the outline headline
 associated with the item.
 
 @menu
@@ -8683,8 +8701,8 @@ syntax; it is exported verbatim.
 @node Horizontal rules, Comment lines, Emphasis and monospace, Structural markup elements
 @subheading  Horizontal rules
 @cindex horizontal rules, markup rules
-A line consisting of only dashes, and at least 5 of them, will be
-exported as a horizontal line (@samp{<hr/>} in HTML).
+A line consisting of only dashes, and at least 5 of them, will be exported as
+a horizontal line (@samp{<hr/>} in HTML and @code{\hrule} in @LaTeX{}).
 
 @node Comment lines,  , Horizontal rules, Structural markup elements
 @subheading Comment lines
@@ -10834,8 +10852,6 @@ respective variable for details.
 @vindex org-export-publishing-directory
 @vindex org-export-html-preamble
 @vindex org-export-html-postamble
-@vindex org-export-html-auto-preamble
-@vindex org-export-html-auto-postamble
 @vindex user-full-name
 @vindex user-mail-address
 @vindex org-export-select-tags
@@ -10883,10 +10899,8 @@ respective variable for details.
 @item @code{:expand-quoted-html}    @tab @code{org-export-html-expand}
 @item @code{:timestamp}             @tab @code{org-export-html-with-timestamp}
 @item @code{:publishing-directory}  @tab @code{org-export-publishing-directory}
-@item @code{:preamble}              @tab @code{org-export-html-preamble}
-@item @code{:postamble}             @tab @code{org-export-html-postamble}
-@item @code{:auto-preamble}         @tab @code{org-export-html-auto-preamble}
-@item @code{:auto-postamble}        @tab @code{org-export-html-auto-postamble}
+@item @code{:html-preamble}         @tab @code{org-export-html-preamble}
+@item @code{:html-postamble}        @tab @code{org-export-html-postamble}
 @item @code{:author}                @tab @code{user-full-name}
 @item @code{:email}                 @tab @code{user-mail-address} : @code{addr;addr;..}
 @item @code{:select-tags}           @tab @code{org-export-select-tags}
@@ -10971,12 +10985,29 @@ of links to all files in the project.
 (default) or @code{last} to display folders first or last,
 respectively.  Any other value will mix files and folders.
 
-@item @code{:sitemap-alphabetically}
-@tab The site map is normally sorted alphabetically.  Set this explicitly to
-@code{nil} to turn off sorting.
+@item @code{:sitemap-sort-files}
+@tab How the files are sorted in the site map.  Set this to
+@code{alphabetically} (default), @code{chronologically} or
+@code{anti-chronologically}. @code{chronologically} sorts the files with
+older date first while @code{anti-chronologically} sorts the files with newer
+date first. @code{alphabetically} sorts the files alphabetically. The date of
+a file is retrieved with @code{org-publish-find-date}.
 
 @item @code{:sitemap-ignore-case}
 @tab Should sorting be case-sensitive?  Default @code{nil}.
+
+@item @code{:sitemap-file-entry-format}
+@tab With this option one can tell how a sitemap's entry is formated in the
+sitemap. This is a format string with some escape sequences: @code{%t} stands
+for the title of the file, @code{%a} stands for the author of the file and
+@code{%d} stands for the date of the file. The date is retrieved with the
+@code{org-publish-find-date} function and formated with
+@code{org-publish-sitemap-date-format}. Default @code{%t}.
+
+@item @code{:sitemap-date-format}
+@tab Format string for the @code{format-time-string} function that tells how
+a sitemap entry's date is to be formated. This property bypasses
+@code{org-publish-sitemap-date-format} which defaults to @code{%Y-%m-%d}.
 
 @end multitable
 
@@ -11094,8 +11125,7 @@ right place on the web server, and publishing images to it.
           :table-of-contents nil
           :style "<link rel=\"stylesheet\"
                   href=\"../other/mystyle.css\" type=\"text/css\"/>"
-          :auto-preamble t
-          :auto-postamble nil)
+          :html-preamble t)
 
          ("images"
           :base-directory "~/images/"
@@ -14117,6 +14147,9 @@ you could add the function @code{org-update-all-dblocks} to a hook, for
 example @code{before-save-hook}.  @code{org-update-all-dblocks} is
 written in a way such that it does nothing in buffers that are not in
 @code{org-mode}.
+
+You can narrow the current buffer to the current dynamic block (like any
+other block) with @code{org-narrow-to-block}.
 
 @node Special agenda views, Extracting agenda information, Dynamic blocks, Hacking
 @section Special agenda views

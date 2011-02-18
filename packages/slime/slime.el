@@ -3029,7 +3029,7 @@ Return nil if there's no useful source location."
                ((eq (slime-note.severity note) :read-error)
                 (slime-choose-overlay-for-read-error location))
                ((equal pos '(:eof))
-                (list (1- (point-max)) (point-max)))
+                (values (1- (point-max)) (point-max)))
                (t
                 (slime-choose-overlay-for-sexp location))))))))
 
@@ -4009,13 +4009,37 @@ The result is a (possibly empty) list of definitions."
 (defun slime-eval-for-lisp (thread tag form-string)
   (let ((ok nil) 
         (value nil)
+        (error nil)
         (c (slime-connection)))
-    (unwind-protect (progn
-                      (slime-check-eval-in-emacs-enabled)
-                      (setq value (eval (read form-string)))
-                      (setq ok t))
-      (let ((result (if ok `(:ok ,value) `(:abort))))
+    (unwind-protect 
+        (condition-case err
+            (progn
+              (slime-check-eval-in-emacs-enabled)
+              (setq value (eval (read form-string)))
+              (slime-check-eval-in-emacs-result value)
+              (setq ok t))
+          ((debug error) 
+           (setq error err)))
+      (let ((result (cond (ok `(:ok ,value))
+                          (error `(:error ,(symbol-name (car error))
+                                          . ,(mapcar #'prin1-to-string 
+                                                     (cdr error))))
+                          (t `(:abort)))))
         (slime-dispatch-event `(:emacs-return ,thread ,tag ,result) c)))))
+
+(defun slime-check-eval-in-emacs-result (x)
+  "Raise an error if X can't be marshaled."
+  (or (stringp x)
+      (memq x '(nil t))
+      (integerp x)
+      (keywordp x)
+      (and (consp x)
+           (let ((l x))
+             (while (consp l)
+               (slime-check-eval-in-emacs-result (car x))
+               (setq l (cdr l)))
+             (slime-check-eval-in-emacs-result l)))
+      (error "Non-serializable return value: %S" x)))
 
 (defun slime-check-eval-in-emacs-enabled ()
   "Raise an error if `slime-enable-evaluate-in-emacs' isn't true."
@@ -6501,6 +6525,17 @@ position of point in the current buffer."
     (cons (line-number-at-pos)
           (current-column))))
 
+(defun slime-inspector-property-at-point ()
+  (let ((properties '(slime-part-number slime-range-button
+                      slime-action-number)))
+    (flet ((find-property (point)
+             (loop for property in properties
+                   for value = (get-text-property point property)
+                   when value
+                   return (list property value))))
+      (or (find-property (point))
+          (find-property (1- (point)))))))
+
 (defun slime-inspector-operate-on-point ()
   "Invoke the command for the text at point.
 1. If point is on a value then recursivly call the inspector on
@@ -6508,23 +6543,26 @@ that value.
 2. If point is on an action then call that action.
 3. If point is on a range-button fetch and insert the range."
   (interactive)
-  (let ((part-number (get-text-property (point) 'slime-part-number))
-        (range-button (get-text-property (point) 'slime-range-button))
-        (action-number (get-text-property (point) 'slime-action-number))
-        (opener (lexical-let ((point (slime-inspector-position)))
+  (let ((opener (lexical-let ((point (slime-inspector-position)))
                   (lambda (parts)
                     (when parts
-                      (slime-open-inspector parts point))))))
-    (cond (part-number
-           (slime-eval-async `(swank:inspect-nth-part ,part-number)
-                             opener)
+                      (slime-open-inspector parts point)))))
+        (new-opener (lambda (parts)
+                      (when parts
+                        (slime-open-inspector parts)))))
+    (destructuring-bind (property value)
+        (slime-inspector-property-at-point)
+        (case property
+          (slime-part-number
+           (slime-eval-async `(swank:inspect-nth-part ,value)
+                              new-opener)
            (push (slime-inspector-position) slime-inspector-mark-stack))
-          (range-button
-           (slime-inspector-fetch-more range-button))
-          (action-number 
-           (slime-eval-async `(swank::inspector-call-nth-action ,action-number)
+          (slime-range-button
+           (slime-inspector-fetch-more value))
+          (slime-action-number 
+           (slime-eval-async `(swank::inspector-call-nth-action ,value)
                              opener))
-          (t (error "No object at point")))))
+          (t (error "No object at point"))))))
 
 (defun slime-inspector-operate-on-click (event)
   "Move to events' position and operate the part."

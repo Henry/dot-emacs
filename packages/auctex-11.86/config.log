@@ -78,8 +78,8 @@ configure:1992: checking for emacs
 configure:2010: found /usr/local/bin/emacs
 configure:2022: result: /usr/local/bin/emacs
 configure:2038: checking if /usr/local/bin/emacs is XEmacs
-/usr/local/bin/emacs -batch -no-site-file -eval (let* ((x (if (featurep (quote xemacs)) "yes" "no"))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770"))
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+/usr/local/bin/emacs -batch -no-site-file -eval (let* ((x (if (featurep (quote xemacs)) "yes" "no"))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691"))
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => no
 configure:2058: result: no
 configure:2062: checking for Emacs prefix
@@ -90,26 +90,26 @@ configure:2062: checking for Emacs prefix
         (setq prefix parent)
       (if (string= (file-name-nondirectory parent) "bin")
          (setq prefix (directory-file-name (file-name-directory parent)))))
-    prefix) (error NONE)))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770")) /usr/local/bin/emacs
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+    prefix) (error NONE)))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691")) /usr/local/bin/emacs
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => /usr/local
 configure:2081: result: "/usr/local"
 configure:2111: checking if Emacs is recent enough
 /usr/local/bin/emacs -batch -no-site-file -eval (let* ((x (cond ((< emacs-major-version 21) "no")
 			 ((> emacs-major-version 21) "yes")
 			 ((< emacs-minor-version 01) "no")
-			 (t "yes")))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770"))
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+			 (t "yes")))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691"))
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => yes
 configure:2125: result: yes
 configure:2135: checking for MULE support
-/usr/local/bin/emacs -batch -eval (let* ((x (condition-case nil (require 'mule ) 	(error (prog1 nil (message "mule not found")))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770"))
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+/usr/local/bin/emacs -batch -eval (let* ((x (condition-case nil (require 'mule ) 	(error (prog1 nil (message "mule not found")))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691"))
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => mule
 configure:2169: result: yes
 configure:2214: checking if build directory is valid
-/usr/local/bin/emacs -batch -eval (let* ((x (if (or (member (directory-file-name default-directory) load-path)	      (member (file-name-as-directory default-directory) load-path))	 "no" "yes"))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770"))
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+/usr/local/bin/emacs -batch -eval (let* ((x (if (or (member (directory-file-name default-directory) load-path)	      (member (file-name-as-directory default-directory) load-path))	 "no" "yes"))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691"))
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => yes
 configure:2230: result: yes
 configure:2318: checking where lisp files go
@@ -142,8 +142,8 @@ configure:2439: checking where the package lisp files go
               (t
 	       `(expand-file-name
                    ,(file-relative-name path startupdir)
-	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/tex-site.el
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/tex-site.el
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => (expand-file-name "auctex" (file-name-directory load-file-name))
 configure:2520: result: /home/dm2/henry/.emacs.d/packages/auctex/auctex
 configure:2523: checking where the data files go
@@ -172,8 +172,8 @@ configure:2523: checking where the data files go
               (t
 	       `(expand-file-name
                    ,(file-relative-name path startupdir)
-	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/tex-site.el
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691")) /home/dm2/henry/.emacs.d/packages/auctex/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/tex-site.el
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => (expand-file-name "auctex" (file-name-directory load-file-name))
 configure:2604: result: /home/dm2/henry/.emacs.d/packages/auctex/auctex
 /usr/local/bin/emacs -batch -no-site-file -eval (let* ((path(pop command-line-args-left)) (lispdir(pop command-line-args-left)) (startup(pop command-line-args-left)) (target(pop command-line-args-left))(x (progn (setq path (directory-file-name path))
@@ -201,8 +201,8 @@ configure:2604: result: /home/dm2/henry/.emacs.d/packages/auctex/auctex
               (t
 	       `(expand-file-name
                    ,(file-relative-name path startupdir)
-	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770"))  /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/auctex.el tex-site.el
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691"))  /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/auctex.el tex-site.el
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => (expand-file-name "tex-site.el" (file-name-directory load-file-name))
 configure:2681: checking where the info files go
 configure:2683: result: ${datarootdir}/info
@@ -233,8 +233,8 @@ configure:2704: result: ${localstatedir}/auctex
               (t
 	       `(expand-file-name
                    ,(file-relative-name path startupdir)
-	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-28770")) /home/dm2/henry/.emacs.d/packages/auctex/var/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/tex-site.el
-Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-28770
+	           (file-name-directory load-file-name))))))))) (write-region (if (stringp x) x (prin1-to-string x)) nil "./conftest-25691")) /home/dm2/henry/.emacs.d/packages/auctex/var/auctex /home/dm2/henry/.emacs.d/packages/auctex /home/dm2/henry/.emacs.d/packages/auctex/tex-site.el
+Wrote /home/dm2/henry/.emacs.d/packages/auctex-11.86/conftest-25691
 => (expand-file-name "var/auctex" (file-name-directory load-file-name))
 configure:2784: checking for tex
 configure:2802: found /usr/bin/tex

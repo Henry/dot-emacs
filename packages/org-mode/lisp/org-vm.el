@@ -54,8 +54,10 @@
 ;; Implementation
 (defun org-vm-store-link ()
   "Store a link to a VM folder or message."
-  (when (or (eq major-mode 'vm-summary-mode)
-	    (eq major-mode 'vm-presentation-mode))
+  (when (and (or (eq major-mode 'vm-summary-mode)
+		 (eq major-mode 'vm-presentation-mode))
+	     (save-window-excursion
+	       (vm-select-folder-buffer) buffer-file-name))
     (and (eq major-mode 'vm-presentation-mode) (vm-summarize))
     (vm-follow-summary-cursor)
     (save-excursion

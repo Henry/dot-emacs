@@ -29,6 +29,7 @@
 ;; This file contains the time clocking code for Org-mode
 
 (require 'org)
+(require 'org-exp)
 ;;; Code:
 
 (eval-when-compile
@@ -228,25 +229,26 @@ string as argument."
   :group 'org-clock)
 
 (defcustom org-clocktable-defaults
-  (list
-   :maxlevel 2
-   :scope 'file
-   :block nil
-   :tstart nil
-   :tend nil
-   :step nil
-   :stepskip0 nil
-   :fileskip0 nil
-   :tags nil
-   :emphasize nil
-   :link nil
-   :narrow '40!
-   :indent t
-   :formula nil
-   :timestamp nil
-   :level nil
-   :tcolumns nil
-   :formatter nil)
+  `(list
+    :maxlevel 2
+    :lang ,org-export-default-language
+    :scope 'file
+    :block nil
+    :tstart nil
+    :tend nil
+    :step nil
+    :stepskip0 nil
+    :fileskip0 nil
+    :tags nil
+    :emphasize nil
+    :link nil
+    :narrow '40!
+    :indent t
+    :formula nil
+    :timestamp nil
+    :level nil
+    :tcolumns nil
+    :formatter nil)
   "Default properties for clock tables."
   :group 'org-clock
   :type 'plist)
@@ -256,6 +258,15 @@ string as argument."
 For more information, see `org-clocktable-write-default'."
   :group 'org-clocktable
   :type 'function)
+
+(defcustom org-clock-clocktable-language-setup
+  '(("en" "File"     "L"  "Timestamp"  "Headline" "Time"  "ALL"   "Total time"   "File time")
+    ("es" "Archivo"  "N"  "Fecha y hora" "Tarea" "Tiempo" "TODO" "Tiempo total" "Tiempo archivo")
+    ("fr" "Fichier"  "N"  "Horodatage" "En-tête"  "Durée" "TOUT"  "Durée totale" "Durée fichier")
+    ("nl" "Bestand"  "N"  "Tijdstip"   "Hoofding" "Duur"  "ALLES" "Totale duur"  "Bestandstijd"))
+  "Terms used in clocktable, translated to different languages."
+  :group 'org-clocktable
+  :type 'alist)
 
 (defcustom org-clock-clocktable-default-properties '(:maxlevel 2 :scope file)
   "Default properties for new clocktables.
@@ -2016,6 +2027,8 @@ from the dynamic block defintion."
   ;; there own special formatter, this maybe much easier because there can
   ;; be a fixed format with a well-defined number of columns...
   (let* ((hlchars '((1 . "*") (2 . "/")))
+	 (lwords (assoc (plist-get params :lang) 
+			org-clock-clocktable-language-setup))
 	 (multifile (plist-get params :multifile))
 	 (block (plist-get params :block))
 	 (ts (plist-get params :tstart))
@@ -2095,19 +2108,21 @@ from the dynamic block defintion."
       ;; Insert the table header line
       (insert-before-markers
        "|"                              ; table line starter
-       (if multifile "File|"      "")   ; file column, maybe
-       (if level-p   "L|"         "")   ; level column, maybe
-       (if timestamp "Timestamp|" "")   ; timestamp column, maybe
-       "Headline|Time|\n")              ; headline and time columns
+       (if multifile (concat (nth 1 lwords) "|") "")  ; file column, maybe
+       (if level-p   (concat (nth 2 lwords) "|") "")  ; level column, maybe
+       (if timestamp (concat (nth 3 lwords) "|") "")  ; timestamp column, maybe
+       (concat (nth 4 lwords) "|" 
+	       (nth 5 lwords) "|\n"))                 ; headline and time columns
 
       ;; Insert the total time in the table
       (insert-before-markers
-       "|-\n"                           ; a hline
-       "|"                              ; table line starter
-       (if multifile "| ALL " "")       ; file column, maybe
-       (if level-p   "|"      "")       ; level column, maybe
-       (if timestamp "|"      "")       ; timestamp column, maybe
-       "*Total time*| "                 ; instead of a headline
+       "|-\n"                            ; a hline
+       "|"                               ; table line starter
+       (if multifile (concat "| " (nth 6 lwords) " ") "") 
+				         ; file column, maybe
+       (if level-p   "|"      "")        ; level column, maybe
+       (if timestamp "|"      "")        ; timestamp column, maybe
+       (concat "*" (nth 7 lwords) "*| ") ; instead of a headline
        "*"
        (org-minutes-to-hh:mm-string (or total-time 0)) ; the time
        "*|\n")                          ; close line
@@ -2126,7 +2141,7 @@ from the dynamic block defintion."
 	    (when multifile
 	      ;; Summarize the time colleted from this file
 	      (insert-before-markers
-	       (format "| %s %s | %s*File time* | *%s*|\n"
+	       (format (concat "| %s %s | %s*" (nth 8 lwords) "* | *%s*|\n")
 		       (file-name-nondirectory (car tbl))
 		       (if level-p   "| " "") ; level column, maybe
 		       (if timestamp "| " "") ; timestamp column, maybe

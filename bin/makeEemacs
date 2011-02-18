@@ -1,13 +1,18 @@
 #!/bin/sh
 
+EMACS=`which emacs`
+
+if which setarch >& /dev/null
+then
 case `uname -m` in
     i686)
     EMACS="setarch i386 -R `which emacs`"
     ;;
     x86_64)
-    EMACS=`which emacs`
+    EMACS="setarch x86_64 -R `which emacs`"
     ;;
 esac
+fi
 
 rm -rf ~/bin/eemacs
 
@@ -25,6 +30,6 @@ make
 
 $EMACS --batch -q \
     --load load-eemacs.el \
-    --execute "(dump-emacs \"~/bin/eemacs\" \"$EMACS\")"
+    --execute "(dump-emacs \"~/bin/eemacs\" \"`which emacs`\")"
 
 bin/makeTAGS
