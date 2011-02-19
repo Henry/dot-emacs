@@ -36,6 +36,9 @@
 ;;; Emms buffer key-bindings
 ;;;  Emms play-list and track controls on the key-pad
 
+;;; Start play
+(define-key emms-browser-mode-map [return] 'emms-browser-add-tracks-and-play)
+
 ;;;  Pause play
 (define-key emms-browser-mode-map [home] 'my-emms-toggle-playing)
 (define-key emms-playlist-mode-map [home] 'my-emms-toggle-playing)

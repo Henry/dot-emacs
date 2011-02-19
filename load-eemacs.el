@@ -175,14 +175,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; Emms: Emacs Multimedia System
-;; Autoload doesn't work with cache, it fails to load and initialise correctly
-;;(autoload 'emms-browser "init-emms" "Emms" t)
-
-;; Don't load by default as the reading of the cache takes a short time
-;; build a special version which includes it: eeemacs
-;; or load at run-time
-;; P.S. It is OK to pre-load the latest emms
-(load "init-emms")
+(autoload 'emms-browser "init-emms" "Emms" t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Dictionary and thesaurus
