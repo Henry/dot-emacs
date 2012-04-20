@@ -326,7 +326,7 @@ Continuation lines follow a line terminated by a '('"
     (define-key map "\C-c\C-n" 'goofie-next-statement)
     (define-key map "\C-c\C-p" 'goofie-previous-statement)
     (define-key map "\C-c\C-u" 'goofie-beginning-of-block)
-    (define-key map "\C-c\C-c" 'comment-region)
+    (define-key map "\C-c\C-c" 'comment-dwim)
 
     ;; Fixme: Add :help to menu.
     (easy-menu-define goofie-menu map "GOOFIE Mode menu"
