@@ -1,8 +1,0 @@
-# pandoc-mode settings file for ebib.text #
-# saved on 2009.11.17 12:23 #
-
-read::markdown
-write::latex
-output::ebib-manual.tex
-custom-header::~/src/ebib/manual/header.tex
-output-dir::~/src/ebib/manual/pdf
