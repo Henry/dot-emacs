@@ -1496,7 +1496,7 @@ Otherwise leave point unchanged and return NIL."
     (indent-sexp)))
 
 ;; -----------------------------------------------------------------------------
-;;; Better automatic commenting/un-commenting
+;;;  Better automatic commenting/un-commenting
 
 ;; From http://www.emacswiki.org/emacs/CommentingCode
 (defun comment-dwim-line (&optional arg)
@@ -1551,8 +1551,6 @@ end of the line."
 ;;;###autoload
 (define-derived-mode eulisp-mode fundamental-mode "EuLisp"
   "Major mode for editing EuLisp files.
-
-Turns on Font Lock mode.
 
 Supports Eldoc mode (only for functions, using a Python process),
 Info-Look and Imenu.  In Outline minor mode, `define' lines count

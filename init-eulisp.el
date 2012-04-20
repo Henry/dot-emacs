@@ -83,6 +83,7 @@
   (font-lock-mode 1))
 
 (add-hook 'makefile-mode-hook 'my-makefile-mode-hook)
+(add-to-list 'auto-mode-alist '("[Mm]akefile\\..*" . makefile-gmake-mode))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-eulisp.el ends here

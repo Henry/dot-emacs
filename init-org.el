@@ -1,30 +1,32 @@
 ;;; init-org.el --- Initialisation for the org-mode organiser
 ;; -----------------------------------------------------------------------------
 ;;; Package paths
-;; (add-to-list 'load-path
-;;              (expand-file-name "~/.emacs.d/packages/org-mode/lisp"))
-;; (add-to-list 'load-path
-;;              (expand-file-name "~/.emacs.d/packages/org-mode/contrib/lisp"))
-;; (add-to-list 'Info-directory-list
-;;              (expand-file-name "~/.emacs.d/packages/org-mode/doc") t)
+(add-to-list 'load-path
+             (expand-file-name "~/.emacs.d/packages/org-mode/lisp"))
+(add-to-list 'load-path
+             (expand-file-name "~/.emacs.d/packages/org-mode/contrib/lisp"))
+(add-to-list 'Info-directory-list
+             (expand-file-name "~/.emacs.d/packages/org-mode/doc") t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Dependencies
 
-(require 'org)
-(require 'org-faces)
-(require 'org-latex)
-(require 'org-html)
-(require 'org-protocol)
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org")
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-macs")
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-list")
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-compat")
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-faces")
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-latex")
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-html")
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-protocol")
-;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-table")
+;;(require 'org)
+;;(require 'org-faces)
+;;(require 'org-latex)
+;;(require 'org-html)
+;;(require 'org-protocol)
+(load-library "~/.emacs.d/packages/org-mode/lisp/org")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-macs")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-list")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-compat")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-faces")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-latex")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-html")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-protocol")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-table")
+(load-library "~/.emacs.d/packages/org-mode/lisp/ob-gnuplot")
+(load-library "~/.emacs.d/packages/org-mode/lisp/org-footnote")
 
 (require 'org-fstree)
 (require 'find-lisp)
@@ -67,6 +69,7 @@
   (setq fill-column 80)
   (setq comment-start nil) ; Hack to avoid auto-fill inserting '^#'
   (turn-on-auto-fill)
+  (font-lock-mode 1)
 
   ;; Show trailing whitespace, tabs and lines > 80
   (whitespace-mode 1)

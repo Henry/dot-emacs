@@ -106,6 +106,7 @@
       '(("^///   [^ ].*" 0 'outline-4 t))))
    '(
      c-mode
+     goofie-mode
      ))
 
   (mapc

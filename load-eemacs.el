@@ -76,6 +76,10 @@
 (load "init-eulisp")
 
 ;; -----------------------------------------------------------------------------
+;;; GOOFIE settings
+(load "init-goofie")
+
+;; -----------------------------------------------------------------------------
 ;;; LaTeX settings
 (load "init-latex")
 
@@ -206,12 +210,12 @@
 ;;(load "init-ido")
 
 ;; -----------------------------------------------------------------------------
-;;; icicles: Enhanced minibuffer completion packages
-(load "init-icicles")
-
-;; -----------------------------------------------------------------------------
 ;;; Do Re Mi: Incremental change using arrow keys or mouse wheel
 (load "init-doremi")
+
+;; -----------------------------------------------------------------------------
+;;; icicles: Enhanced minibuffer completion packages
+(load "init-icicles")
 
 ;; -----------------------------------------------------------------------------
 ;;; Application generated customisations

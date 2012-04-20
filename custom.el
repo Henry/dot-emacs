@@ -26,7 +26,7 @@
  '(server-host "10.0.0.37")
  '(server-kill-new-buffers t)
  '(w3m-fill-column 80)
- '(whitespace-style (quote (tabs space-before-tab space-after-tab trailing empty lines-tail)))
+ '(whitespace-style (quote (face tabs space-before-tab space-after-tab trailing empty lines-tail)))
  '(whole-line-or-region-mode t)
  '(word-wrap t))
 

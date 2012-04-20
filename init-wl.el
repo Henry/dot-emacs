@@ -233,7 +233,7 @@
 (setq wl-draft-config-alist
       '(
         ((string-match ".*@imap\\.gmail\\.com.*" wl-draft-parent-folder)
-         ("From" . "Henry Weller <hweller0@gmail.com>")
+         ("From" . "Henry G. Weller <hweller0@gmail.com>")
          ("Organization" . nil)
          ("X-Attribution" . "HGW")
          (signature . "~/Maildir/Signatures/homeAddress"))
@@ -431,9 +431,9 @@ e.g.
 
 (defun my-wl-gmail-smtp-server ()
   "Configure the use of the GMail SMTP server for sending"
-  (setq wl-smtp-connection-type 'stats
-        wl-smtp-authenticate-type "plain"
+  (setq wl-smtp-connection-type 'starttls
         wl-smtp-posting-port 587
+        wl-smtp-authenticate-type "plain"
         wl-smtp-posting-user "hweller0@gmail.com"
         wl-smtp-posting-server "smtp.gmail.com"
         wl-local-domain "gmail.com"))
@@ -447,7 +447,8 @@ e.g.
     (set-frame-position (selected-frame) 663 0)
     (set-frame-height (selected-frame) 70)
     (set-frame-width (selected-frame) 114)
-    (my-wl-zen-smtp-server) ;; Set the default smtp server to zen
+    (my-wl-sgi-smtp-server) ;; Set the default smtp server to zen
+    ;;(my-wl-zen-smtp-server)
     ;;(my-wl-plusnet-smtp-server)
     ;;(my-wl-gmail-smtp-server)
     (my-bbdb-wl-refile-alist) ;; Add the BBDB refiling folders

@@ -8,6 +8,7 @@
 
 (setq emms-directory "~/Emacs/Emms")
 (require 'emms-setup)
+(require 'emms-volume)
 ;;(autoload 'emms "emms-setup" "Emms" t)
 
 ;(eval-after-load "emms-setup"

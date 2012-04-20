@@ -107,6 +107,8 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
   (autoload 'turn-on-eldoc-mode "eldoc" nil t)
   (turn-on-eldoc-mode)
 
+  (font-lock-mode 1)
+
   ;; Show trailing whitespace, tabs and lines > 80
   (whitespace-mode 1)
 

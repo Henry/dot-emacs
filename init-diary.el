@@ -6,7 +6,7 @@
   my-diary-file-list
   '(
     "~/Emacs/Diaries/anniversaries"
-    "~hilary/Emacs/Diaries/homeDiary"
+    ;;"~hilary/Emacs/Diaries/homeDiary"
     )
 
   diary-number-of-entries 7

@@ -113,7 +113,7 @@ Unlike `icicle-locate-file' this command is a wrapper for the program `locate'."
 (require 'icomplete+)
 (setq icomplete-prospects-height 2)
 (icomplete-mode t)
-(partial-completion-mode)
+(setq partial-completion-mode t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Completing-help: press \M-? to display info on possible completions

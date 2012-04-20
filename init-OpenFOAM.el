@@ -305,7 +305,7 @@
     (c-comment-only-line-offset . (0 . 0))
     (c-indent-comments-syntactically-p . t)
     (c-block-comments-indent-p . nil)
-    (comment-style . 'multi-line)
+    ;;(comment-style . 'multi-line)
     (comment-start . "// ")
     (comment-end . "")
     (c-cleanup-list . '((defun-close-semi) (list-close-comma) (scope-operator)))
@@ -388,6 +388,8 @@
   ;(setq special-display-buffer-names
   ;  (append special-display-buffer-names (list "*compilation*"))
   ;)
+
+  (font-lock-mode 1)
 
   ;; Show trailing whitespace, tabs and lines > 80
   (whitespace-mode 1)
