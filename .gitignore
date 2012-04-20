@@ -12,6 +12,9 @@ CVS
 .cvs*
 .#*
 tramp
-TAGS
+*TAGS
+
+/packages
+!packages/bin
 
 # end-of-file
