@@ -14,7 +14,34 @@ CVS
 tramp
 *TAGS
 
-/packages
-!packages/bin
+/packages/*
+!/packages/bin
+!/packages/yasnippet/
+/packages/yasnippet/*
+!/packages/yasnippet/Makefile
+!/packages/doremi/
+/packages/doremi/*
+!/packages/doremi/Makefile
+!/packages/ioccur/
+/packages/ioccur/*
+!/packages/ioccur/Makefile
+!/packages/mo-git-blame/
+/packages/mo-git-blame/*
+!/packages/mo-git-blame/Makefile
+!/packages/babel/
+/packages/babel/*
+!/packages/babel/Makefile
+!/packages/cl-lookup/
+/packages/cl-lookup/*
+!/packages/cl-lookup/Makefile
+!/packages/icicles/
+/packages/icicles/*
+!/packages/icicles/Makefile
+!/packages/emsane/
+/packages/emsane/*
+!/packages/emsane/Makefile
+!/packages/anything-config/
+/packages/anything-config/*
+!/packages/anything-config/Makefile
 
 # end-of-file
