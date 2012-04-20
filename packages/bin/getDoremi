@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+base_url=http://www.emacswiki.org/cgi-bin/wiki/download
+dir=doremi
+
+required_libraries="
+doremi-cmd.el
+doremi-frm.el
+faces+.el
+hexrgb.el
+doremi.el
+doremi-mac.el
+frame-fns.el
+ring+.el
+"
+
+optional_libraries=""
+
+if [ -d "$dir" ]; then
+  typeset -i i=0
+  while [ -d "${dir}_OLD$i" ]; do
+    i="$i + 1"
+  done
+  mv "$dir" "${dir}_OLD$i"
+fi
+
+for library in $required_libraries $optional_libraries ; do
+    wget -nd -P $dir ${base_url}/${library}
+    # Sleep for 2 seconds so as not to overload www.emacswiki.org
+    sleep 2
+done
+
+cp ../makefiles/general doremi/Makefile
