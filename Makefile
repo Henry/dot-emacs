@@ -13,6 +13,7 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L packages/apel \
 	-L packages/auctex \
         -L packages/auto-complete \
+        -L packages/auto-complete-clang \
 	-L packages/babel \
 	-L packages/bbdb/lisp \
 	-L packages/bbdb/bbdbv3-wl \
