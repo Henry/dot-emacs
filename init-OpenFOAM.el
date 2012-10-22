@@ -568,11 +568,9 @@
 (add-to-list 'load-path
              (expand-file-name "~/.emacs.d/packages/auto-complete-clang"))
 (add-to-list 'load-path
-             (expand-file-name
-              "~/.emacs.d/packages/emacs-clang-complete-async"))
+             (expand-file-name "~/.emacs.d/packages/emacs-clang-complete-async"))
 
 (require 'auto-complete-config)
-
 (require 'auto-complete-clang-async)
 
 (defun ac-cc-mode-setup ()
@@ -618,7 +616,6 @@
 ;;   (setq ac-sources
 ;;     (append '(ac-source-clang ac-source-yasnippet) ac-sources)))
 ;; (add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
-
 
 ;; -----------------------------------------------------------------------------
 ;;; init-OpenFOAM.el ends here
