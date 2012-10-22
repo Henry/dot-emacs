@@ -9,7 +9,7 @@
 (cd emms && git pull)
 (cd emsane && git pull)
 (cd flim && git pull)
-(cd ioccur && hg pull)
+(cd ioccur && git pull)
 (cd magit && git pull)
 (cd mo-git-blame && git pull)
 (cd org-mode && git pull)
@@ -18,6 +18,6 @@
 (cd undo-tree && git pull)
 (cd w3m && cvs up)
 (cd wanderlust && git pull)
-(cd yasnippet && svn up)
+(cd yasnippet && git pull)
 bin/getDoremi
 bin/getIcicles

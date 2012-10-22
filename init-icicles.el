@@ -9,6 +9,7 @@
 (when window-system (require 'hexrgb))
 (require 'bbdb-com)
 (require 'icicles)
+(require 'icicles-mac)
 
 ;; -----------------------------------------------------------------------------
 ;;; General settings

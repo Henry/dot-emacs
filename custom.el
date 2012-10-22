@@ -16,6 +16,7 @@
  '(icicle-command-abbrev-alist (quote ((zone-mode z 3) (find-file ff 1))))
  '(initial-major-mode (quote emacs-lisp-mode))
  '(mairix-saved-searches (quote (("test1" "c:simon f:moni" nil nil))))
+ '(org-latex-to-pdf-process (quote ("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")))
  '(proced-auto-update-flag t)
  '(proced-auto-update-interval 1)
  '(remember-data-file "~/Emacs/remember")

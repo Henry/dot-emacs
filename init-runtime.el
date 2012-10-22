@@ -103,7 +103,16 @@
 
      (font-lock-add-keywords
       mode
-      '(("^///   [^ ].*" 0 'outline-4 t))))
+      '(("^ */// [^ ].*" 0 'outline-3 t)))
+
+     (font-lock-add-keywords
+      mode
+      '(("^///   [^ ].*" 0 'outline-4 t)))
+
+     (font-lock-add-keywords
+      mode
+      '(("^ *//- .*" 0 'font-lock-keyword-face t)))
+     )
    '(
      c-mode
      goofie-mode
