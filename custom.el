@@ -2,10 +2,10 @@
 ;; -----------------------------------------------------------------------------
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(anything-show-completion-activate nil)
  '(bm-highlight-style (quote bm-highlight-only-line))
  '(bookmark-default-file "~/Emacs/Bookmarks")
@@ -16,6 +16,8 @@
  '(icicle-command-abbrev-alist (quote ((zone-mode z 3) (find-file ff 1))))
  '(initial-major-mode (quote emacs-lisp-mode))
  '(mairix-saved-searches (quote (("test1" "c:simon f:moni" nil nil))))
+ '(org-emphasis-alist (quote (("*" bold "<b>" "</b>") ("/" italic "<i>" "</i>") ("_" underline "<span style=\"text-decoration:underline;\">" "</span>") ("=" org-code "<code>" "</code>" verbatim) ("~" org-verbatim "<code>" "</code>" verbatim) ("+" (:strike-through t) "<del>" "</del>") ("@" org-warning "<b>" "</b>"))))
+ '(org-export-latex-emphasis-alist (quote (("*" "\\textbf{%s}" nil) ("/" "\\emph{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\protectedtexttt" t) ("~" "\\verb" t) ("@" "\\alert{%s}" nil))))
  '(org-latex-to-pdf-process (quote ("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")))
  '(proced-auto-update-flag t)
  '(proced-auto-update-interval 1)
@@ -32,10 +34,10 @@
  '(word-wrap t))
 
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "white" :foreground "black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 103 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
  '(bm-face ((((class color) (background light)) (:background "pale goldenrod"))))
  '(bm-fringe-face ((((class color) (background light)) (:background "pale goldenrod"))))
