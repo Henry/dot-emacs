@@ -571,8 +571,7 @@
 (require 'auto-complete-config)
              (expand-file-name "~/.emacs.d/packages/auto-complete-clang"))
 (add-to-list 'load-path
-             (expand-file-name
-              "~/.emacs.d/packages/emacs-clang-complete-async"))
+             (expand-file-name "~/.emacs.d/packages/emacs-clang-complete-async"))
 
 (require 'auto-complete-config)
 (require 'auto-complete-clang-async)
