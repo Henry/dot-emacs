@@ -1,7 +1,7 @@
-;;; goofie.el -- Basic mode for GOOFIE
+;;; goofie.el -- Basic mode for Goofie
 ;;
 ;; Copyright (C) 2003, 2004, 2005  Free Software Foundation, Inc.
-;; Copyright (C) 2011 Henry G. Weller
+;; Copyright (C) 2011, 2012 Henry G. Weller
 ;;
 ;; Maintainer: Henry G. Weller
 ;;
@@ -9,10 +9,10 @@
 ;; Based on: Python mode by Dave Love <fx@gnu.org>
 ;;
 ;; Created: July 2005
-;; Version: 0.2
-;; Last-Updated: Sat May 14 21:24:05 2011 (+0100)
+;; Version: 0.3
+;; Last-Updated: Tue Jun 26 17:06:43 2012 (+0100)
 ;;           By: Henry G. Weller
-;;     Update #: 9
+;;     Update #: 10
 ;; URL:
 ;; Keywords: languages
 ;; Compatibility: GNU Emacs 23.x (may work with earlier versions)
@@ -21,10 +21,10 @@
 ;; -----------------------------------------------------------------------------
 ;;; Commentary:
 ;;
-;; Major mode for editing programs written in GOOFIE.
+;; Major mode for editing programs written in Goofie.
 ;;
 ;; Successive TABs cycle between possible indentations for the line.
-;; There is symbol completion using lookup in GOOFIE.
+;; There is symbol completion using lookup in Goofie.
 ;; -----------------------------------------------------------------------------
 ;;; Change log:
 ;;
@@ -37,6 +37,10 @@
 ;; * Corrected support for outline-mode and added handling of `///' comments.
 ;; * Improved Imenu support.
 ;; * Completed list of types for font-locking.
+;; Version 0.3
+;; * Moved "_" from symbol to word
+;; * Added the keyword "initially"
+;; * Improved support for `///' comments used to section modules
 ;; -----------------------------------------------------------------------------
 ;;
 ;; This program is free software: you can redistribute it and/or modify
@@ -58,7 +62,7 @@
 (require 'outline)
 
 (defgroup goofie nil
-  "Editing mode for GOOFIE programs"
+  "Editing mode for Goofie programs"
   :group 'languages
   :version "0.2"
   :link '(emacs-commentary-link "goofie"))
@@ -73,20 +77,20 @@
 (add-to-list 'auto-mode-alist '("\\.gi\\'" . goofie-mode))
 
 ;;;###autoload
-(add-to-list 'same-window-buffer-names "*GOOFIE*")
+(add-to-list 'same-window-buffer-names "*Goofie*")
 
 ;; -----------------------------------------------------------------------------
 ;;; Customization variables
 
 (defcustom goofie-indent 3
-  "*Number of columns for a unit of indentation in GOOFIE mode.
+  "*Number of columns for a unit of indentation in Goofie mode.
 See also `\\[goofie-guess-indent]'"
   :group 'goofie
   :type 'integer)
 
 (defcustom goofie-guess-indent t
-  "*Non-nil means GOOFIE mode guesses `goofie-indent' for the buffer."
-  :type 'boolean
+  "*Non-nil means Goofie mode guesses `goofie-indent' for the buffer."
+  :type 'BB
   :group 'goofie)
 
 (defcustom goofie-indent-string-contents t
@@ -102,7 +106,7 @@ Otherwise indent them to column zero."
 Only do this for comments where the leading comment character is followed
 by space.  This doesn't apply to comment lines, which are always indented
 in lines with preceding comments."
-  :type 'boolean
+  :type 'BB
   :group 'goofie)
 
 (defcustom goofie-continuation-offset 6
@@ -122,51 +126,51 @@ Continuation lines follow a line terminated by a '('"
 
 (eval-when-compile
   (defvar goofie-keywords
-    '("generic" "is" "import" "include" "using" "use"
+    '("initially" "generic" "is" "import" "include" "using" "use"
       "in" "out" "variable" "constant" "var" "const"
       "return" "other" "require" "ensure" "written" "yield"
       "try" "catch" "retry" "raise" "transform" "into" "include"
       "while" "until" "for" "do" "loop" "exit" "restart"
       "translate" "when" "where" "with" "case"
       "if" "then" "else" "not" "and" "or" "xor" "nil")
-    "List of words highlighted as 'keywords' in GOOFIE mode")
+    "List of words highlighted as 'keywords' in Goofie mode")
 
   (defvar goofie-warnings
     '("raise")
-    "List of words prefixing a 'warnings' in GOOFIE mode")
+    "List of words prefixing a 'warnings' in Goofie mode")
 
   (defvar goofie-types
-    '("integer" "natural" "real" "character" "text" "record" "boolean")
-    "List of words highlighted as 'types' in GOOFIE mode")
+    '("integer" "natural" "real" "character" "text" "record" "BB")
+    "List of words highlighted as 'types' in Goofie mode")
 
   (defvar goofie-functors
     '("function" "procedure" "to" "translation" "iterator")
-    "List of words declaring functions in GOOFIE mode")
+    "List of words declaring functions in Goofie mode")
 
   (defvar goofie-type-declarators
     '("type")
-    "List of words declaring types in GOOFIE mode")
+    "List of words declaring types in Goofie mode")
 
   (defvar goofie-module-declarators
     '("module")
-    "List of words declaring modules in GOOFIE mode")
+    "List of words declaring modules in Goofie mode")
 
   (defvar goofie-declarators
     (append goofie-functors goofie-type-declarators goofie-module-declarators)
-    "List of words declaring modules or records in GOOFIE mode")
+    "List of words declaring modules or records in Goofie mode")
 
   (defvar goofie-outdent-words
     '("else" "into")
-    "List of words declaring modules or records in GOOFIE mode")
+    "List of words declaring modules or records in Goofie mode")
 
   (defvar goofie-quotes
     '(("<<" ">>"))
-    "List of character sequences used as quotes in GOOFIE mode")
+    "List of character sequences used as quotes in Goofie mode")
 
   (defvar goofie-comments
     '(("//")
       ("/*" "*/"))
-    "List of character sequences used as comments in GOOFIE mode")
+    "List of character sequences used as comments in Goofie mode")
 
   (defun goofie-separators-regexp (sep-list)
     "Return a regexp matching the separator list"
@@ -182,11 +186,12 @@ Continuation lines follow a line terminated by a '('"
                                  '(or "\n" "\f"))))
                       sep-list))))
 
-;; Strictly speaking, GOOFIE has no keywords, but colorizing special words
-;; that have standard uses in normal GOOFIE programs still makes sense.
+;; Strictly speaking, Goofie has no keywords, but colorizing special words
+;; that have standard uses in normal Goofie programs still makes sense.
 (defvar goofie-font-lock-keywords
   (eval-when-compile
     (list
+
      ;; Strings
      `(,(rx (group (eval (goofie-separators-regexp goofie-quotes))))
        (1 font-lock-string-face))
@@ -196,9 +201,9 @@ Continuation lines follow a line terminated by a '('"
        (1 font-lock-comment-face))
 
      ;; Pragmas
-     `(,(rx (group (and "{" (0+ blank) (0+ word))))
+     `(,(rx (group (and "#" (1+ (not (any "#"))) "#")))
        (1 font-lock-preprocessor-face))
-     `(,(rx (group "}"))
+     `(,(rx (group (and "#" (1+ word))))
        (1 font-lock-preprocessor-face))
 
      ;; Keywords
@@ -211,7 +216,8 @@ Continuation lines follow a line terminated by a '('"
      `(,(rx (and word-start
                  (group (eval (cons 'or goofie-warnings)))
                  (1+ space) (group (1+ (or (1+ word)
-                                           (eval (goofie-separators-regexp goofie-quotes))
+                                           (eval (goofie-separators-regexp
+                                                  goofie-quotes))
                                            (1+ (char digit ".eE_")))))))
        (1 font-lock-keyword-face) (2 font-lock-warning-face))
 
@@ -290,6 +296,10 @@ Continuation lines follow a line terminated by a '('"
        (1 font-lock-variable-name-face)
        (2 font-lock-type-face))
 
+     ;; Mapping operator
+     `(,(rx (group "=>"))
+       (1 font-lock-keyword-face))
+
      ;; Assignment
      `(,(rx (and word-start
                  (group (1+ word))
@@ -297,7 +307,7 @@ Continuation lines follow a line terminated by a '('"
        (1 font-lock-variable-name-face)))))
 
 
-;; Recognize GOOFIE text separators
+;; Recognize Goofie text separators
 (defconst goofie-font-lock-syntactic-keywords
   (eval-when-compile
     (list
@@ -329,9 +339,9 @@ Continuation lines follow a line terminated by a '('"
     (define-key map "\C-c\C-c" 'comment-dwim)
 
     ;; Fixme: Add :help to menu.
-    (easy-menu-define goofie-menu map "GOOFIE Mode menu"
-      '("GOOFIE"
-        :help "GOOFIE-specific Features"
+    (easy-menu-define goofie-menu map "Goofie Mode menu"
+      '("Goofie"
+        :help "Goofie-specific Features"
         ["Shift region left" goofie-shift-left :active mark-active
          :help "Shift by a single indentation step"]
         ["Shift region right" goofie-shift-right :active mark-active
@@ -391,19 +401,23 @@ Continuation lines follow a line terminated by a '('"
     ;; # is a paired delimiter in 16#FFFE#, but we treat it as symbol
     (modify-syntax-entry ?#  "." table)
 
-    ;; define what belongs in Ada symbols
+    ;; define what belongs in symbols
     (modify-syntax-entry ?_ "_" table)
 
     ;; define parentheses to match
     (modify-syntax-entry ?\( "()" table)
     (modify-syntax-entry ?\) ")(" table)
+
+    ;; By default underscore is in symbol class but in Goofie it is a
+    ;; word constituent so add it to the word class
+    (modify-syntax-entry ?\_ "w" table)
     table))
 
 ;; -----------------------------------------------------------------------------
 ;;; Support functions
 
 (defsubst goofie-in-string/comment ()
-  "Return non-nil if point is in a GOOFIE literal (a comment or string)."
+  "Return non-nil if point is in a Goofie literal (a comment or string)."
   (syntax-ppss-context (syntax-ppss)))
 
 (defun goofie-skip-comments/blanks (&optional backward)
@@ -465,7 +479,7 @@ Do nothing if not in string."
 
 (defun goofie-open-block-statement-p ()
   "Return non-nil if statement at point opens a block.
-In GOOFIE, a statement opens a block if next line is more indented"
+In Goofie, a statement opens a block if next line is more indented"
   (let ((indent (current-indentation)))
     (if (eobp) nil
       (if (goofie-outdent-p) t
@@ -526,7 +540,7 @@ Set `goofie-indent' locally to the value guessed."
           indent)))))
 
 (defun goofie-calculate-indentation ()
-  "Calculate GOOFIE indentation for line at point."
+  "Calculate Goofie indentation for line at point."
   (save-excursion
     (beginning-of-line)
     (let ((syntax (syntax-ppss))
@@ -616,7 +630,8 @@ Set `goofie-indent' locally to the value guessed."
 
 ;; -----------------------------------------------------------------------------
 ;;; Cycling through the possible indentations with TAB
-;; These don't need to be buffer-local since they're only relevant during a cycle.
+;; These don't need to be buffer-local since they're only relevant
+;; during a cycle.
 
 (defvar goofie-indent-list nil
   "Alist of possible indentations and start of statement they would close
@@ -653,7 +668,8 @@ corresponding block opening (or nil)."
       (progn
         (save-excursion
           (while (goofie-beginning-of-block)
-            (push (cons (current-indentation) (goofie-initial-text)) unindents)))
+            (push (cons (current-indentation) (goofie-initial-text))
+                  unindents)))
         (setq levels (append (reverse unindents) levels unindents levels))
         (push (cons (+ (current-indentation) goofie-indent) t)
               levels)))
@@ -664,7 +680,8 @@ corresponding block opening (or nil)."
 Does non-repeated indentation.  LEAVE non-nil means leave
 indentation if it is valid, i.e. one of the positions returned by
 `goofie-calculate-indentation'.
-This is basically what `goofie-indent-line' would be if we didn't do the cycling."
+This is basically what `goofie-indent-line' would be if we didn't do the
+cycling."
   (let ((target (goofie-calculate-indentation))
         (pos (- (point-max) (point))))
     (if (or (= target (current-indentation))
@@ -685,7 +702,7 @@ This is basically what `goofie-indent-line' would be if we didn't do the cycling
   (indent-for-tab-command))
 
 (defun goofie-indent-line ()
-  "Indent current line as GOOFIE code.
+  "Indent current line as Goofie code.
 When invoked via `indent-for-tab-command', cycle through possible
 indentations for current line.  The cycle is broken by a command different
 from `indent-for-tab-command', i.e. successive TABs do the cycling."
@@ -739,12 +756,14 @@ another valid position."
 ;;; Movement.
 
 (defun goofie-beginning-of-defun ()
-  "`beginning-of-defun-function' for GOOFIE.
+  "`beginning-of-defun-function' for Goofie.
 Finds beginning of innermost nested type or function definition.
 Returns the name of the definition found at the end, or nil if reached
 start of buffer."
   (let ((ci (current-indentation))
-        (def-re (rx (and line-start (0+ space) (eval (cons 'or goofie-declarators))
+        (def-re (rx (and line-start (0+ space) (eval (cons
+                                                      'or
+                                                      goofie-declarators))
                          (1+ space)
                          (group (1+ (or word (syntax symbol)))))))
         found lep def-line)
@@ -914,7 +933,7 @@ move and return nil.  Otherwise return t."
                      (1+ (or blank "\n"))
                      (group (1+ (or word (syntax symbol))))))))
          2))
-  "Imenu expression for GOOFIE-mode.  See `imenu-generic-expression'.")
+  "Imenu expression for Goofie-mode.  See `imenu-generic-expression'.")
 
 ;; -----------------------------------------------------------------------------
 ;;; `Electric' commands
@@ -945,10 +964,10 @@ If not at the end of line's indentation, or on a comment line, just call
 (declare-function info-lookup-maybe-add-help "info-look" (&rest arg))
 
 (defun goofie-after-info-look ()
-  "Set up info-look for GOOFIE.
+  "Set up info-look for Goofie.
 Used with `eval-after-load'."
   (let* ((version "dunno")
-         ;; Whether info files have a GOOFIE version suffix, e.g. in Debian.
+         ;; Whether info files have a Goofie version suffix, e.g. in Debian.
          (versioned
           (with-temp-buffer
             (with-no-warnings (Info-mode))
@@ -1073,16 +1092,17 @@ END lie."
   (indent-rigidly start end count))
 
 (defun goofie-outline-level ()
-  "`outline-level' function for GOOFIE mode.
+  "`outline-level' function for Goofie mode.
 
-For heading starting with /// the outline level is the number of proceeding
-spaces.
+For heading starting with /// the outline level is the number of spaces between
+the /// and the following text.
 
 For heading starting with `goofie-indent' steps of indentation followed by ///
 the outline level is the number of `goofie-indent' steps.
 
 For heading starting with `goofie-indent' steps of indentation followed by a
-defining keyword the level is the number of `goofie-indent' steps of indentation - 1."
+defining keyword the level is the number of `goofie-indent' steps of
+indentation - 1."
   (let (buffer-invisibility-spec)
     (if (string-match-p "^///" (match-string 0))
         (- (outline-level) 3)
@@ -1104,8 +1124,8 @@ Uses `goofie-beginning-of-block', `goofie-end-of-block'."
 ;;; Mode
 
 ;;;###autoload
-(define-derived-mode goofie-mode fundamental-mode "GOOFIE"
-  "Major mode for editing GOOFIE files.
+(define-derived-mode goofie-mode fundamental-mode "Goofie"
+  "Major mode for editing Goofie files.
 
 The Emacs commands which work with `defun's,
 e.g. \\[beginning-of-defun], deal with nested `function' and
@@ -1124,8 +1144,8 @@ current line relative to the preceding code.  Successive TABs,
 with no intervening command, cycle through the possibilities for
 indentation on the basis of enclosing blocks.
 
-\\[fill-paragraph] fills comments and multiline strings appropriately, but has no
-effect outside them.
+\\[fill-paragraph] fills comments and multiline strings appropriately, but has
+no effect outside them.
 
 Supports Info-Look and Imenu.
 
@@ -1155,7 +1175,8 @@ lines count as headers in addition to lines starting with `///'.
 
   ;; Outline mode
   (set (make-local-variable 'outline-regexp)
-       (concat "///[ ]+\\|\\s-*///[ ]+\\|\\s-*" (rx (eval (cons 'or goofie-declarators))) "\\>"))
+       (concat "///[ ]+\\|\\s-*///[ ]+\\|\\s-*"
+               (rx (eval (cons 'or goofie-declarators))) "\\>"))
   (set (make-local-variable 'outline-level) #'goofie-outline-level)
 
   (set (make-local-variable 'open-paren-in-column-0-is-defun-start) nil)
