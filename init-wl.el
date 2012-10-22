@@ -447,8 +447,8 @@ e.g.
     (set-frame-position (selected-frame) 663 0)
     (set-frame-height (selected-frame) 70)
     (set-frame-width (selected-frame) 114)
-    (my-wl-sgi-smtp-server) ;; Set the default smtp server to zen
-    ;;(my-wl-zen-smtp-server)
+    ;;(my-wl-sgi-smtp-server)
+    (my-wl-zen-smtp-server)
     ;;(my-wl-plusnet-smtp-server)
     ;;(my-wl-gmail-smtp-server)
     (my-bbdb-wl-refile-alist) ;; Add the BBDB refiling folders

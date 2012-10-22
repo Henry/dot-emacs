@@ -274,6 +274,11 @@ end of the line."
 (add-hook 'postscript-mode-hook 'turn-off-font-lock)
 
 ;; -----------------------------------------------------------------------------
+;;; Turn-on font-lock for FORTRAN files
+;; (turn-on-font-lock)
+(add-hook 'fortran-mode-hook 'turn-on-font-lock)
+
+;; -----------------------------------------------------------------------------
 ;;; Start client server
 (defconst remote-display (getenv "DISPLAY")
   "Holds the `DISPLAY' environment variable which is set to the correct

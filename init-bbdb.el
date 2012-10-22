@@ -7,6 +7,7 @@
              (expand-file-name "~/.emacs.d/packages/bbdb/texinfo") t)
 
 (setq bbdb-file-coding-system 'utf-8)
+;;(require 'bbdb-loaddefs)
 (require 'bbdb-autoloads)
 (require 'bbdb)
 (require 'bbdb-com)

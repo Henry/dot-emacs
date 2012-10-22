@@ -12,14 +12,17 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L packages/anything-config/extensions \
 	-L packages/apel \
 	-L packages/auctex \
+        -L packages/auto-complete \
 	-L packages/babel \
 	-L packages/bbdb/lisp \
+	-L packages/bbdb/bbdbv3-wl \
 	-L packages/cl-lookup \
 	-L packages/completion-ui \
 	-L packages/doremi \
 	-L packages/ebib/src \
 	-L packages/ecb \
 	-L packages/ectags \
+        -L packages/emacs-clang-complete-async \
 	-L packages/emsane \
 	-L packages/emms/lisp \
 	-L packages/flim \
@@ -31,6 +34,7 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L packages/mo-git-blame \
 	-L packages/org-mode/lisp \
 	-L packages/org-mode/contrib/lisp \
+        -L packages/popup-el \
 	-L packages/semi \
 	-L packages/slime \
         -L packages/undo-tree \

@@ -559,4 +559,32 @@
 
 
 ;; -----------------------------------------------------------------------------
+;;;  auto-complete-clang-async
+
+(add-to-list 'load-path
+             (expand-file-name "~/.emacs.d/packages/popup-el"))
+(add-to-list 'load-path
+             (expand-file-name "~/.emacs.d/packages/auto-complete"))
+(add-to-list 'load-path
+             (expand-file-name "~/.emacs.d/packages/emacs-clang-complete-async"))
+
+(require 'auto-complete-config)
+(require 'auto-complete-clang-async)
+
+(defun ac-cc-mode-setup ()
+  (setq ac-sources '(ac-source-clang-async))
+  (launch-completion-proc)
+  )
+
+;; (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+;; (add-hook 'auto-complete-mode-hook 'ac-common-setup)
+
+(defun my-clang-complete ()
+  (interactive)
+  (setq ac-sources '(ac-source-clang-async))
+  (launch-completion-proc)
+  (global-auto-complete-mode t))
+
+
+;; -----------------------------------------------------------------------------
 ;;; init-OpenFOAM.el ends here

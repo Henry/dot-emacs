@@ -1,12 +1,12 @@
 ;;; init-org.el --- Initialisation for the org-mode organiser
 ;; -----------------------------------------------------------------------------
 ;;; Package paths
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/org-mode/lisp"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/org-mode/contrib/lisp"))
-(add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/org-mode/doc") t)
+;; (add-to-list 'load-path
+;;              (expand-file-name "~/.emacs.d/packages/org-mode/lisp"))
+;; (add-to-list 'load-path
+;;              (expand-file-name "~/.emacs.d/packages/org-mode/contrib/lisp"))
+;; (add-to-list 'Info-directory-list
+;;              (expand-file-name "~/.emacs.d/packages/org-mode/doc") t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Dependencies
@@ -16,19 +16,38 @@
 ;;(require 'org-latex)
 ;;(require 'org-html)
 ;;(require 'org-protocol)
-(load-library "~/.emacs.d/packages/org-mode/lisp/org")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-macs")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-list")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-compat")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-faces")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-latex")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-html")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-protocol")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-table")
-(load-library "~/.emacs.d/packages/org-mode/lisp/ob-gnuplot")
-(load-library "~/.emacs.d/packages/org-mode/lisp/org-footnote")
 
-(require 'org-fstree)
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-macs")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-list")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-compat")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-faces")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-latex")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-html")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-protocol")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-table")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/ob")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/ob-gnuplot")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-beamer")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-exp")
+;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-footnote")
+
+(require 'org)
+(require 'org-macs)
+(require 'org-list)
+(require 'org-compat)
+(require 'org-faces)
+(require 'org-latex)
+(require 'org-html)
+(require 'org-protocol)
+(require 'org-table)
+(require 'ob)
+(require 'ob-gnuplot)
+(require 'org-beamer)
+(require 'org-exp)
+(require 'org-footnote)
+
+;;(require 'org-fstree)
 (require 'find-lisp)
 
 ;; -----------------------------------------------------------------------------
@@ -307,6 +326,12 @@ in a full-height window"
   )
 
 (add-to-list 'command-switch-alist '("agenda" . my-agenda))
+
+;; -----------------------------------------------------------------------------
+;;; Use "minted" LaTeX package for listings
+
+(setq org-export-latex-listings 'minted)
+(add-to-list 'org-export-latex-packages-alist '("" "minted"))
 
 ;; -----------------------------------------------------------------------------
 ;;; Load personal information

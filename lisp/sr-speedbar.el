@@ -369,11 +369,6 @@ of a speedbar-window.  It will be created if necessary."
           (speedbar-reconfigure-keymaps)
           (speedbar-update-contents)
           (speedbar-set-timer 1)
-          ;; Emacs 21 compatibility.
-          (when (<= emacs-major-version 21)
-            (eval-when-compile
-              (with-no-warnings
-                (make-local-hook 'kill-buffer-hook))))
           ;; Add speedbar hook.
           (add-hook 'speedbar-before-visiting-file-hook 'sr-speedbar-before-visiting-file-hook t)
           (add-hook 'speedbar-before-visiting-tag-hook 'sr-speedbar-before-visiting-tag-hook t)
