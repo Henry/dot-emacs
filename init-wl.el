@@ -159,6 +159,12 @@
       'wl-draft-kill
       'mail-send-hook))
 
+;; Speed-up rendering on Emacs-24
+(setq-default bidi-display-reordering nil)
+
+;; Do not delete temporary files to allow HTML Emails to be viewed in Conkeror
+(setq mime-play-delete-file-immediately nil)
+
 ;; -----------------------------------------------------------------------------
 ;;; Folders
 
@@ -447,8 +453,8 @@ e.g.
     (set-frame-position (selected-frame) 663 0)
     (set-frame-height (selected-frame) 70)
     (set-frame-width (selected-frame) 114)
-    ;;(my-wl-sgi-smtp-server)
-    (my-wl-zen-smtp-server)
+    (my-wl-opencfd-smtp-server)
+    ;;(my-wl-zen-smtp-server)
     ;;(my-wl-plusnet-smtp-server)
     ;;(my-wl-gmail-smtp-server)
     (my-bbdb-wl-refile-alist) ;; Add the BBDB refiling folders
