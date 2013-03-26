@@ -1,0 +1,51 @@
+#!/usr/bin/emacs --script
+
+(require 'org-table)
+
+(defun org-tbl-push-support-data
+  (final values value-prop percent-prop value-curr exrate value-gbp-prop value-liab-prop)
+  "Calculate the sum of the VALUES and the percentage w.r.t. FINAL,
+push these results into the given properties VALUE-PROP and
+PERCENT-PROP.
+
+Read the project value in given currency VALUE_CURR and exchange
+rate EXRATE in GBP.  Evaluate the project value in GBP and return
+the result and push it into VALUE-GBP-PROP.
+
+From the percent completed, evaluate the liability and push into
+in VALUE-LIAB-PROP.
+
+Return the sum of the VALUES."
+  (let* ((total-20mins (apply '+ values))
+         (total-hrs (/ (apply '+ values) 3.0))
+         (percent-hrs (/ (* 100 total-hrs) final))
+         (value-gbp (/ value-curr exrate))
+         (value-liab (/ (* value-gbp (- 100 percent-hrs)) 100)))
+    (org-entry-put (point) value-prop
+                   (format "%.1f" total-hrs))
+    (org-entry-put (point) percent-prop
+                   (format "%.0f" percent-hrs))
+    (org-entry-put (point) value-gbp-prop
+                   (format "%.0f" value-gbp))
+    (org-entry-put (point) value-liab-prop
+                   (format "%.0f" value-liab))
+    (format "%d" total-20mins)))
+
+(defun org-table-recalculate-buffer-tables ()
+  "Recalculate all tables in the current buffer."
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (org-table-map-tables (lambda () (org-table-recalculate t))))))
+
+(defun update-files (files)
+  (cond (files
+         (find-file (car files))
+         (org-table-recalculate-buffer-tables)
+         (org-update-all-dblocks)
+         (save-buffer)
+         (kill-buffer)
+         (update-files (cdr files)))))
+
+(update-files command-line-args-left)
