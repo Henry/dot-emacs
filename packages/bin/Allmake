@@ -16,7 +16,6 @@
 (cd icicles && make)
 (cd imaxima && make)
 (cd magit && make)
-(cd mo-git-blame && make)
 (cd org-mode && make && make doc)
 (cd semi && make)
 (cd slime && make)
