@@ -435,15 +435,6 @@ e.g.
 ;; Don't split large messages
 (setq mime-edit-split-message nil)
 
-(defun my-wl-gmail-smtp-server ()
-  "Configure the use of the GMail SMTP server for sending"
-  (setq wl-smtp-connection-type 'starttls
-        wl-smtp-posting-port 587
-        wl-smtp-authenticate-type "plain"
-        wl-smtp-posting-user "hweller0@gmail.com"
-        wl-smtp-posting-server "smtp.gmail.com"
-        wl-local-domain "gmail.com"))
-
 ;; -----------------------------------------------------------------------------
 ;;; Add hooks
 
@@ -453,10 +444,7 @@ e.g.
     (set-frame-position (selected-frame) 663 0)
     (set-frame-height (selected-frame) 70)
     (set-frame-width (selected-frame) 114)
-    (my-wl-opencfd-smtp-server)
-    ;;(my-wl-zen-smtp-server)
-    ;;(my-wl-plusnet-smtp-server)
-    ;;(my-wl-gmail-smtp-server)
+    (my-wl-default-smtp-server)
     (my-bbdb-wl-refile-alist) ;; Add the BBDB refiling folders
     (run-with-idle-timer 30 t 'my-wl-auto-save-draft-buffers)
 
