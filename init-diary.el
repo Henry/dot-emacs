@@ -145,4 +145,18 @@ See also the documentation for `my-diary-mark-included-files'."
 
 
 ;; -----------------------------------------------------------------------------
+;;; calfw settings
+
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/emacs-calfw"))
+
+(require 'calfw-cal)
+(require 'calfw-ical)
+(require 'calfw-org)
+
+;; -----------------------------------------------------------------------------
+;;; Load personal information
+
+(load "personal/init-diary")
+
+;; -----------------------------------------------------------------------------
 ;;; init-diary.el ends here

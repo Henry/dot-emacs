@@ -23,6 +23,7 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L packages/ebib/src \
 	-L packages/ecb \
 	-L packages/ectags \
+        -L packages/emacs-calfw \
         -L packages/emacs-clang-complete-async \
 	-L packages/emsane \
 	-L packages/emms/lisp \

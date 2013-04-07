@@ -47,6 +47,7 @@
 ;;; Calendar and Diary
 (autoload 'calendar "init-diary" "Calendar/Diary" t)
 (autoload 'autoload-init-diary "init-diary" "Calendar/Diary" t)
+(autoload 'my-open-calendar "init-diary" "Calendar/Diary" t)
 
 ;; -----------------------------------------------------------------------------
 ;;; CEDET
