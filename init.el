@@ -219,6 +219,10 @@
 (load "init-icicles")
 
 ;; -----------------------------------------------------------------------------
+;;; E2WM
+(load "init-e2wm")
+
+;; -----------------------------------------------------------------------------
 ;;; Application generated customisations
 (setq custom-file (expand-file-name "~/.emacs.d/custom.el"))
 (load custom-file)
