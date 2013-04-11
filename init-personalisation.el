@@ -10,7 +10,8 @@ rather than vertically.")
   "Split the window horizontally if the `frame-width' is larger than
 `split-window-threshold' otherwise split it vertically."
   (interactive)
-  (if (one-window-p t)
+  (if (and (one-window-p t)
+           (not (active-minibuffer-window)))
       (if (> (frame-width) split-window-threshold)
           (split-window-horizontally)
         (split-window-vertically))
