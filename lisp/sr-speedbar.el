@@ -7,11 +7,11 @@
 ;; Copyright (C) 2008, 2009, Andy Stewart, all rights reserved.
 ;; Copyright (C) 2009, Peter Lunicks, all rights reversed.
 ;; Created: 2008
-;; Version: 0.1.8
-;; Last-Updated: 2009-07-23 12:35:12
+;; Version: 0.1.9
+;; Last-Updated: 2013-03-09 20:56:35
 ;; URL: http://www.emacswiki.org/emacs/download/sr-speedbar.el
 ;; Keywords: speedbar, sr-speedbar.el
-;; Compatibility: GNU Emacs 21 ~ GNU Emacs 23
+;; Compatibility: GNU Emacs 22 ~ GNU Emacs 24
 ;;
 ;; Features that might be required by this library:
 ;;
@@ -95,6 +95,10 @@
 ;;
 
 ;;; Change log:
+;;
+;; * 09 March 2013:
+;;   * Tharre:
+;;      * Remove Emacs 21 compatibility code as it fails to compile on Emacs 24.
 ;;
 ;; * 20 July 2009:
 ;;   * Peter Lunicks:

@@ -155,7 +155,7 @@ rather than vertically.")
  speedbar-use-images t)
 
 ;; Same-frame speedbar
-(require 'sr-speedbar)
+(autoload 'sr-speedbar-open "sr-speedbar" "sr-speedbar" t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Duplicate start of line or region

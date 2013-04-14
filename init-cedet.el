@@ -1,21 +1,6 @@
 ;;; init-cedet.el --- Initialize the semantic code analyser
 ;; -----------------------------------------------------------------------------
 
-;; (load "~/.emacs.d/packages/cedet/common/cedet")
-
-;; (add-to-list 'Info-directory-list
-;;              (expand-file-name "~/.emacs.d/packages/cedet/common") t)
-;; (add-to-list 'Info-directory-list
-;;              (expand-file-name "~/.emacs.d/packages/cedet/cogre") t)
-;; (add-to-list 'Info-directory-list
-;;              (expand-file-name "~/.emacs.d/packages/cedet/ede") t)
-;; (add-to-list 'Info-directory-list
-;;              (expand-file-name "~/.emacs.d/packages/cedet/eieio") t)
-;; (add-to-list 'Info-directory-list
-;;              (expand-file-name "~/.emacs.d/packages/cedet/speedbar") t)
-;; (add-to-list 'Info-directory-list
-;;              (expand-file-name "~/.emacs.d/packages/cedet/semantic/doc") t)
-
 (defvar my-cedet-directory
   (expand-file-name "~/Emacs/CEDET"))
 
