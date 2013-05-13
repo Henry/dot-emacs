@@ -42,10 +42,6 @@
    (concat "wmake " (eshell-flatten-and-stringify args))
    "No more errors"))
 
-(defun wmakeLibso ()
-  (interactive)
-  (wmake "libso"))
-
 (defun Allwmake ()
   (interactive)
   (save-some-buffers (not compilation-ask-about-save) nil)
@@ -423,9 +419,8 @@
 
   ;; Map build commands to function keys
   (define-key c++-mode-map [f5] 'wmake)
-  (define-key c++-mode-map [f6] 'wmakeLibso)
-  (define-key c++-mode-map [f7] 'Allwmake)
-  (define-key c++-mode-map [f8] 'wclean)
+  (define-key c++-mode-map [f6] 'Allwmake)
+  (define-key c++-mode-map [f7] 'wclean)
 
   (require 'compile)
 
@@ -450,7 +445,6 @@
        )
       "---"
       ["wmake" wmake]
-      ["wmake libso" wmakeLibso]
       ["Allwmake" Allwmake]
       ["wclean" wclean t]
       "---"
@@ -556,6 +550,16 @@
   )
 
 (add-hook 'c-mode-hook 'my-c-mode-hook)
+
+
+;; -----------------------------------------------------------------------------
+;;;  compilation-mode
+
+(defun my-compilation-mode-hook ()
+  (font-lock-mode 1)
+  )
+
+(add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
 
 
 ;; -----------------------------------------------------------------------------
