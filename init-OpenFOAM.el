@@ -39,7 +39,7 @@
   (interactive)
   (save-some-buffers (not compilation-ask-about-save) nil)
   (compile-internal
-   (concat "wmake " (eshell-flatten-and-stringify args))
+   (concat "wdwim " (eshell-flatten-and-stringify args))
    "No more errors"))
 
 (defun Allwmake ()
