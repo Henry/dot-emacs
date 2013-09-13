@@ -494,7 +494,7 @@
 )
 
 (add-hook 'c-mode-common-hook 'OpenFOAM-mode-hook)
-
+(add-hook 'c++-mode-hook 'OpenFOAM-mode-hook)
 
 (defun c-open-relational-file (how-open-type)
   (interactive "nOpen-Type: ")
@@ -549,7 +549,7 @@
   (outline-minor-mode +1)
   )
 
-(add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'c-mode-common-hook 'my-c-mode-hook)
 
 
 ;; -----------------------------------------------------------------------------
