@@ -115,6 +115,7 @@
      )
    '(
      c-mode
+     c++-mode
      goofie-mode
      ))
 
