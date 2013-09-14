@@ -4,155 +4,177 @@
 #+EMAIL: no-reply
 #+OPTIONS: author:nil email:nil ^:{}
 
-This is the contents of my /.emacs.d/ directory.  Many of the code snippets and
-ideas collated here were obtained originally from the [[http://www.emacswiki.org][EmacsWiki]] and I am
-indebted to all those who contribute to this excellent resource.
+This is the contents of my /.emacs.d/ directory.
+
+Many of the code snippets and ideas collated here were obtained originally from
+the [[http://www.emacswiki.org][EmacsWiki]] and I am indebted to all those who contribute to this excellent
+resource.
 
 * Emacs Version
   + For GNU Emacs 24.3.1
   + May work with GNU Emacs 24.? but not earlier versions.
 
+* Building eemacs (fast-loading extended emacs)
+  I use such an extensive set of packages and configurations that loading
+  them at run-time in the normal manner is prohibitively slow.  To avoid this
+  problem I build and dump an image of =emacs= containing nearly all of the
+  packages and configuration files as =eemacs=.  The script to perform this task
+  is =bin/makeEemacs= based on various sources of information on the =emacs
+  dump= function, in particular [[http://www.emacswiki.org/cgi-bin/wiki/DumpingEmacs][dumping emacs]].
+
 * My Packages (in /my-lisp/ directory)
-*** anything-config-ext
-*** completion-selection
-*** completion-ui-more-sources
-*** etags-select
-*** eulisp-mode
-*** goofie
-*** org-pua
-*** thingatpt-ext
-*** thing-cmds
-*** tooltip-help (taken over from Tamas Patrovics)
-*** wn-org
+  + anything-config-ext
+  + completion-selection
+  + completion-ui-more-sources
+  + etags-select
+  + eulisp-mode
+  + goofie
+  + org-pua
+  + thingatpt-ext
+  + thing-cmds
+  + tooltip-help (taken over from Tamas Patrovics)
+  + wn-org
 
 * Other Packages without permanent home (in /my-lisp/ directory)
-*** ectags
-*** em-last
-*** file-journal (This is already on GitHub)
-*** git-grep
-*** rw-acronyms
-*** xl
+  + ectags
+  + em-last
+  + file-journal (This is already on GitHub)
+  + git-grep
+  + rw-acronyms
+  + xl
 
-* Major Packages (in the /packages/ directory)
-*** anything-config
-*** apel
-*** auctex
-*** auto-complete
-*** auto-complete-clang
-*** babel
-*** bbdb
-*** bin
-*** cl-lookup
-*** completion-ui
-*** doremi
-*** doxymacs
-*** ebib
-*** emacs-calfw
-*** emacs-clang-complete-async
-*** emacs-window-layout
-*** emacs-window-manager
-*** emms
-*** emsane
-*** flim
-*** git-modes
-*** gnuplot
-*** icicles
-*** imaxima
-*** ioccur
-*** latexrefman
-*** magit
-*** org-mode
-*** paredit
-*** popup-el
-*** predictive
-*** save
-*** semi
-*** slime
-*** undo-tree
-*** w3m
-*** wanderlust
-*** wget
-*** yasnippet
+* Third-party Packages (in the /packages/ and /lisp/ directories)
+  A set of scripts are provided to download, update, and compile all the
+  major third-party packages I use.  In the /packages/bin/ directory:
+  + =getAll=: Get all the packages from their respective repositories
+  + =getDoremi=: Get the =doremi= package from the Emacs Wiki
+  + =getIcicles=: Get the =icicles= package from the Emacs Wiki
+  + =getWl=: Get =wanderlust= and associated packages
+  + =updateAll=: Update all the packages from their respective repositories
+  + =makeDirs=: Helper script for =Allmake=
+  + =Allmake=: build all the packages
+  In addition a =Makefile= is provided in the /lisp/ directory to compile the
+  minor packages.
+*** Major packages (in the /packages/ directory)
+    + anything-config
+    + apel
+    + auctex
+    + auto-complete
+    + auto-complete-clang
+    + babel
+    + bbdb
+    + bin
+    + cl-lookup
+    + completion-ui
+    + doremi
+    + doxymacs
+    + ebib
+    + emacs-calfw
+    + emacs-clang-complete-async
+    + emacs-window-layout
+    + emacs-window-manager
+    + emms
+    + emsane
+    + flim
+    + git-modes
+    + gnuplot
+    + icicles
+    + imaxima
+    + ioccur
+    + latexrefman
+    + magit
+    + org-mode
+    + paredit
+    + popup-el
+    + predictive
+    + save
+    + semi
+    + slime
+    + undo-tree
+    + w3m
+    + wanderlust
+    + wget
+    + yasnippet
 
-* Minor Packages (in the lisp directory)
-*** accelerate
-*** autoinfo
-*** babel
-*** bm
-*** boxquote
-*** browse-kill-ring
-*** browse-kill-ring+
-*** cdlatex
-*** cldoc
-*** cl-lib
-*** color-grep
-*** color-moccur
-*** color-occur
-*** completing-help
-*** constants
-*** dired-details
-*** dired-details+
-*** dired+
-*** dired-explore
-*** dired-sort-menu
-*** dired-sort-menu+
-*** dired-tar
-*** ediff-trees
-*** eiv
-*** esh-toggle
-*** etags-table
-*** filladapt
-*** finder+
-*** find-recursive
-*** fsdired
-*** goto-chg
-*** grep-edit
-*** gtags
-*** header2
-*** highlight-parentheses
-*** hl-sexp
-*** htmlize
-*** htmlr
-*** idutils
-*** iedit
-*** igrep
-*** igrep-next-error
-*** iman
-*** info+
-*** isearch-all
-*** isearch+
-*** iterator
-*** lively
-*** markdown-mode
-*** mcomplete
-*** mcomplete-history
-*** mediawiki
-*** menu-bar+
-*** mgrep
-*** moccur-edit
-*** multi-eshell
-*** multi-shell
-*** multi-term
-*** no-word
-*** oddmuse
-*** openwith
-*** oprofile-mode
-*** org-fstree
-*** outline-magic
-*** pos-tip
-*** ppindent
-*** rect-mark
-*** replace+
-*** sequential-command-config
-*** sequential-command
-*** sr-speedbar
-*** stumpwm-mode
-*** synonyms
-*** traverselisp
-*** w3m-session
-*** webjump-plus
-*** whole-line-or-region
-*** window-number
-*** xgtags
-*** xgtags-extension
-*** yaoddmuse
+*** Minor Packages (in the /lisp/ directory)
+    + accelerate
+    + autoinfo
+    + babel
+    + bm
+    + boxquote
+    + browse-kill-ring
+    + browse-kill-ring+
+    + cdlatex
+    + cldoc
+    + cl-lib
+    + color-grep
+    + color-moccur
+    + color-occur
+    + completing-help
+    + constants
+    + dired-details
+    + dired-details+
+    + dired+
+    + dired-explore
+    + dired-sort-menu
+    + dired-sort-menu+
+    + dired-tar
+    + ediff-trees
+    + eiv
+    + esh-toggle
+    + etags-table
+    + filladapt
+    + finder+
+    + find-recursive
+    + fsdired
+    + goto-chg
+    + grep-edit
+    + gtags
+    + header2
+    + highlight-parentheses
+    + hl-sexp
+    + htmlize
+    + htmlr
+    + idutils
+    + iedit
+    + igrep
+    + igrep-next-error
+    + iman
+    + info+
+    + isearch-all
+    + isearch+
+    + iterator
+    + lively
+    + markdown-mode
+    + mcomplete
+    + mcomplete-history
+    + mediawiki
+    + menu-bar+
+    + mgrep
+    + moccur-edit
+    + multi-eshell
+    + multi-shell
+    + multi-term
+    + no-word
+    + oddmuse
+    + openwith
+    + oprofile-mode
+    + org-fstree
+    + outline-magic
+    + pos-tip
+    + ppindent
+    + rect-mark
+    + replace+
+    + sequential-command-config
+    + sequential-command
+    + sr-speedbar
+    + stumpwm-mode
+    + synonyms
+    + traverselisp
+    + w3m-session
+    + webjump-plus
+    + whole-line-or-region
+    + window-number
+    + xgtags
+    + xgtags-extension
+    + yaoddmuse
