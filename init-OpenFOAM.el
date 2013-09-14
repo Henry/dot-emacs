@@ -34,6 +34,8 @@
 
 (require 'git-grep)
 
+(setq openfoam-source-path '("." ))
+
 (defun wmake (&rest args)
   "`wmake' script wrapper callable from `eshell' and directly."
   (interactive)
@@ -59,7 +61,6 @@
 (defvar OPENFOAM_DIR (getenv "WM_PROJECT_DIR"))
 (defvar OPENFOAM_TAGS_DIR (concat OPENFOAM_DIR "/.tags"))
 (defvar OpenFOAM-semantic-active-flag nil)
-(defvar OpenFOAM-ecb-active-flag nil)
 
 (defun OpenFOAM-make-tags ()
   "Create/update the tags files for etags, gtags and ebrowse."
@@ -154,8 +155,7 @@
     ;;(semanticdb-load-ebrowse-caches)
 
     ;;(c++-mode) ;; Re-run the mode hooks to setup semantic
-    (if (equal OpenFOAM-ecb-active-flag t)
-        (ecb-layout-switch "OF-2-m")))))
+    )))
 
 (defun OpenFOAM-deactivate-semantic ()
   "Deactivate semantic for the current session"
@@ -173,14 +173,13 @@
     (global-srecode-minor-mode -1)
     (global-semantic-mru-bookmark-mode -1)
     ;;(global-ede-mode nil)
-    (if (equal OpenFOAM-ecb-active-flag t)
-        (ecb-layout-switch "OF-2")))))
+    )))
 
 (defun OpenFOAM-semantic-create-ebrowse ()
   "Create and create the `semantic' database for `ebrowse'."
   (interactive)
   (setq semanticdb-ebrowse-file-match "\\.H")
-  (dolist (path ecb-source-path)
+  (dolist (path openfoam-source-path)
     (semanticdb-create-ebrowse-database (car path))))
 
 (defun OpenFOAM-semantic ()
@@ -193,37 +192,6 @@
    (t
     (OpenFOAM-deactivate-semantic)
     (setq OpenFOAM-semantic-active-flag nil))))
-
-(defun OpenFOAM-activate-ecb ()
-  "Activate ECB for the current session"
-  (interactive)
-  (cond
-   ((null OpenFOAM-ecb-active-flag)
-    (if (equal OpenFOAM-semantic-active-flag t)
-        (ecb-layout-switch "OF-2-m")
-      (ecb-layout-switch "OF-2"))
-    (ecb-activate-2)
-    (setq OpenFOAM-ecb-active-flag t))))
-
-(defun OpenFOAM-deactivate-ecb ()
-  "Deactivate ECB for the current session"
-  (interactive)
-  (cond
-    ((equal OpenFOAM-ecb-active-flag t)
-     (ecb-deactivate-2)
-     (setq OpenFOAM-ecb-active-flag nil))))
-
-(defun OpenFOAM-ecb ()
-  "Toggle the active status of ecb"
-  (interactive)
-  (cond
-   ((null OpenFOAM-ecb-active-flag)
-    (OpenFOAM-activate-ecb)
-    (setq OpenFOAM-ecb-active-flag t))
-   (t
-    (OpenFOAM-deactivate-ecb)
-    (setq OpenFOAM-ecb-active-flag nil))))
-
 
 (defun foam-create-C-file (className)
   (interactive "sclass name: ") ;   which is read with the Minibuffer.
@@ -427,9 +395,7 @@
   (easy-menu-define
     OpenFOAM-menu c++-mode-map "OpenFOAM"
    '("OpenFOAM"
-      ["ECB" OpenFOAM-ecb
-       :style toggle :selected OpenFOAM-ecb-active-flag]
-      ["Senator" OpenFOAM-semantic
+     ["Senator" OpenFOAM-semantic
        :style toggle :selected OpenFOAM-semantic-active-flag]
       ["Make Tags" OpenFOAM-make-tags]
       ["Tags" OpenFOAM-tags]
@@ -466,27 +432,11 @@
   )
   (easy-menu-add OpenFOAM-menu)
 
-;;   ;; Set the CEDET project details
-;;   (add-to-list 'semanticdb-project-roots OPENFOAM_DIR)
-
-;;   (ede-cpp-root-project
-;;    "OpenFOAM"
-;;    :name "OpenFOAM"
-;;    :version (getenv "WM_PROJECT_DIR")
-;;    :file (concat OPENFOAM_DIR "/README.org")
-;;    :include-path '( "/src/OpenFOAM/lnInclude" "/src/finiteVolume/lnInclude" ))
-
-  ;; Set the ECB source paths
-  ;;(add-to-list 'ecb-source-path
-  ;;             (list (concat OPENFOAM_DIR "/src/OpenFOAM")
-  ;;                   "OpenFOAM"))
-  (add-to-list 'ecb-source-path
+  ;; Set the OPENFOAM source paths
+  (add-to-list 'openfoam-source-path
                (list (concat OPENFOAM_DIR "/src/OpenFOAM/lnInclude")
                      "OpenFOAMlnInclude"))
-  ;;(add-to-list 'ecb-source-path
-  ;;             (list (concat OPENFOAM_DIR "/src/finiteVolume")
-  ;;                   "finiteVolume"))
-  (add-to-list 'ecb-source-path
+  (add-to-list 'openfoam-source-path
                (list (concat OPENFOAM_DIR "/src/finiteVolume/lnInclude")
                      "finiteVolumelnInclude"))
 
@@ -506,10 +456,13 @@
     (match-string 1 file-name))
   (defun get-opening-file-name (file-name-prefix ext-list)
     (let ((opening-file-name (concat file-name-prefix "." (car ext-list))))
-      (cond ((null (car ext-list))             nil)
-            ((file-exists-p opening-file-name) opening-file-name)
-            (t                                 (get-opening-file-name file-name-prefix
-                                                                      (cdr ext-list))))))
+      (cond ((null (car ext-list))
+             nil)
+            ((file-exists-p opening-file-name)
+             opening-file-name)
+            (t
+             (get-opening-file-name file-name-prefix
+                                    (cdr ext-list))))))
   (let* ((ext-map '(
                     ("h" . ("c" "cpp" "cxx" "cc" "c++"))
                     ("c" . ("h" "s"))
@@ -518,7 +471,8 @@
                     ("hpp" . ("cpp" "cxx" "cc" "c++"))
                     ))
          (opened-file-name (buffer-file-name (window-buffer)))
-         (opened-file-name-prefix (get-opened-file-name-prefix opened-file-name))
+         (opened-file-name-prefix
+          (get-opened-file-name-prefix opened-file-name))
          (opened-file-ext-type (get-ext-type opened-file-name))
          (opening-file-ext-type-list (cdr (assoc opened-file-ext-type ext-map)))
          (opening-file-name (get-opening-file-name opened-file-name-prefix
@@ -565,20 +519,19 @@
 ;; -----------------------------------------------------------------------------
 ;;;  auto-complete-clang-async
 
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/popup-el"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/auto-complete"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/emacs-clang-complete-async"))
+(add-to-list
+ 'load-path (expand-file-name "~/.emacs.d/packages/popup-el"))
+(add-to-list
+ 'load-path (expand-file-name "~/.emacs.d/packages/auto-complete"))
+(add-to-list
+ 'load-path (expand-file-name "~/.emacs.d/packages/emacs-clang-complete-async"))
 
 (require 'auto-complete-config)
 (require 'auto-complete-clang-async)
 
 (defun ac-cc-mode-setup ()
   (setq ac-sources '(ac-source-clang-async))
-  (launch-completion-proc)
-  )
+  (launch-completion-proc))
 
 ;; (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
 ;; (add-hook 'auto-complete-mode-hook 'ac-common-setup)

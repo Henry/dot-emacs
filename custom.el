@@ -10,7 +10,6 @@
  '(bm-highlight-style (quote bm-highlight-only-line))
  '(bookmark-default-file "~/Emacs/Bookmarks")
  '(disk-find-file-function (quote icicle-file))
- '(ecb-options-version "2.33")
  '(fill-column 80)
  '(ibuffer-formats (quote ((mark " " (name 30 -1 :left :elide) " " (filename -1 47 :left)) (mark modified read-only " " (name 18 18 :left :elide) " " (size 9 -1 :right) " " (mode 16 16 :left :elide) " " filename-and-process) (mark " " (name 16 -1) " " filename))))
  '(icicle-command-abbrev-alist (quote ((zone-mode z 3) (find-file ff 1))))
