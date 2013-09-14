@@ -9,19 +9,19 @@ ideas collated here were obtained originally from the [[http://www.emacswiki.org
 indebted to all those who contribute to this excellent resource.
 
 * Emacs Version
-  + For GNU Emacs 23.2.1
-  + May work with GNU Emacs 23.1 but not earlier versions.
-  + Untested with GNU Emacs 24 but will be upgraded as soon as this version is
-    released.
+  + For GNU Emacs 24.3.1
+  + May work with GNU Emacs 24.? but not earlier versions.
 
 * My Packages (in /my-lisp/ directory)
 *** anything-config-ext
 *** completion-selection
 *** completion-ui-more-sources
+*** etags-select
 *** eulisp-mode
-*** inf-eulisp
+*** goofie
 *** org-pua
 *** thingatpt-ext
+*** thing-cmds
 *** tooltip-help (taken over from Tamas Patrovics)
 *** wn-org
 
@@ -31,31 +31,40 @@ indebted to all those who contribute to this excellent resource.
 *** file-journal (This is already on GitHub)
 *** git-grep
 *** rw-acronyms
+*** xl
 
 * Major Packages (in the /packages/ directory)
 *** anything-config
 *** apel
 *** auctex
-*** auctex-11.86
+*** auto-complete
+*** auto-complete-clang
 *** babel
 *** bbdb
 *** bin
 *** cl-lookup
 *** completion-ui
 *** doremi
+*** doxymacs
 *** ebib
-*** ecb
+*** emacs-calfw
+*** emacs-clang-complete-async
+*** emacs-window-layout
+*** emacs-window-manager
 *** emms
 *** emsane
 *** flim
+*** git-modes
 *** gnuplot
 *** icicles
 *** imaxima
 *** ioccur
 *** latexrefman
 *** magit
-*** mo-git-blame
 *** org-mode
+*** paredit
+*** popup-el
+*** predictive
 *** save
 *** semi
 *** slime
@@ -75,6 +84,7 @@ indebted to all those who contribute to this excellent resource.
 *** browse-kill-ring+
 *** cdlatex
 *** cldoc
+*** cl-lib
 *** color-grep
 *** color-moccur
 *** color-occur
@@ -90,7 +100,6 @@ indebted to all those who contribute to this excellent resource.
 *** ediff-trees
 *** eiv
 *** esh-toggle
-*** etags-select
 *** etags-table
 *** filladapt
 *** finder+
@@ -130,7 +139,6 @@ indebted to all those who contribute to this excellent resource.
 *** oprofile-mode
 *** org-fstree
 *** outline-magic
-*** paredit
 *** pos-tip
 *** ppindent
 *** rect-mark
@@ -142,6 +150,7 @@ indebted to all those who contribute to this excellent resource.
 *** synonyms
 *** traverselisp
 *** w3m-session
+*** webjump-plus
 *** whole-line-or-region
 *** window-number
 *** xgtags
