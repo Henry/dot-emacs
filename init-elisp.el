@@ -140,14 +140,6 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
 
   ;; Turn on outline minor mode by default
   (outline-minor-mode +1)
-
-  ;; Set the ECB source paths
-  (add-to-list 'ecb-source-path
-               (list "~/.emacs.d" ".emacs.d"))
-  (add-to-list 'ecb-source-path
-               (list "~/Emacs" "Emacs"))
-  (add-to-list 'ecb-source-path
-               (list "/usr/local/share/emacs/23.0.60/lisp" "emacs-23"))
   )
 
 ;; -----------------------------------------------------------------------------

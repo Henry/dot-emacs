@@ -9,14 +9,13 @@ tar -xzf cl-lookup.tar.gz
 wget http://www.dr-qubit.org/download.php?file=predictive/completion-ui-0.11.9.tar.gz
 tar -xzf completion-ui-0.11.9.tar.gz
 git clone git://repo.or.cz/ebib.git
-#cvs -z3 -d:pserver:anonymous@ecb.cvs.sourceforge.net:/cvsroot/ecb co -P ecb
-git clone https://github.com/emacsmirror/ecb.git
 git clone https://github.com/kiwanami/emacs-calfw.git
 git clone https://github.com/kiwanami/emacs-window-layout.git
 git clone https://github.com/kiwanami/emacs-window-manager.git
 git clone git://git.sv.gnu.org/emms.git
 git clone https://github.com/jave/emsane.git
 git clone https://github.com/wanderlust/flim.git
+git clone https://github.com/magit/git-modes.git
 #wget http://cars9.uchicago.edu/~ravel/software/gnuplot-mode/gnuplot-mode.0.6.0.tar.gz
 #tar -xzf gnuplot-mode.0.6.0.tar.gz
 git clone https://github.com/bruceravel/gnuplot-mode.git gnuplot

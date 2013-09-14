@@ -1,29 +1,41 @@
 ;;; dired-details+.el --- Enhancements to library `dired-details+.el'.
-;; 
+;;
 ;; Filename: dired-details+.el
 ;; Description: Enhancements to library `dired-details+.el'.
 ;; Author: Drew Adams
 ;; Maintainer: Drew Adams
-;; Copyright (C) 2005-2011, Drew Adams, all rights reserved.
+;; Copyright (C) 2005-2013, Drew Adams, all rights reserved.
 ;; Created: Tue Dec 20 13:33:01 2005
-;; Version: 
-;; Last-Updated: Tue Jan  4 08:21:08 2011 (-0800)
+;; Version: 0
+;; Package-Requires: ((dired-details "0"))
+;; Last-Updated: Tue Jul 23 15:48:39 2013 (-0700)
 ;;           By: dradams
-;;     Update #: 190
-;; URL: http://www.emacswiki.org/cgi-bin/wiki/dired-details+.el
+;;     Update #: 222
+;; URL: http://www.emacswiki.org/dired-details+.el
+;; Doc URL: http://www.emacswiki.org/DiredDetails
 ;; Keywords: dired, frames
-;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x
-;; 
+;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x, 24.x
+;;
 ;; Features that might be required by this library:
 ;;
 ;;   `autofit-frame', `dired', `dired-details', `fit-frame',
 ;;   `misc-fns', `strings', `thingatpt', `thingatpt+'.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
-;;; Commentary: 
-;; 
+;;
+;;; Commentary:
+;;
 ;;  This enhances the functionality of library `dired-details.el'.
+;;
+;;
+;;    NOTE: If you use Emacs 24.4 or later then you DO NOT NEED this
+;;    library or library `dired-details.el'.  Instead, use
+;;    `dired-hide-details-mode'.  Library `dired+.el' enhances
+;;    `dired-hide-details-mode' to give it the save features as
+;;    `dired-details+.el' provides.  Just use `(require 'dired+.el)'.
+;;
+;;
+;;  `dired-details+.el' enhances `dired-details.el' in these ways:
 ;;
 ;;  1. It shrink-wraps Dired's frame whenever you show or hide
 ;;     details.  For this enhancement, you will need library
@@ -50,12 +62,6 @@
 ;;                             non-nil, then use the last state.
 ;;
 ;;
-;;  I have submitted these enhancements to Rob Giardina, the author of
-;;  `dired-details.el', for inclusion in that library.  If they (or
-;;  similar) are added to that library, then I'll remove this library.
-;;  In any case, this feature has been added to Emacs, starting with
-;;  Emacs 22.2, I think.
-;;
 ;;  Put this in your initialization file (~/.emacs):
 ;;
 ;;   (require 'dired-details+)
@@ -63,13 +69,20 @@
 ;;  I also recommend customizing `dired-details-hidden-string' to use
 ;;  the value "" instead of the default "[...]" - less wasted space.
 ;;
-;;  Note: This library also calls `dired-details-install', activating
-;;  show/hide and binding keys `(' and `)'.
-;;    
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
-;;; Change log:
+;;  Note: This library also calls `dired-details-install', activates
+;;  show/hide and binds key `)'.
 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Change Log:
+;;
+;; 2013/07/22 dadams
+;;     Hard-require, not soft-require, dired-details.el.
+;; 2013/07/19 dadams
+;;     Mention in Commentary that you do not need dired-details(+).el for Emacs
+;;       24.4 or later.
+;; 2013/07/13 dadams
+;;     If dired-hide-details-mode is defined, bind that to (, like vanilla Emacs.
 ;; 2011/01/04 dadams
 ;;     Added autoload cookies for defcustom.
 ;; 2009/06/07 dadams
@@ -96,26 +109,26 @@
 ;;     dired-details-(show|hide): Only fit frame if it's showing Dired.
 ;; 2005/12/26 dadams
 ;;     Updated groups.
-;; 
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
-;; 
+;;
 ;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;; 
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth
 ;; ;; Floor, Boston, MA 02110-1301, USA.
-;; 
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;;
 ;;; Code:
 
 ;;; Do this `defcustom' first, before we load `dired-details', so we
@@ -128,16 +141,23 @@
   "*This string will be shown in place of file details and symbolic links."
   :group 'dired-details :group 'dired :type 'string)
 
-(require 'dired-details nil t) ;; (no error if not found): dired-details-hide,
-                               ;; dired-details-install, dired-details-show
+(require 'dired-details) ;; dired-details-hide, dired-details-initially-hide,
+                         ;; dired-details-install, dired-details-show,
+                         ;; dired-details-state
 (require 'autofit-frame nil t) ;; (no error if not found): fit-frame-if-one-window
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Quiet the byte-compiler.
+(defvar dired-details-state)
+(defvar dired-details-initially-hide)
+
+;;;;;;;;;;;;;;;;
+
 
 ;;;###autoload
 (defcustom dired-details-propagate-flag t
-  "Non-nil means next Dired buffer should be displayed the same.
+  "*Non-nil means next Dired buffer should be displayed the same.
 The last `dired-details-state' value set is used by the next Dired
 buffer created."
   :group 'dired-details :group 'dired :type 'boolean)
@@ -152,7 +172,7 @@ This is changed each time any Dired buffer's state changes.")
 ;;; Temporarily widen.
 ;;; Delete overlays to trim new lines from, e.g. `C'.
 ;;; Use last hide/show state, if `dired-details-propagate-flag'.
-;;; 
+;;;
 (defun dired-details-activate ()
   "Set up dired-details in the current dired buffer.
 Called by `dired-after-readin-hook' on initial display and when a
@@ -182,7 +202,9 @@ Otherwise, use the default state, as determined by
     (require 'dired)
     (dired-details-install)
     ;; Override bindings in `dired-details-install'.
-    (define-key dired-mode-map "(" 'dired-details-toggle)
+    (define-key dired-mode-map "(" (if (fboundp 'dired-hide-details-mode)
+                                       'dired-hide-details-mode ; Restore vanilla
+                                     'dired-details-toggle))
     (define-key dired-mode-map ")" 'dired-details-toggle)
     (defadvice dired-details-show (after fit-dired-frame activate)
       "Save `dired-details-last-state'.  Fit Dired frame if `one-window-p'."

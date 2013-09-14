@@ -8,7 +8,6 @@
 (cd completion-ui && make)
 (cd doremi && make)
 (cd ebib/src && make)
-(cd ecb && make)
 (cd emacs-calfw && make)
 (cd emacs-window-layout && make)
 (cd emacs-window-manager && make)

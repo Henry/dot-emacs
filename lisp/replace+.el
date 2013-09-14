@@ -4,24 +4,26 @@
 ;; Description: Extensions to `replace.el'.
 ;; Author: Drew Adams
 ;; Maintainer: Drew Adams
-;; Copyright (C) 1996-2011, Drew Adams, all rights reserved.
+;; Copyright (C) 1996-2013, Drew Adams, all rights reserved.
 ;; Created: Tue Jan 30 15:01:06 1996
-;; Version: 21.0
-;; Last-Updated: Tue Jan  4 13:40:49 2011 (-0800)
+;; Version: 0
+;; Package-Requires: ()
+;; Last-Updated: Wed Jul 24 10:00:29 2013 (-0700)
 ;;           By: dradams
-;;     Update #: 1060
-;; URL: http://www.emacswiki.org/cgi-bin/wiki/replace+.el
+;;     Update #: 1620
+;; URL: http://www.emacswiki.org/replace%2b.el
+;; Doc URL: http://www.emacswiki.org/ReplacePlus
 ;; Keywords: matching, help, internal, tools, local
-;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x
+;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x, 24.x
 ;;
 ;; Features that might be required by this library:
 ;;
-;;   `apropos', `apropos+', `avoid', `faces', `faces+', `fit-frame',
-;;   `frame-cmds', `frame-fns', `help+20', `highlight', `info',
-;;   `info+', `isearch+', `menu-bar', `menu-bar+', `misc-cmds',
-;;   `misc-fns', `second-sel', `strings', `thingatpt', `thingatpt+',
-;;   `unaccent', `w32browser-dlgopen', `wid-edit', `wid-edit+',
-;;   `widget'.
+;;   `apropos', `apropos+', `avoid', `easymenu', `faces', `faces+',
+;;   `fit-frame', `frame-cmds', `frame-fns', `help+20', `highlight',
+;;   `info', `info+', `isearch+', `menu-bar', `menu-bar+',
+;;   `misc-cmds', `misc-fns', `naked', `second-sel', `strings',
+;;   `thingatpt', `thingatpt+', `unaccent', `w32browser-dlgopen',
+;;   `wid-edit', `wid-edit+', `widget'.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -29,9 +31,11 @@
 ;;
 ;;    Extensions to `replace.el'.
 ;;
-;;  Functions defined here:
+;;  Commands defined here:
 ;;
-;;    `query-replace-w-options', `toggle-replace-w-completion'.
+;;    `occur-unhighlight-visited-hits', `query-replace-w-options',
+;;    `toggle-replace-w-completion',
+;;    `toggle-search/replace-region-as-default'.
 ;;
 ;;  Faces defined here:
 ;;
@@ -39,58 +43,73 @@
 ;;
 ;;  User options defined here:
 ;;
-;;    `replace-w-completion-flag', `search/replace-default-fn'.
+;;    `replace-w-completion-flag',
+;;    `search/replace-region-as-default-flag',
+;;    `search/replace-2nd-sel-as-default-flag',
+;;    `search/replace-default-fn'.
 ;;
-;;  Internal variable defined here: `occur-regexp'.
+;;  Non-interactive functions defined here:
 ;;
+;     `search/replace-default', `usable-region'.
 ;;
+;;  Internal variable defined here:
 ;;
-;;  ***** NOTE: The following user option defined in `replace.el' has
-;;              been REDEFINED HERE:
-;;
-;;    `list-matching-lines-face'.
+;;    `occur-regexp', `occur-searched-buffers'.
 ;;
 ;;
 ;;  ***** NOTE: The following functions defined in `replace.el' have
-;;              been REDEFINED HERE:
+;;              been REDEFINED or ADVISED HERE:
 ;;
 ;;    `flush-lines' - (Not needed for Emacs 21)
-;;                    1. The prompt has been changed, to mention that
-;;                       only lines after point are affected.
-;;                    2. The default regexp is provided by
-;;                       `search/replace-default-fn'.
+;;                    1. The prompt mentions that only lines after
+;;                       point are affected.
+;;                    2. The default input is provided by
+;;                       `search/replace-region-as-default-flag' or
+;;                       `search/replace-2nd-sel-as-default-flag' or
+;;                       `search/replace-default-fn', in that order.
 ;;                    3. An in-progress message has been added.
 ;;    `how-many' - (Not needed for Emacs 21)
-;;                 1. Prompt changed: lines after point are affected.
-;;                 2. Default regexp: `search/replace-default-fn'.
+;;                 1. Prompt mentions tlines after point are affected.
+;;                 2. The default input is provided by
+;;                    `search/replace-region-as-default-flag' or
+;;                    `search/replace-2nd-sel-as-default-flag' or
+;;                    `search/replace-default-fn', in that order.
 ;;                 3. An in-progress message has been added.
 ;;    `keep-lines' - Same as `flush-lines'. (Not needed for Emacs 21)
-;;    `occur' - 1. Default regexp is from `search/replace-default-fn'.
-;;              2. Regexp is saved as `occur-regexp' for use by
-;;                 `occur-mode-mouse-goto'
-;;    `occur-mode-goto-occurrence', `occur-mode-display-occurrence', 
+;;    `occur' - Default from `search/replace-region-as-default-flag'
+;;              or `search/replace-2nd-sel-as-default-flag'
+;;              or `search/replace-default-fn' (Emacs 20 only)
+;;    `occur', `multi-occur', `multi-occur-in-matching-buffers' -
+;;              Regexp is saved as `occur-regexp' for use by
+;;              `occur-mode-mouse-goto'
+;;    `occur-engine' - Save list of searched buffers in
+;;                     `occur-searched-buffers' (Emacs 22+)
+;;    `occur-mode-goto-occurrence', `occur-mode-display-occurrence',
 ;;    `occur-mode-goto-occurrence-other-window',
-;;    `occur-mode-mouse-goto' - Highlights regexp in source buffer
+;;    `occur-mode-mouse-goto' - Highlight regexp in source buffer
 ;;                              and visited linenum in occur buffer.
 ;;    `occur-read-primary-args' - (Emacs 21 only) Default regexps via
-;;                                `search/replace-default-fn'.
-;;    `query-replace-read-args',  - (Not needed for Emacs 21)
-;;                                1. Uses `completing-read' if
+;;                                `search/replace-default'.
+;;    `query-replace', `query-replace-regexp', `replace-string',
+;;      `replace-regexp'        - No " in region" in prompt if
+;;                                `*-region-as-default-flag'.
+;;    `query-replace-read-args' - 1. Uses `completing-read' if
 ;;                                   `replace-w-completion-flag' is
 ;;                                   non-nil.
 ;;                                2. Default regexps are obtained via
-;;                                   `search/replace-default-fn'.
-;;    `query-replace-read-(from|to)' - Same as `query-replace-read-args',
-;;                                     but for Emacs 21.
+;;                                   `search/replace-default'.
+;;                                3. Deactivates region if
+;;                                   `*-region-as-default-flag'.
+;;    `query-replace-read-(from|to)' - Like `query-replace-read-args',
+;;                                     but for Emacs 21+.
+;;    `read-regexp' (Emacs 23-24.2) -
+;;                        1. Allow DEFAULTS to be a list of strings.
+;;                        2. Prepend DEFAULTS to the vanilla defaults.
 ;;
 ;;
 ;;  This file should be loaded after loading the standard GNU file
 ;;  `replace.el'.  So, in your `~/.emacs' file, do this:
 ;;  (eval-after-load "replace" '(progn (require 'replace+)))
-;;
-;;  Because standard variables such as `list-matching-lines-face' are
-;;  predefined, this file overrides the standard definition.  If you
-;;  want a different value, you must set it after loading this file.
 ;;
 ;;  For Emacs releases prior to Emacs 22, these Emacs 22 key bindings
 ;;  are made here:
@@ -103,10 +122,69 @@
 ;;   (substitute-key-definition 'query-replace 'query-replace-w-options
 ;;                              global-map)
 ;;
+;;  If you want the highlighting of regexp matches in the searched
+;;  buffers to be removed when you quit occur or multi-occur, then add
+;;  function `occur-unhighlight-visited-hits' to an appropripate hook.
+;;  For example, to have this happen when you kill the occur buffer,
+;;  add it to `kill-buffer-hook':
+;;
+;;    (add-hook 'kill-buffer-hook 'occur-unhighlight-visited-hits)
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
 ;;
+;; 2013/07/24 dadams
+;;     query-replace(-w-options|regexp), replace-(string|regexp): Region test includes being nonempty.
+;; 2013/04/08 dadams
+;;     read-regexp: Not needed for Emacs 24.3 or later.
+;; 2013/03/28 dadams
+;;     Added redefinition of query-replace-read-args for Emacs 22+.
+;;     Added defadvice for query-replace(-regexp), replace-(string|regexp).
+;;     query-replace-read-args: deactivate mark when search/replace-region-as-default-flag is non-nil.
+;; 2013/02/07 dadams
+;;     Added: search/replace-region-as-default-flag, toggle-search/replace-region-as-default'
+;;            usable-region.
+;;     search/replace-default: Respect search/replace-region-as-default-flag.
+;;     Updated doc strings throughout to mention search/replace-region-as-default-flag..
+;; 2013/01/29 dadams
+;;     search/replace-2nd-sel-as-default-flag: Changed default value to nil.
+;; 2012/08/31 dadams
+;;     Added: search/replace-2nd-sel-as-default-flag, search/replace-default, redefinition of read-regexp.
+;;     query-replace-read-(from|to|read-args), (keep|flush)-lines, how-many, occur(-read-primary-args):
+;;       Respect search/replace-2nd-sel-as-default-flag.
+;; 2012/08/21 dadams
+;;     Call tap-put-thing-at-point-props after load thingatpt+.el.
+;; 2012/08/18 dadams
+;;     Invoke tap-define-aliases-wo-prefix if thingatpt+.el is loaded.
+;; 2012/08/04 dadams
+;;     occur-unhighlight-visited-hits: Removed requirement that it be called from occur mode.
+;; 2012/08/03 dadams
+;;     Added: occur-searched-buffers, occur-unhighlight-visited-hits.
+;;     Advised multi-occur(--in-matching-buffers), to highlight source match.
+;; 2012/08/02 dadams
+;;     occur-read-primary-args, occur-mode-goto-occurrence-other-window, occur-mode-display-occurrence:
+;;       Updated for Emacs 24.
+;; 2011/12/19 dadams
+;;     (keep|flush)-lines, occur(-mode-(mouse-goto|goto-occurrence(-other-window)|display-occurrence)):
+;;       Use line-(beginning|end)-position, not (beginning|end)-of-line + point.
+;; 2011/09/22 dadams
+;;     Applied renaming of set-region-around-search-target to isearchp-set-region-around-search-target.
+;; 2011/08/30 dadams
+;;     search/replace-default-fn:
+;;       defvar -> defcustom.
+;;       symbol-name-nearest-point -> non-nil-symbol-name-nearest-point.
+;;     query-replace-read-(to|from|args), (keep|flush)-lines, how-many, occur, occur-read-primary-args:
+;;       Use functionp, not fboundp.
+;; 2011/08/24 dadams
+;;     Added macro menu-bar-make-toggle-any-version.  Use for menu-bar-toggle-replace-w-completion.
+;; 2011/08/22 dadams
+;;     menu-bar-toggle-replace-w-completion:
+;;       Just use menu-bar-make-toggle, and adjust for diff releases.  Thx to PasJa (EmacsWiki).
+;;     Removed eval-when-compile soft require of menu-bar+.el.
+;; 2011/04/16 dadams
+;;     occur, occur-mode-mouse-goto:
+;;       Fix for lexbind Emacs 24: replace named arg REGEXP, EVENT by (ad-get-arg 0).
 ;; 2011/01/04 dadams
 ;;     Removed autoload cookies for non def* sexps, defadvice, and non-interactive fns.  Added for cmds.
 ;; 2010/01/12 dadams
@@ -216,21 +294,42 @@
 ;; Don't want to do a (load-library "replace") either, because it wouldn't
 ;; allow doing (eval-after-load "replace" '(progn (require 'replace+)))
 
-(eval-when-compile (require 'cl)) ;; incf (plus, for Emacs 20: push, pop,
-                                  ;;       and, for Emacs <20: cadr, when, unless)
+(eval-when-compile (require 'cl)) ;; incf (plus, for Emacs 20: push)
 
 (require 'thingatpt nil t) ;; (no error if not found): word-at-point
-(require 'thingatpt+ nil t) ;; (no error if not found): symbol-name-nearest-point
+
+(when (and (require 'thingatpt+ nil t);; (no error if not found)
+           (fboundp 'tap-put-thing-at-point-props)) ; >= 2012-08-21
+  (tap-define-aliases-wo-prefix)
+  (tap-put-thing-at-point-props))
+ ;; non-nil-symbol-name-nearest-point
+
 (require 'frame-cmds nil t) ;; (no error if not found): show-a-frame-on
 (require 'frame-fns nil t) ;; (no error if not found): get-a-frame
 (require 'fit-frame nil t) ;; (no error if not found): fit-frame
 (require 'highlight nil t) ;; (no error if not found): hlt-highlight-regexp-region
 (require 'isearch+ nil t) ;; (no error if not found):
-                          ;; isearchp-set-region-flag, set-region-around-search-target
-(eval-when-compile (require 'menu-bar+ nil t)) ;; menu-bar-make-toggle-any-version
+                          ;; isearchp-set-region-around-search-target, isearchp-set-region-flag
 (require 'menu-bar+ nil t) ;; menu-bar-options-menu, menu-bar-search-replace-menu
 
+;; Quiet the byte compiler.
+(defvar occur-collect-regexp-history)   ; In `replace.el' (Emacs 24+).
+
 ;;;;;;;;;;;;;;;;;;;;;
+
+;; Same as the version in `menu-bar+.el'.
+(defmacro menu-bar-make-toggle-any-version (name variable doc message help &rest body)
+  "Return a valid `menu-bar-make-toggle' call in Emacs 20 or later.
+NAME is the name of the toggle command to define.
+VARIABLE is the variable to set.
+DOC is the menu-item name.
+MESSAGE is the toggle message, minus status.
+HELP is :help string.
+BODY is the function body to use.  If present, it is responsible for
+setting the variable and displaying a status message (not MESSAGE)."
+  (if (< emacs-major-version 21)
+      `(menu-bar-make-toggle ,name ,variable ,doc ,message ,@body)
+    `(menu-bar-make-toggle ,name ,variable ,doc ,message ,help ,@body)))
 
 (defface occur-highlight-linenum '((t (:foreground "Red")))
   "*Face to use to highlight line number of visited hit lines."
@@ -240,30 +339,30 @@
 (unless (facep 'minibuffer-prompt)
   (defface minibuffer-prompt '((((background dark)) (:foreground "cyan"))
                                (t (:foreground "dark blue")))
-    "Face for minibuffer prompts."
+    "*Face for minibuffer prompts."
     :group 'basic-faces))
-
 
 (defvar occur-regexp nil "Search pattern used by `occur' command.") ; Internal variable.
 
+(defvar occur-searched-buffers ()
+  "Source buffers searched by `occur' and `multi-occur'.")
 
 (defcustom replace-w-completion-flag nil
-  "*Non-nil means use minibuffer completion for replacement commands
-such as `query-replace'.  With completion, to insert a SPC or TAB
-char, you will need to preceed it by `\\[quoted-insert]'.  If this is
-inconvenient, set this variable to nil."
+  "*Non-nil means use completion for `query-replace'.
+You can complete to any symbol name.  During completion, you can
+insert a SPC or TAB char by preceding it with `\\[quoted-insert]'.  If this is
+inconvenient, set this option to nil."
   :type 'boolean :group 'matching)
 
 ;;;###autoload
 (defun toggle-replace-w-completion (force-p)
-  "Toggle whether to use minibuffer completion for replacement commands
-such as `query-replace'.
-Non-nil prefix arg FORCE-P => Use completion iff FORCE-P >= 0.
+  "Toggle whether to use minibuffer completion for `query-replace'.
+This toggles the value of option `replace-w-completion-flag'.
+During completion, you can insert a SPC or TAB char by preceding it
+with `\\[quoted-insert]'.
 
-Note that with completion, to insert a SPC or TAB character you will
-need to preceed it by `\\[quoted-insert]'.
-
-This toggles the value of option `replace-w-completion-flag'."
+A non-negative prefix arg means set `replace-w-completion-flag' to t.
+A negative prefix arg means set it to nil."
   (interactive "P")
   (if force-p                           ; Force.
       (if (natnump (prefix-numeric-value force-p))
@@ -271,39 +370,141 @@ This toggles the value of option `replace-w-completion-flag'."
         (setq replace-w-completion-flag  nil))
     (setq replace-w-completion-flag  (not replace-w-completion-flag)))) ; Toggle.
 
-(defvar search/replace-default-fn
-  (if (fboundp 'symbol-name-nearest-point)
-      'symbol-name-nearest-point
-    'word-at-point)
-  "*Fn of 0 args called to provide default input for search/replacement
-functions such as \\[query-replace-w-options] and \\[occur].
+(defcustom search/replace-2nd-sel-as-default-flag nil
+  "*Non-nil means use secondary selection as default for search/replace.
+That is, if there is currently a nonempty secondary selection, use it
+as the default input.  All text properties are removed from the text.
 
-Some reasonable choices are defined in `thingatpt+.el':
-`word-nearest-point', `symbol-name-nearest-point', `sexp-nearest-point'")
+This is used only if `search/replace-region-as-default-flag' is nil or
+the region is not active."
+  :type 'boolean :group 'matching)
+
+(defcustom search/replace-region-as-default-flag nil
+  "*Non-nil means use the active region text as default for search/replace.
+That is, if the region is currently active then use its text as the
+default input.  All text properties are removed from the text.
+
+Note that in this case the active region is not used to limit the
+search/replacement scope.  But in that case you can of course just
+narrow the buffer temporarily to restrict the operation scope.
+
+A non-nil value of this option takes precedence over the use of option
+`search/replace-2nd-sel-as-default-flag'.  To give that option
+precedence over using the active region, you can set this option to
+nil and use `region-or-non-nil-symbol-name-nearest-point' as the value
+of option `search/replace-default-fn'."
+  :type 'boolean :group 'matching)
+
+;;;###autoload
+(defun toggle-search/replace-region-as-default (msgp)
+  "Toggle whether to use the active region text as default.
+This toggles the value of option
+`search/replace-region-as-default-flag', which affects search and
+replace commands."
+  (interactive "p")
+  (setq search/replace-region-as-default-flag  (not search/replace-region-as-default-flag))
+  (when msgp (message "Using active region text as default is now %s"
+                      (if search/replace-region-as-default-flag "ON" "OFF"))))
 
 
 
-;; REPLACES ORIGINAL in `replace.el'.
-;; 1. Uses `completing-read' if `replace-w-completion-flag' is non-nil.
-;; 2. Default values are provided by `search/replace-default-fn'.
+(defcustom search/replace-default-fn (if (fboundp 'non-nil-symbol-name-nearest-point)
+                                         'non-nil-symbol-name-nearest-point
+                                       'word-at-point)
+  "*Function to provide default input for search/replacement functions.
+The function is called with no arguments.
+This is used by `query-replace' and related commands: `occur',
+`how-many', `flush-lines', `keep-lines', etc.
+
+Reminder: Emacs 23 and later can use multiple default values.  The
+function you use here can return a single string default value or a
+list of such strings.
+
+Some reasonable choices are defined in library `thingatpt+.el':
+`word-nearest-point', `non-nil-symbol-name-nearest-point',
+`region-or-non-nil-symbol-name-nearest-point', `sexp-nearest-point'.
+
+If you use `region-or-non-nil-symbol-name-nearest-point' for this then
+you cannot also take advantage of the use of the active region to
+bound the scope of query-replace operations.  But in that case you can
+of course just narrow the buffer temporarily to restrict the operation
+scope.
+
+See also options `search/replace-region-as-default-flag' and
+`search/replace-2nd-sel-as-default-flag'."
+  :type '(choice
+          (const :tag "No default input search/replacement functions" nil)
+          (function :tag "Function of 0 args to provide default for search/replace"))
+  :group 'matching)
+
+(defun usable-region (&optional no-props)
+  "Return the region text if the region is active and nonempty.
+Non-nil optional arg NO-PROPS means return the text without any
+properties."
+  (and transient-mark-mode  mark-active  (/= (region-end) (region-beginning))
+       (if no-props
+           (buffer-substring-no-properties (region-beginning) (region-end))
+         (buffer-substring (region-beginning) (region-end)))))
+
+(defun search/replace-default (history)
+  "Return a default value or list of such for search & replace functions.
+A list of default input strings is computed and returned for Emacs 23
+or later.  For Emacs 20-22, only the first such string is returned.
+The possible strings are, in order:
+
+* The active region, if option
+  `search/replace-region-as-default-flag' is non-nil.
+
+* The secondary selection, if option
+  `search/replace-2nd-sel-as-default-flag' is non-nil.
+
+* The result of calling the value of option
+  `search/replace-default-fn', if non-nil.
+
+* The first entry in the history list HISTORY."
+  (let ((selection   (usable-region t))
+        (second-sel  (and  (or (not search/replace-region-as-default-flag)  (not (usable-region t)))
+                           search/replace-2nd-sel-as-default-flag
+                           (x-get-selection 'SECONDARY))))
+    (when second-sel (set-text-properties 0 (length second-sel) () second-sel))
+    (if (> emacs-major-version 22)
+        (delq nil (list selection
+                        second-sel
+                        (and (functionp search/replace-default-fn) (funcall search/replace-default-fn))
+                        (car (symbol-value query-replace-from-history-variable))))
+      (or selection
+          second-sel
+          (and (functionp search/replace-default-fn) (funcall search/replace-default-fn))
+          (car history)))))
+
+
+
+;; REPLACE ORIGINAL in `replace.el'.
 ;;
-;; You can still use the history lists, and you can still enter
-;; nothing to repeat the previous query replacement operation.
+;; 1. Use nonempty active region as default if `search/replace-region-as-default-flag' is non-nil.
+;; 2. Else use secondary selection as default input if `search/replace-2nd-sel-as-default-flag' is non-nil.
+;; 3. Else provide default input using `search/replace-default-fn'.
+;; 4. Use `completing-read' if `replace-w-completion-flag' is non-nil.
 ;;
-;; However, in addition, this provides an initial value by
-;; `search/replace-default-fn'.
+;; As with vanilla query-replace, you can also use the history lists,
+;; and you can enter nothing to repeat the previous query replacement
+;; operation.
 ;;
 (when (> emacs-major-version 21)
   (defun query-replace-read-from (string regexp-flag)
     "Query and return the `from' argument of a query-replace operation.
 The return value can also be a pair (FROM . TO) indicating that the user
 wants to replace FROM with TO.
-Non-nil `replace-w-completion-flag' means you can use completion."
+
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default value.
+
+If option `replace-w-completion-flag' is non-nil then you can complete
+to a symbol name."
     (if query-replace-interactive
         (car (if regexp-flag regexp-search-ring search-ring))
-      (let* ((default   (if (fboundp search/replace-default-fn)
-                            (funcall search/replace-default-fn)
-                          (car (symbol-value query-replace-from-history-variable))))
+      (let* ((default   (search/replace-default (symbol-value query-replace-from-history-variable)))
              (lastto    (car (symbol-value query-replace-to-history-variable)))
              (lastfrom  (car (symbol-value query-replace-from-history-variable)))
              (from-prompt
@@ -333,31 +534,31 @@ Non-nil `replace-w-completion-flag' means you can use completion."
                (string-match "\\(\\`\\|[^\\]\\)\\(\\\\\\\\\\)*\\(\\\\[nt]\\)" from)
                (let ((match  (match-string 3 from)))
                  (cond
-                  ((string= match "\\n")
-                   (message "Note: `\\n' here doesn't match a newline; to do that, type C-q C-j instead"))
-                  ((string= match "\\t")
-                   (message "Note: `\\t' here doesn't match a tab; to do that, just type TAB")))
+                   ((string= match "\\n")
+                    (message "Note: `\\n' here doesn't match a newline; to do that, type C-q C-j instead"))
+                   ((string= match "\\t")
+                    (message "Note: `\\t' here doesn't match a tab; to do that, just type TAB")))
                  (sit-for 2)))
           from)))))
 
 
 
-;; REPLACES ORIGINAL in `replace.el'.
-;; 1. Uses `completing-read' if `replace-w-completion-flag' is non-nil.
-;; 2. Default values are provided by `search/replace-default-fn'.
+;; REPLACE ORIGINAL in `replace.el'.
 ;;
-;; You can still use the history lists, and you can still enter
-;; nothing to repeat the previous query replacement operation.
+;; 1. Use nonempty active region as default if `search/replace-region-as-default-flag' is non-nil.
+;; 2. Else use secondary selection as default input if `search/replace-2nd-sel-as-default-flag' is non-nil.
+;; 3. Else provide default input using `search/replace-default-fn'.
+;; 3. Use `completing-read' if `replace-w-completion-flag' is non-nil.
 ;;
-;; However, in addition, this provides an initial value by
-;; `search/replace-default-fn'.
+;; As with vanilla query-replace, you can also use the history lists,
+;; and you can enter nothing to repeat the previous query replacement
+;; operation.
 ;;
 (when (> emacs-major-version 21)
   (defun query-replace-read-to (from string regexp-flag)
-    "Query and return the `to' argument of a query-replace operation."
-    (let* ((default    (if (fboundp search/replace-default-fn)
-                           (funcall search/replace-default-fn)
-                         (car (symbol-value query-replace-to-history-variable))))
+    "Query and return the `to' argument of a query-replace operation.
+See `query-replace-read-from'."
+    (let* ((default    (search/replace-default (symbol-value query-replace-to-history-variable)))
            (to-prompt  (format "%s.  NEW (replacing %s): " string (query-replace-descr from)))
            ;; The save-excursion here is in case the user marks and copies
            ;; a region in order to specify the minibuffer input.
@@ -395,106 +596,28 @@ Non-nil `replace-w-completion-flag' means you can use completion."
         (setq to  (cons 'replace-eval-replacement (if (> (length to) 1) (cons 'concat to) (car to)))))
       to)))
 
-(when (boundp 'menu-bar-search-replace-menu) ; In `menu-bar+.el'.
-  (define-key menu-bar-search-replace-menu [query-replace]
-    '(menu-item "Query String" query-replace-w-options
-      :help "Replace string interactively asking about each occurrence"
-      :enable (not buffer-read-only))))      
-
-(when (boundp 'menu-bar-options-menu)   ; In `menu-bar+.el'.
-  (define-key-after menu-bar-options-menu [replace-w-completion-flag]
-    (menu-bar-make-toggle-any-version menu-bar-toggle-replace-w-completion
-                                      replace-w-completion-flag
-                                      "Completion for Query Replace"
-                                      "Using completion with query replace is %s"
-                                      "Using completion with query replace")
-    'case-fold-search))
 
 
-;; The main difference between this and `query-replace' is in the treatment of the PREFIX
-;; arg.  Only a positive (or nil) PREFIX value gives the same behavior.  A negative PREFIX
-;; value does a regexp query replace.  Another difference is that non-nil
-;; `isearchp-set-region-flag' means set the region around the last target occurrence.
+
+;; REPLACE ORIGINAL in `replace.el'.
 ;;
-;; In Emacs 21, this has the same behavior as the versions of `query-replace-read-to' and
-;; `query-replace-read-from' defined here:
-;;
-;;    1. Uses `completing-read' if `replace-w-completion-flag' is non-nil.
-;;    2. Default values are provided by `search/replace-default-fn'.
-;;
-;;    You can still use the history lists, and you can still enter
-;;    nothing to repeat the previous query replacement operation.
-;;    However, in addition, this provides an initial value by
-;;    `search/replace-default-fn'.
-;;
-;; In Emacs 20, this has the same behavior as the version of `query-replace-read-args'
-;; defined here:
-;;
-;;    1. It uses `completing-read' if `replace-w-completion-flag' is non-nil.
-;;    2. The default regexps are provided by `search/replace-default-fn'.
-;;
-;;;###autoload
-(defun query-replace-w-options (old new &optional prefix start end)
-  "Replace some occurrences of OLD text with NEW one.
-Fourth and fifth arg START and END specify the region to operate on.
-
-This is the same as command `query-replace', except for the treatment
-of a prefix argument.
-
-No PREFIX argument (nil) means replace literal string matches.
-Non-negative PREFIX argument means replace word matches.
-Negative PREFIX argument means replace regexp matches.
-
-Option `replace-w-completion-flag', if non-nil, provides for
-minibuffer completion while you type OLD and NEW.  In that case, to
-insert a SPC or TAB character, you will need to preceed it by \
-`\\[quoted-insert]'.
-
-If option `isearchp-set-region-flag' is non-nil, then select the last
-replacement."
-  (interactive
-   (let* ((kind    (cond ((and current-prefix-arg (natnump (prefix-numeric-value current-prefix-arg)))
-                          " WORD")
-                         (current-prefix-arg " REGEXP")
-                         (t " STRING")))
-          (common  (query-replace-read-args (concat "Query replace" kind) (string= " REGEXP " kind))))
-     (list (nth 0 common) (nth 1 common) (nth 2 common)
-           ;; These are done separately here, so that command-history will record these expressions
-           ;; rather than the values they had this time.
-           (and transient-mark-mode mark-active (region-beginning))
-           (and transient-mark-mode mark-active (region-end)))))
-  (let ((kind  (cond ((and prefix (natnump (prefix-numeric-value prefix))) 'WORD)
-                     (prefix 'REGEXP)
-                     (t 'STRING))))
-    (case kind
-      (WORD
-       (if (< emacs-major-version 21) (query-replace old new t) (query-replace old new t start end)))
-      (REGEXP
-       (if (< emacs-major-version 21)
-           (query-replace-regexp old new)
-         (query-replace-regexp old new nil start end)))
-      (STRING
-       (if (< emacs-major-version 21) (query-replace old new) (query-replace old new nil start end))))
-    (when (interactive-p) (message "query-replace %s `%s' by `%s'...done" kind old new)))
-  (when (and (boundp 'isearchp-set-region-flag) isearchp-set-region-flag)
-    (set-region-around-search-target))) ; Defined in `isearch+.el'.
-
-
-;; REPLACES ORIGINAL in `replace.el'.
-;; 1. Uses `completing-read' if `replace-w-completion-flag' is non-nil.
-;; 2. The default regexps are provided by `search/replace-default-fn'.
+;; 1. Use `completing-read' if `replace-w-completion-flag' is non-nil.
+;; 2. Provide default regexps using `search/replace-default'.
+;; 3. Deactivate mark if using region text for default.
 ;;
 (unless (> emacs-major-version 21)
   (defun query-replace-read-args (string regexp-flag &optional noerror)
     "Read arguments for replacement functions such as `\\[query-replace]'.
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default value.
+
 Option `replace-w-completion-flag', if non-nil, provides for
 minibuffer completion while you type the arguments.  In that case, to
-insert a `SPC' or `TAB' character, you will need to preceed it by \
+insert a `SPC' or `TAB' character, you will need to precede it by \
 `\\[quoted-insert]'."
     (unless noerror (barf-if-buffer-read-only))
-    (let* ((default     (if (fboundp search/replace-default-fn)
-                            (funcall search/replace-default-fn)
-                          (car regexp-history)))
+    (let* ((default     (search/replace-default regexp-history))
            (old-prompt  (concat string ".  OLD (to be replaced): "))
            (oldx        (if replace-w-completion-flag
                             (completing-read old-prompt obarray nil nil nil
@@ -509,15 +632,272 @@ insert a `SPC' or `TAB' character, you will need to preceed it by \
                                              query-replace-to-history-variable default t)
                           (read-from-minibuffer new-prompt nil nil nil
                                                 query-replace-to-history-variable default t))))
+      (when (and search/replace-region-as-default-flag  (usable-region t)) (deactivate-mark))
       (list oldx newx current-prefix-arg))))
 
 
 
+;; REPLACE ORIGINAL in `replace.el'.
+;;
+;; Deactivate mark if using region text for default.
+;;
+(when (> emacs-major-version 21)
+  (defun query-replace-read-args (prompt regexp-flag &optional noerror)
+    "Read arguments for replacement functions such as `\\[query-replace]'.
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default values.
 
-;; REPLACES ORIGINAL in `replace.el':
-;; 1. Prompt changed, to mention that lines after point are affected.
-;; 2. The default regexp is provided by `search/replace-default-fn'.
-;; 3. An in-progress message has been added.
+Option `replace-w-completion-flag', if non-nil, provides for
+minibuffer completion while you type the arguments.  In that case, to
+insert a `SPC' or `TAB' character, you will need to precede it by \
+`\\[quoted-insert]'."
+    (unless noerror
+      (barf-if-buffer-read-only))
+    (let* ((from  (query-replace-read-from prompt regexp-flag))
+           (to    (if (consp from) (prog1 (cdr from) (setq from (car from)))
+                    (query-replace-read-to from prompt regexp-flag))))
+      (when (and search/replace-region-as-default-flag  (usable-region t)) (deactivate-mark))
+      (list from to current-prefix-arg))))
+
+
+
+
+(when (boundp 'menu-bar-search-replace-menu) ; In `menu-bar+.el'.
+  (define-key menu-bar-search-replace-menu [query-replace]
+    '(menu-item "Query" query-replace-w-options
+      :help "Replace text interactively asking about each occurrence"
+      :enable (not buffer-read-only))))
+
+(define-key-after menu-bar-options-menu [replace-w-completion-flag]
+  (menu-bar-make-toggle-any-version menu-bar-toggle-replace-w-completion replace-w-completion-flag
+                                    "Completion for Query Replace"
+                                    "Using completion with query replace is %s"
+                                    "Using completion with query replace")
+  'case-fold-search)
+
+
+
+
+;; The main difference between this and `query-replace' is in the treatment of the PREFIX
+;; arg.  Only a positive (or nil) PREFIX value gives the same behavior.  A negative PREFIX
+;; value does a regexp query replace.  Another difference is that non-nil
+;; `isearchp-set-region-flag' means set the region around the last target occurrence.
+;;
+;; In Emacs 21+, this has the same behavior as the versions of `query-replace-read-to' and
+;; `query-replace-read-from' defined here:
+;;
+;;    1. Uses `completing-read' if `replace-w-completion-flag' is non-nil.
+;;    2. Default values are provided by `search/replace-default', which respects options
+;;       `search/replace-region-as-default-flag', `search/replace-2nd-sel-as-default-flag', and
+;;       `search/replace-default-fn'.
+;;
+;;    You can still use the history lists, and you can still enter
+;;    nothing to repeat the previous query replacement operation.
+;;    However, in addition, this provides an initial value by
+;;    `search/replace-default'.
+;;
+;; In Emacs 20, this has the same behavior as the version of `query-replace-read-args'
+;; defined here:
+;;
+;;    1. It uses `completing-read' if `replace-w-completion-flag' is non-nil.
+;;    2. The default regexps are provided by `search/replace-default'.
+;;
+;;;###autoload
+(defun query-replace-w-options (old new &optional prefix start end)
+  "Replace some occurrences of OLD text with NEW one.
+Fourth and fifth arg START and END specify the region to operate on.
+
+This is the same as command `query-replace', except for the treatment
+of a prefix argument.
+
+No PREFIX argument (nil) means replace literal string matches.
+Non-negative PREFIX argument means replace word matches.
+Negative PREFIX argument means replace regexp matches.
+
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default values of OLD and
+NEW.
+
+Option `replace-w-completion-flag', if non-nil, provides for
+minibuffer completion while you type OLD and NEW.  In that case, to
+insert a SPC or TAB character, you will need to precede it by \
+`\\[quoted-insert]'.
+
+If option `isearchp-set-region-flag' is non-nil, then select the last
+replacement."
+  (interactive
+   (let* ((kind    (cond ((and current-prefix-arg (natnump (prefix-numeric-value current-prefix-arg)))
+                          " WORD")
+                         (current-prefix-arg " REGEXP")
+                         (t " STRING")))
+          (common  (query-replace-read-args (concat "Query replace" kind) (string= " REGEXP " kind))))
+     (list (nth 0 common) (nth 1 common) (nth 2 common)
+           (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))  (region-beginning))
+           (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))  (region-end)))))
+  (let ((kind  (cond ((and prefix (natnump (prefix-numeric-value prefix))) 'WORD)
+                     (prefix 'REGEXP)
+                     (t 'STRING))))
+    (case kind
+      (WORD
+       (if (< emacs-major-version 21) (query-replace old new t) (query-replace old new t start end)))
+      (REGEXP
+       (if (< emacs-major-version 21)
+           (query-replace-regexp old new)
+         (query-replace-regexp old new nil start end)))
+      (STRING
+       (if (< emacs-major-version 21) (query-replace old new) (query-replace old new nil start end))))
+    (when (interactive-p) (message "query-replace %s `%s' by `%s'...done" kind old new)))
+  (when (and (boundp 'isearchp-set-region-flag) isearchp-set-region-flag)
+    (isearchp-set-region-around-search-target))) ; Defined in `isearch+.el'.
+
+
+
+;; ADVISE ORIGINAL in `replace.el':
+;;
+;; Do not add " in region" to prompt if `search/replace-region-as-default-flag'.
+;;
+(when (> emacs-major-version 21)
+  (defadvice query-replace (before respect-search/replace-region-as-default-flag activate)
+    nil
+    (interactive
+     (let ((common
+            (query-replace-read-args (concat "Query replace" (and current-prefix-arg  " word")
+                                             (and transient-mark-mode  mark-active
+                                                  (> (region-end) (region-beginning))
+                                                  (not search/replace-region-as-default-flag)
+                                                  " in region"))
+                                     nil)))
+       (list (nth 0 common) (nth 1 common) (nth 2 common)
+             ;; These are done separately here, so that `command-history' will record these expressions
+             ;; rather than the values they had this time.
+             (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))
+                  (region-beginning))
+             (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))
+                  (region-end)))))))
+
+
+
+;; ADVISE ORIGINAL in `replace.el':
+;;
+;; Do not add " in region" to prompt if `search/replace-region-as-default-flag'.
+;;
+(when (> emacs-major-version 21)
+  (defadvice query-replace-regexp (before respect-search/replace-region-as-default-flag activate)
+    nil
+    (interactive
+     (let ((common
+            (query-replace-read-args (concat "Query replace" (and current-prefix-arg  " word") " regexp"
+                                             (and transient-mark-mode  mark-active
+                                                  (> (region-end) (region-beginning))
+                                                  (not search/replace-region-as-default-flag)
+                                                  " in region"))
+                                     t)))
+       (list (nth 0 common) (nth 1 common) (nth 2 common)
+             (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))
+                  (region-beginning))
+             (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))
+                  (region-end)))))))
+
+
+
+;; ADVISE ORIGINAL in `replace.el':
+;;
+;; Do not add " in region" to prompt if `search/replace-region-as-default-flag'.
+;;
+(when (> emacs-major-version 21)
+  (defadvice replace-string (before respect-search/replace-region-as-default-flag activate)
+    nil
+    (interactive
+     (let ((common
+            (query-replace-read-args (concat "Replace" (and current-prefix-arg  " word") " string"
+                                             (and transient-mark-mode  mark-active
+                                                  (> (region-end) (region-beginning))
+                                                  (not search/replace-region-as-default-flag)
+                                                  " in region"))
+                                     nil)))
+       (list (nth 0 common) (nth 1 common) (nth 2 common)
+             (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))
+                  (region-beginning))
+             (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))
+                  (region-end)))))))
+
+
+
+;; ADVISE ORIGINAL in `replace.el':
+;;
+;; Do not add " in region" to prompt if `search/replace-region-as-default-flag'.
+;;
+(when (> emacs-major-version 21)
+  (defadvice replace-regexp (before respect-search/replace-region-as-default-flag activate)
+    nil
+    (interactive
+     (let ((common
+            (query-replace-read-args (concat "Replace" (and current-prefix-arg " word") " regexp"
+                                             (and transient-mark-mode  mark-active
+                                                  (> (region-end) (region-beginning))
+                                                  (not search/replace-region-as-default-flag)
+                                                  " in region"))
+                                     t)))
+       (list (nth 0 common) (nth 1 common) (nth 2 common)
+             (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))
+                  (region-beginning))
+             (and transient-mark-mode  mark-active  (> (region-end) (region-beginning))
+                  (region-end)))))))
+
+
+
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; 1. Allow DEFAULTS to be a list of strings.
+;; 2. Prepend DEFAULTS to the vanilla defaults.
+;;
+;; Not needed for Emacs 24.3+.
+;;
+;; $$$$$$ Should we let this return empty input ("") under some conditions?  E.g., if DEFAULTS contains ""?
+;;
+(when (or (= emacs-major-version 23)  (and (= emacs-major-version 24)  (< emacs-minor-version 3)))
+  (defun read-regexp (prompt &optional defaults)
+    "Read and return a regular expression as a string.
+Prompt with PROMPT, which should not include a final `: '.
+
+Non-nil optional arg DEFAULTS is a string or a list of strings that
+are prepended to a list of standard default values, which include the
+string at point, the last isearch regexp, the last isearch string, and
+the last replacement regexp."
+    (when (and defaults  (atom defaults)) (setq defaults  (list defaults)))
+    (let* ((deflts                 (append
+                                    defaults
+                                    (list (regexp-quote
+                                           (or (funcall
+                                                (or find-tag-default-function
+                                                    (get major-mode 'find-tag-default-function)
+                                                    'find-tag-default))
+                                               ""))
+                                          (car regexp-search-ring)
+                                          (regexp-quote (or (car search-ring)  ""))
+                                          (car (symbol-value query-replace-from-history-variable)))))
+           (deflts                 (delete-dups (delq nil (delete "" deflts))))
+           (history-add-new-input  nil) ; Do not automatically add INPUT to the history, in case it is "".
+           (input                  (read-from-minibuffer
+                                    (if defaults
+                                        (format "%s (default `%s'): " prompt
+                                                (mapconcat 'isearch-text-char-description (car deflts) ""))
+                                      (format "%s: " prompt))
+                                    nil nil nil 'regexp-history deflts t)))
+      (if (equal input "")
+          (or (car defaults)  input)
+        (prog1 input (add-to-history 'regexp-history input))))))
+
+
+
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; 1. Prompt mentions that lines after point are affected.
+;; 2. Provide default regexp using `search/replace-default'.
+;; 3. Add an in-progress message.
+;;
 (when (< emacs-major-version 21)
   (defun keep-lines (regexp)
     "Delete all lines after point except those with a match for REGEXP.
@@ -525,14 +905,14 @@ A match split across lines preserves all the lines it lies in.
 Note that the lines are deleted, not killed to the kill-ring.
 
 If REGEXP contains upper case characters (excluding those preceded by `\\'),
-the matching is case-sensitive."
+the matching is case-sensitive.
+
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default REGEXP value."
     (interactive
-     (list (read-from-minibuffer
-            "Keep lines after cursor that contain a match for REGEXP: "
-            (if (fboundp search/replace-default-fn)
-                (funcall search/replace-default-fn)
-              (car regexp-history))
-            nil nil 'regexp-history nil t)))
+     (list (read-from-minibuffer "Keep lines after cursor that contain a match for REGEXP: "
+                                 (search/replace-default regexp-history) nil nil 'regexp-history nil t)))
     (when (interactive-p) (message "Deleting non-matching lines..."))
     (save-excursion
       (unless (bolp) (forward-line 1))
@@ -542,7 +922,7 @@ the matching is case-sensitive."
           ;; Start is first char not preserved by previous match.
           (if (not (re-search-forward regexp nil 'move))
               (delete-region start (point-max))
-            (let ((end  (save-excursion (goto-char (match-beginning 0)) (beginning-of-line) (point))))
+            (let ((end  (save-excursion (goto-char (match-beginning 0)) (line-beginning-position))))
               ;; Now end is first char preserved by the new match.
               (when (< start end) (delete-region start end))))
           (setq start  (save-excursion (forward-line 1) (point)))
@@ -553,10 +933,12 @@ the matching is case-sensitive."
 
 
 
-;; REPLACES ORIGINAL in `replace.el':
-;; 1. Prompt changed, to mention that lines after point are affected.
-;; 2. The default regexp is provided by `search/replace-default-fn'.
-;; 3. An in-progress message has been added.
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; 1. Prompt mentions that lines after point are affected.
+;; 2. Provide default regexp using `search/replace-default'.
+;; 3. Add an in-progress message.
+;;
 (when (< emacs-major-version 21)
   (defun flush-lines (regexp)
     "Delete lines after point that contain a match for REGEXP.
@@ -564,39 +946,42 @@ If a match is split across lines, all the lines it lies in are deleted.
 Note that the lines are deleted, not killed to the kill-ring.
 
 If REGEXP contains upper case characters (excluding those preceded by `\\'),
-the matching is case-sensitive."
+the matching is case-sensitive.
+
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default REGEXP value."
     (interactive
-     (list (read-from-minibuffer
-            "Delete lines after cursor that contain a match for REGEXP: "
-            (if (fboundp search/replace-default-fn)
-                (funcall search/replace-default-fn)
-              (car regexp-history))
-            nil nil 'regexp-history nil t)))
+     (list (read-from-minibuffer "Delete lines after cursor that contain a match for REGEXP: "
+                                 (search/replace-default regexp-history) nil nil 'regexp-history nil t)))
     (when (interactive-p) (message "Deleting matching lines..."))
     (let ((case-fold-search  (and case-fold-search (isearch-no-upper-case-p regexp t))))
       (save-excursion
         (while (and (not (eobp)) (re-search-forward regexp nil t))
-          (delete-region (save-excursion (goto-char (match-beginning 0)) (beginning-of-line) (point))
+          (delete-region (save-excursion (goto-char (match-beginning 0)) (line-beginning-position))
                          (progn (forward-line 1) (point))))))
     (when (interactive-p) (message "Deleting matching lines...done"))))
 
 
 
-;; REPLACES ORIGINAL in `replace.el':
-;; 1. Prompt changed, to mention that lines after point are affected.
-;; 2. The default regexp is provided by `search/replace-default-fn'.
-;; 3. An in-progress message has been added.
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; 1. Prompt mentions that lines after point are affected.
+;; 2. Provide default regexp using `search/replace-default'.
+;; 3. Add an in-progress message.
+;;
 (when (< emacs-major-version 21)
   (defun how-many (regexp)
     "Print number of matches for REGEXP following point.
-
 If REGEXP contains upper case characters (excluding those preceded by `\\'),
-the matching is case-sensitive."
-    (interactive (list (read-from-minibuffer
-                        "Count matches after point for REGEXP: "
-                        (if (fboundp search/replace-default-fn)
-                            (funcall search/replace-default-fn)
-                          (car regexp-history)) nil nil 'regexp-history nil t)))
+the matching is case-sensitive.
+
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default REGEXP value."
+    (interactive (list (read-from-minibuffer "Count matches after point for REGEXP: "
+                                             (search/replace-default regexp-history)
+                                             nil nil 'regexp-history nil t)))
     (when (interactive-p) (message "Counting matches after point..."))
     (let ((count             0)
           (case-fold-search  (and case-fold-search (isearch-no-upper-case-p regexp t)))
@@ -616,14 +1001,14 @@ the matching is case-sensitive."
 
 
 
-;; REPLACES ORIGINAL in `replace.el':
-;; 1. The default regexp is provided by `search/replace-default-fn'.
-;; 2. Regexp is saved as `occur-regexp' for use by `occur-mode-mouse-goto'
-;;    and `occur-mode-goto-occurrence'.
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; 1. Provide default regexp using `search/replace-default'.
+;; 2. Save regexp as `occur-regexp' for use by `occur-mode-mouse-goto' and `occur-mode-goto-occurrence'.
+;;
 (when (< emacs-major-version 21)
   (defun occur (regexp &optional nlines)
     "Show all lines in the current buffer containing a match for REGEXP.
-
 If a match spreads across multiple lines, all those lines are shown.
 
 Each line is displayed with NLINES lines before and after,
@@ -636,11 +1021,13 @@ menu to find any of the occurrences in the current buffer.
 \\<occur-mode-map>\\[describe-mode] in the `*Occur*' buffer will explain how.
 
 If REGEXP contains upper case characters (excluding those preceded by `\\'),
-the matching is case-sensitive."
+the matching is case-sensitive.
+
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default REGEXP value."
     (interactive
-     (list (let ((default  (if (fboundp search/replace-default-fn)
-                               (funcall search/replace-default-fn)
-                             (car regexp-history))))
+     (list (let ((default  (search/replace-default regexp-history)))
              (read-from-minibuffer "List lines matching regexp: "  nil nil nil 'regexp-history default t))
            current-prefix-arg))
     (setq occur-regexp  regexp)         ; Save for highlighting.
@@ -659,10 +1046,9 @@ the matching is case-sensitive."
            ;; Marker to the start of context immediately following
            ;; the matched text in *Occur*.
            (make-marker)))
-;;;     (save-excursion
-;;;       (beginning-of-line)
-;;;       (setq linenum  (1+ (count-lines (point-min) (point))))
-;;;       (setq prevpos  (point)))
+;;;     (save-excursion (beginning-of-line)
+;;;                     (setq linenum  (1+ (count-lines (point-min) (point)))
+;;;                           prevpos  (point)))
       (save-excursion
         (goto-char (point-min))
         ;; Check first whether there are any matches at all.
@@ -679,6 +1065,7 @@ the matching is case-sensitive."
                 (let ((print-escape-newlines  t)) (prin1 regexp))
                 (insert " in buffer `" (buffer-name buffer) "'." ?\n)
                 (occur-mode)
+                ;; `occur-buffer', `occur-nlines', and `occur-command-arguments' are free here.
                 (setq occur-buffer             buffer
                       occur-nlines             nlines
                       occur-command-arguments  (list regexp nlines))))
@@ -743,10 +1130,9 @@ the matching is case-sensitive."
                         (insert "\n"))
                     (set-marker final-context-start (+ (- (point) (- end (match-end 0)))
                                                        (if (with-current-buffer buffer
-                                                             (save-excursion
-                                                               (goto-char (match-end 0))
-                                                               (end-of-line)
-                                                               (bolp)))
+                                                             (save-excursion (goto-char (match-end 0))
+                                                                             (end-of-line)
+                                                                             (bolp)))
                                                            1 0)))
                     (set-marker text-end (point))
 
@@ -782,16 +1168,12 @@ the matching is case-sensitive."
                           (setq tag  (format "%5d" this-linenum)))
                         (insert tag ?:)
 ;;;                    ;; DDA: Add mouse-face to line
-;;;                    (put-text-property (save-excursion
-;;;                                         (beginning-of-line) (point))
-;;;                                       (save-excursion (end-of-line) (point))
+;;;                    (put-text-property (line-beginning-position) (line-end-position)
 ;;;                                       'mouse-face 'underline)
 ;;;                    ;; DDA: Highlight `grep-pattern' in compilation buffer, if possible.
 ;;;                    (when (fboundp 'hlt-highlight-regexp-region)
-;;;                      (hlt-highlight-regexp-region
-;;;                       (save-excursion (beginning-of-line) (point))
-;;;                       (save-excursion (end-of-line) (point))
-;;;                       occur-regexp list-matching-lines-face))
+;;;                      (hlt-highlight-regexp-region (line-beginning-position) (line-end-position)
+;;;                                                   occur-regexp list-matching-lines-face))
                         (forward-line 1)
                         (setq tag  nil)
                         (incf this-linenum))
@@ -837,75 +1219,119 @@ the matching is case-sensitive."
 
 
 
-;; REPLACES ORIGINAL in `replace.el':
-;; Regexp is saved as `occur-regexp' for use by `occur-mode-mouse-goto' and `occur-mode-goto-occurrence'.
-(when (>= emacs-major-version 21)
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; Save regexp as `occur-regexp' for use by `occur-mode-mouse-goto' and `occur-mode-goto-occurrence'.
+;;
+(when (> emacs-major-version 20)
   (defadvice occur (before occur-save-regexp activate compile)
-    (setq occur-regexp  regexp)))        ; Save for highlighting.
+    (setq occur-regexp  (ad-get-arg 0)))) ; Save for highlighting.
 
 
 
-;; REPLACES ORIGINAL in `replace.el':
-;; The default regexp is provided by `search/replace-default-fn'.
-(when (>= emacs-major-version 21)
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; Save regexp as `occur-regexp' for use by `occur-mode-mouse-goto' and `occur-mode-goto-occurrence'.
+;;
+(when (> emacs-major-version 20)
+  (defadvice multi-occur (before multi-occur-save-regexp activate compile)
+    (setq occur-regexp  (ad-get-arg 1)))) ; Save for highlighting.
+
+
+
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; Save regexp as `occur-regexp' for use by `occur-mode-mouse-goto' and `occur-mode-goto-occurrence'.
+;;
+(when (> emacs-major-version 20)
+  (defadvice multi-occur-in-matching-buffers (before multi-occur-in-matching-buffers-save-regexp
+                                                     activate compile)
+    (setq occur-regexp  (ad-get-arg 1)))) ; Save for highlighting.
+
+
+
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; Provide default input using `search/replace-default'.
+;;
+(when (> emacs-major-version 20)
   (defun occur-read-primary-args ()
-    (list (let* ((default  (if (fboundp search/replace-default-fn)
-                               (funcall search/replace-default-fn)
-                             (car regexp-history)))
-                 (input    (read-from-minibuffer
-                            (if default
-                                (format "List lines matching regexp (default `%s'): "
-                                        (query-replace-descr default))
-                              "List lines matching regexp: ")
-                            nil nil nil 'regexp-history default)))
-            (if (equal input "") default input))
-          (and current-prefix-arg (prefix-numeric-value current-prefix-arg)))))
+    "Read arguments for `occur'.
+See options `search/replace-region-as-default-flag',
+`search/replace-2nd-sel-as-default-flag', and
+`search/replace-default-fn' regarding the default regexp value."
+    (let* ((perform-collect  (and (> emacs-major-version 23)  (consp current-prefix-arg)))
+           (default          (search/replace-default regexp-history))
+           (regexp           (if (fboundp 'read-regexp) ; Emacs 23+
+                                 (read-regexp (if perform-collect
+                                                  "Collect strings matching regexp"
+                                                "List lines matching regexp")
+                                              default)
+                               (when (consp default) (setq default  (car default)))
+                               (read-from-minibuffer ; Emacs 20-22
+                                (if default
+                                    (format "List lines matching regexp (default `%s'): "
+                                            (query-replace-descr default))
+                                  "List lines matching regexp: ")
+                                nil nil nil 'regexp-history default))))
+      (when (equal regexp "") (setq regexp  default))
+      (list regexp
+            (if perform-collect
+                (if (zerop (regexp-opt-depth regexp)) ; Perform collect operation
+                    "\\&"               ; No subexpression, so collect entire match.
+                  (let ((coll-def  (car occur-collect-regexp-history))) ; Regexp for collection pattern.
+                    (read-string (format "Regexp to collect (default %s): " coll-def)
+                                 nil 'occur-collect-regexp-history coll-def)))
+              ;; Otherwise normal occur takes numerical prefix argument.
+              (and current-prefix-arg  (prefix-numeric-value current-prefix-arg)))))))
 
 
 
-;; REPLACES ORIGINAL in `replace.el':
-;; Highlights visited linenum in occur buffer.
-;; Highlights regexp in source buffer.
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; Highlight visited linenum in occur buffer.
+;; Highlight regexp in source buffer.
+;;
 (defadvice occur-mode-mouse-goto (around occur-mode-mouse-goto-highlight activate compile)
-  "Highlight visited line number in occur buffer.
-Alo highlight occur regexp in source buffer."
-  (with-current-buffer (window-buffer (posn-window (event-end event)))
+  "Go to the occurrence for the clicked line.
+Highlight visited line number in the occur buffer.
+Highlight the occur regexp in the source buffer."
+  (with-current-buffer (window-buffer (posn-window (event-end (ad-get-arg 0))))
     (save-excursion
-      (goto-char (posn-point (event-end event)))
+      (goto-char (posn-point (event-end (ad-get-arg 0))))
       (when (fboundp 'hlt-highlight-regexp-region) ; Highlight goto lineno.
-        (let ((bol  (save-excursion (beginning-of-line) (point))))
-          (hlt-highlight-regexp-region bol
-                                       (save-excursion
-                                         (beginning-of-line) (search-forward ":" (+ bol 20) t) (point))
-                                       "[0-9]+:"
-                                       'occur-highlight-linenum)))))
+        (let ((bol  (line-beginning-position)))
+          (hlt-highlight-regexp-region bol (save-excursion (beginning-of-line)
+                                                           (search-forward ":" (+ bol 20) t)
+                                                           (point))
+                                       "[0-9]+:" 'occur-highlight-linenum)))))
   ad-do-it
   (when (fboundp 'hlt-highlight-regexp-region)
-    (let ((inhibit-field-text-motion  t)) ; Just to be sure, for end-of-line.
-      (hlt-highlight-regexp-region (save-excursion (beginning-of-line) (point))
-                                   (save-excursion (end-of-line) (point))
+    (let ((inhibit-field-text-motion  t)) ; Just to be sure, for `line-end-position'.
+      (hlt-highlight-regexp-region (line-beginning-position) (line-end-position)
                                    occur-regexp list-matching-lines-face))))
 
 
 
-;; REPLACES ORIGINAL in `replace.el':
-;; Highlights visited linenum in occur buffer.
-;; Highlights regexp in source buffer.
+;; REPLACE ORIGINAL in `replace.el':
+;;
+;; Highlight visited linenum in occur buffer.
+;; Highlight regexp in source buffer.
+;;
 (defadvice occur-mode-goto-occurrence (around occur-mode-goto-occurrence-highlight activate compile)
-  "Highlight visited line number in occur buffer.
-Also highlight occur regexp in source buffer."
+  "Go to the occurrence for the current line.
+Highlight visited line number in the occur buffer.
+Highlight the occur regexp in the source buffer."
   (when (fboundp 'hlt-highlight-regexp-region) ; Highlight goto lineno.
-    (let ((bol  (save-excursion (beginning-of-line) (point))))
-      (hlt-highlight-regexp-region bol
-                                   (save-excursion
-                                     (beginning-of-line) (search-forward ":" (+ bol 20) t) (point))
-                                   "[0-9]+:"
-                                   'occur-highlight-linenum)))
+    (let ((bol  (line-beginning-position)))
+      (hlt-highlight-regexp-region bol (save-excursion (beginning-of-line)
+                                                       (search-forward ":" (+ bol 20) t)
+                                                       (point))
+                                   "[0-9]+:" 'occur-highlight-linenum)))
   ad-do-it
   (when (fboundp 'hlt-highlight-regexp-region)
-    (let ((inhibit-field-text-motion  t)) ; Just to be sure, for end-of-line.
-      (hlt-highlight-regexp-region (save-excursion (beginning-of-line) (point))
-                                   (save-excursion (end-of-line) (point))
+    (let ((inhibit-field-text-motion  t)) ; Just to be sure, for `line-end-position'.
+      (hlt-highlight-regexp-region (line-beginning-position) (line-end-position)
                                    occur-regexp list-matching-lines-face))))
 
 ;; Bindings for Emacs prior to version 22.
@@ -915,251 +1341,79 @@ Also highlight occur regexp in source buffer."
 
 
 
-;; REPLACES ORIGINAL in `replace.el' (Emacs 22):
-;; Highlights visited linenum in occur buffer.
-;; Highlights regexp in source buffer.
+;; REPLACE ORIGINAL in `replace.el' (Emacs 22):
+;;
+;; Highlight visited linenum in occur buffer.
+;; Highlight regexp in source buffer.
+;;
 ;;;###autoload
 (defun occur-mode-goto-occurrence-other-window ()
-  "Go to the occurrence the current line describes, in another window."
+  "Go to the occurrence for the current line, in another window.
+Highlight the visited line number in the occur buffer.
+Highlight the occur regexp in the source buffer."
   (interactive)
   (when (fboundp 'hlt-highlight-regexp-region) ; Highlight goto lineno.
-    (let ((bol  (save-excursion (beginning-of-line) (point))))
-      (hlt-highlight-regexp-region bol
-                                   (save-excursion
-                                     (beginning-of-line) (search-forward ":" (+ bol 20) t) (point))
-                                   "[0-9]+:"
-                                   'occur-highlight-linenum)))
+    (let ((bol  (line-beginning-position)))
+      (hlt-highlight-regexp-region bol (save-excursion (beginning-of-line)
+                                                       (search-forward ":" (+ bol 20) t)
+                                                       (point))
+                                   "[0-9]+:" 'occur-highlight-linenum)))
   (let ((pos  (occur-mode-find-occurrence)))
     (switch-to-buffer-other-window (marker-buffer pos))
     (goto-char pos)
+    (when (boundp 'occur-mode-find-occurrence-hook) (run-hooks 'occur-mode-find-occurrence-hook))
     (when (fboundp 'hlt-highlight-regexp-region)
-      (let ((inhibit-field-text-motion  t)) ; Just to be sure, for end-of-line.
-        (hlt-highlight-regexp-region (save-excursion (beginning-of-line) (point))
-                                     (save-excursion (end-of-line) (point))
+      (let ((inhibit-field-text-motion  t)) ; Just to be sure, for `line-end-position'.
+        (hlt-highlight-regexp-region (line-beginning-position) (line-end-position)
                                      occur-regexp list-matching-lines-face)))))
 
 
 
-;; REPLACES ORIGINAL in `replace.el' (Emacs 22):
-;; Highlights visited linenum in occur buffer.
-;; Highlights regexp in source buffer.
+;; REPLACE ORIGINAL in `replace.el' (Emacs 22):
+;;
+;; Highlight visited linenum in occur buffer.
+;; Highlight regexp in source buffer.
+;;
 ;;;###autoload
 (defun occur-mode-display-occurrence ()
-  "Display in another window the occurrence the current line describes."
+  "Display in another window the occurrence for the current line.
+Highlight the visited line number in the occur buffer.
+Highlight the occur regexp in the source buffer."
   (interactive)
   (when (fboundp 'hlt-highlight-regexp-region) ; Highlight goto lineno.
-    (let ((bol  (save-excursion (beginning-of-line) (point))))
-      (hlt-highlight-regexp-region bol
-                                   (save-excursion
-                                     (beginning-of-line) (search-forward ":" (+ bol 20) t) (point))
-                                   "[0-9]+:"
-                                   'occur-highlight-linenum)))
-  (let ((pos  (occur-mode-find-occurrence))
-        window
-        ;; Bind these to ensure `display-buffer' puts it in another window.
-        same-window-buffer-names
-        same-window-regexps)
-    (setq window  (display-buffer (marker-buffer pos)))
-    ;; This is the way to set point in the proper window.
-    (save-selected-window
+    (let ((bol  (line-beginning-position)))
+      (hlt-highlight-regexp-region bol (save-excursion (beginning-of-line)
+                                                       (search-forward ":" (+ bol 20) t)
+                                                       (point))
+                                   "[0-9]+:" 'occur-highlight-linenum)))
+  (let* ((pos     (occur-mode-find-occurrence))
+         (window  (display-buffer (marker-buffer pos) t)))
+    (save-selected-window            ; Set point in the proper window.
       (select-window window)
       (goto-char pos)
       (when (fboundp 'hlt-highlight-regexp-region)
-        (let ((inhibit-field-text-motion  t)) ; Just to be sure, for end-of-line.
-          (hlt-highlight-regexp-region (save-excursion (beginning-of-line) (point))
-                                       (save-excursion (end-of-line) (point))
+        (let ((inhibit-field-text-motion  t)) ; Just to be sure, for `line-end-position'.
+          (hlt-highlight-regexp-region (line-beginning-position) (line-end-position)
                                        occur-regexp list-matching-lines-face))))))
 
 
 
+;; REPLACE ORIGINAL in `replace.el' (Emacs 22):
+;;
+;; Save list of searched buffers in `occur-searched-buffers'.
+;;
+(defadvice occur-engine (after record-buffers activate)
+  (setq occur-searched-buffers  (ad-get-arg 1)))
 
-;;;Emacs19 ;; REPLACES ORIGINAL in `replace.el':
-;;;Emacs19 ;; When change markers to numbers (after query loop), ensure they are markers.
-;;;Emacs19 (defun perform-replace (from-string replacements query-flag regexp-flag
-;;;Emacs19                                     delimited-flag &optional repeat-count map)
-;;;Emacs19   "Subroutine of `query-replace'.  Its complexity handles interactive queries.
-;;;Emacs19 Don't use this in your own program unless you want to query and set the mark
-;;;Emacs19 just as `query-replace' does.  Instead, write a simple loop like this:
-;;;Emacs19   (while (re-search-forward \"foo[ \t]+bar\" nil t)
-;;;Emacs19     (replace-match \"foobar\" nil nil))
-;;;Emacs19 which will run faster and probably do what you want."
-;;;Emacs19   (unless map (setq map query-replace-map))
-;;;Emacs19   (let ((nocasify (not (and case-fold-search case-replace
-;;;Emacs19                             (string-equal from-string
-;;;Emacs19                                           (downcase from-string)))))
-;;;Emacs19         (literal (not regexp-flag))
-;;;Emacs19         (search-function (if regexp-flag 're-search-forward 'search-forward))
-;;;Emacs19         (search-string from-string)
-;;;Emacs19         (real-match-data nil)           ; The match data for the current match.
-;;;Emacs19         (next-replacement nil)
-;;;Emacs19         (replacement-index 0)
-;;;Emacs19         (keep-going t)
-;;;Emacs19         (stack nil)
-;;;Emacs19         (next-rotate-count 0)
-;;;Emacs19         (replace-count 0)
-;;;Emacs19         (lastrepl nil)                  ; Position after last match considered.
-;;;Emacs19         (match-again t)
-;;;Emacs19         (message (and query-flag (substitute-command-keys "Query replacing %s \
-;;;Emacs19 with %s: (\\<query-replace-map>\\[help] for help) "))))
-;;;Emacs19     (if (stringp replacements)
-;;;Emacs19         (setq next-replacement replacements)
-;;;Emacs19       (unless repeat-count (setq repeat-count 1)))
-;;;Emacs19     (when delimited-flag
-;;;Emacs19       (setq search-function 're-search-forward)
-;;;Emacs19       (setq search-string (concat "\\b" (if regexp-flag
-;;;Emacs19                                             from-string
-;;;Emacs19                                           (regexp-quote from-string))
-;;;Emacs19                                   "\\b")))
-;;;Emacs19     (push-mark)
-;;;Emacs19     (undo-boundary)
-;;;Emacs19     (unwind-protect
-;;;Emacs19         ;; Loop finding occurrences that perhaps should be replaced.
-;;;Emacs19         (while (and keep-going
-;;;Emacs19                     (not (eobp))
-;;;Emacs19                     (funcall search-function search-string nil t)
-;;;Emacs19                     ;; If the search string matches immediately after
-;;;Emacs19                     ;; the previous match, but it did not match there
-;;;Emacs19                     ;; before the replacement was done, ignore the match.
-;;;Emacs19                     (or (not (or (eq lastrepl (point))
-;;;Emacs19                                  (and regexp-flag
-;;;Emacs19                                       (eq lastrepl (match-beginning 0))
-;;;Emacs19                                       (not match-again))))
-;;;Emacs19                         (and (not (eobp))
-;;;Emacs19                              ;; Don't replace the null string
-;;;Emacs19                              ;; right after end of previous replacement.
-;;;Emacs19                              (progn (forward-char 1)
-;;;Emacs19                                     (funcall search-function search-string
-;;;Emacs19                                              nil t)))))
-;;;Emacs19           ;; Save the data associated with the real match.
-;;;Emacs19           (setq real-match-data (match-data))
-;;;Emacs19           ;; Before we make the replacement, decide whether the search string
-;;;Emacs19           ;; can match again just after this match.
-;;;Emacs19           (when regexp-flag (setq match-again (looking-at search-string)))
-;;;Emacs19           ;; If time for a change, advance to next replacement string.
-;;;Emacs19           (when (and (listp replacements) (= next-rotate-count replace-count))
-;;;Emacs19             (incf next-rotate-count repeat-count)
-;;;Emacs19             (setq next-replacement (nth replacement-index replacements))
-;;;Emacs19             (setq replacement-index (% (1+ replacement-index)
-;;;Emacs19                                        (length replacements))))
-;;;Emacs19           (if (not query-flag)
-;;;Emacs19               (progn (store-match-data real-match-data)
-;;;Emacs19                      (replace-match next-replacement nocasify literal)
-;;;Emacs19                      (incf replace-count))
-;;;Emacs19             (undo-boundary)
-;;;Emacs19             (let (done replaced key def)
-;;;Emacs19               ;; Loop reading commands until one of them sets DONE,
-;;;Emacs19               ;; which means it has finished handling this occurrence.
-;;;Emacs19               (while (not done)
-;;;Emacs19                 (store-match-data real-match-data)
-;;;Emacs19                 (replace-highlight (match-beginning 0) (match-end 0))
-;;;Emacs19              ;; Bind message-log-max so we don't fill up the message log
-;;;Emacs19              ;; with a bunch of identical messages.
-;;;Emacs19              (let ((message-log-max nil))
-;;;Emacs19                (message message from-string next-replacement))
-;;;Emacs19              (setq key (read-event))
-;;;Emacs19              (setq key (vector key))
-;;;Emacs19              (setq def (lookup-key map key))
-;;;Emacs19              ;; Restore the match data while we process the command.
-;;;Emacs19              (cond ((eq def 'help)
-;;;Emacs19                     (with-output-to-temp-buffer "*Help*"
-;;;Emacs19                       (princ
-;;;Emacs19                        (concat "Query replacing "
-;;;Emacs19                                (if regexp-flag "regexp " "")
-;;;Emacs19                                from-string " by "
-;;;Emacs19                                next-replacement ".\n\n"
-;;;Emacs19                                (substitute-command-keys
-;;;Emacs19                                 query-replace-help)))
-;;;Emacs19                       (save-excursion
-;;;Emacs19                         (set-buffer standard-output)
-;;;Emacs19                         (help-mode))))
-;;;Emacs19                    ((eq def 'exit)
-;;;Emacs19                     (setq keep-going nil)
-;;;Emacs19                     (setq done t))
-;;;Emacs19                    ((eq def 'backup)
-;;;Emacs19                     (if stack
-;;;Emacs19                         (let ((elt (car stack)))
-;;;Emacs19                           (goto-char (car elt))
-;;;Emacs19                           (setq replaced (eq t (cdr elt)))
-;;;Emacs19                           (unless replaced
-;;;Emacs19                                (store-match-data (cdr elt)))
-;;;Emacs19                           (pop stack))
-;;;Emacs19                       (message "No previous match")
-;;;Emacs19                       (ding 'no-terminate)
-;;;Emacs19                       (sit-for 1)))
-;;;Emacs19                    ((eq def 'act)
-;;;Emacs19                     (unless replaced
-;;;Emacs19                          (replace-match next-replacement nocasify literal))
-;;;Emacs19                     (setq done t) (setq replaced t))
-;;;Emacs19                    ((eq def 'act-and-exit)
-;;;Emacs19                     (unless replaced
-;;;Emacs19                         (replace-match next-replacement nocasify literal))
-;;;Emacs19                     (setq keep-going nil)
-;;;Emacs19                     (setq done t) (setq replaced t))
-;;;Emacs19                    ((eq def 'act-and-show)
-;;;Emacs19                     (unless replaced
-;;;Emacs19                          (replace-match next-replacement nocasify literal)
-;;;Emacs19                          (setq replaced t)))
-;;;Emacs19                    ((eq def 'automatic)
-;;;Emacs19                     (unless replaced
-;;;Emacs19                          (replace-match next-replacement nocasify literal))
-;;;Emacs19                     (setq done t)
-;;;Emacs19                        (setq query-flag nil)
-;;;Emacs19                        (setq replaced t))
-;;;Emacs19                    ((eq def 'skip)
-;;;Emacs19                     (setq done t))
-;;;Emacs19                    ((eq def 'recenter)
-;;;Emacs19                     (recenter nil))
-;;;Emacs19                    ((eq def 'edit)
-;;;Emacs19                        (message (substitute-command-keys
-;;;Emacs19                                  "Recursive edit.  Type \\[exit-recursive-edit] \
-;;;Emacs19 to return to top level."))
-;;;Emacs19                     (store-match-data
-;;;Emacs19                      (prog1 (match-data)
-;;;Emacs19                        (save-excursion (recursive-edit))))
-;;;Emacs19                     ;; Before we make the replacement,
-;;;Emacs19                     ;; decide whether the search string
-;;;Emacs19                     ;; can match again just after this match.
-;;;Emacs19                     (when regexp-flag
-;;;Emacs19                          (setq match-again (looking-at search-string))))
-;;;Emacs19                    ((eq def 'delete-and-edit)
-;;;Emacs19                        (message (substitute-command-keys
-;;;Emacs19                                  "Recursive edit.  Type \\[exit-recursive-edit] \
-;;;Emacs19 to return to top level."))
-;;;Emacs19                     (delete-region (match-beginning 0) (match-end 0))
-;;;Emacs19                     (store-match-data
-;;;Emacs19                      (prog1 (match-data)
-;;;Emacs19                        (save-excursion (recursive-edit))))
-;;;Emacs19                     (setq replaced t))
-;;;Emacs19                    ;; Note: we do not need to treat `exit-prefix'
-;;;Emacs19                    ;; specially here, since we reread
-;;;Emacs19                    ;; any unrecognized character.
-;;;Emacs19                    (t
-;;;Emacs19                     (setq this-command 'mode-exited)
-;;;Emacs19                     (setq keep-going nil)
-;;;Emacs19                     (setq unread-command-events
-;;;Emacs19                           (append (listify-key-sequence key)
-;;;Emacs19                                   unread-command-events))
-;;;Emacs19                     (setq done t))))
-;;;Emacs19            ;; Record previous position for ^ when we move on.
-;;;Emacs19            ;; Change markers to numbers in the match data
-;;;Emacs19            ;; since lots of markers slow down editing.
-;;;Emacs19            (push (cons (point)
-;;;Emacs19                           (or replaced
-;;;Emacs19                               (mapcar (lambda (elt)
-;;;Emacs19                                         (and (markerp elt)
-;;;Emacs19                                              (prog1 (marker-position elt)
-;;;Emacs19                                                (set-marker elt nil))))
-;;;Emacs19                                       (match-data))))
-;;;Emacs19                     stack)
-;;;Emacs19            (when replaced (incf replace-count))))
-;;;Emacs19        (setq lastrepl (point)))
-;;;Emacs19       (replace-dehighlight))
-;;;Emacs19     (or unread-command-events
-;;;Emacs19      (message "Replaced %d occurrence%s"
-;;;Emacs19               replace-count
-;;;Emacs19               (if (= replace-count 1) "" "s")))
-;;;Emacs19     (and keep-going stack)))
-
+(defun occur-unhighlight-visited-hits (&optional msgp)
+  "Unhighlight visited search hits for the latest occur-mode buffer.
+Non-interactively, this is a no-op without library `highlight.el'."
+  (interactive "p")
+  (when (and msgp  (not (fboundp 'hlt-unhighlight-region)))
+    (error "`occur-unhighlight-visited-hits' requires library `highlight.el'"))
+  (when (and (fboundp 'hlt-unhighlight-region)  (listp occur-searched-buffers))
+    (dolist (buf  occur-searched-buffers)  (with-current-buffer buf (hlt-unhighlight-region)))
+    (setq occur-searched-buffers  ())))
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -54,13 +54,6 @@
 ;;(load "init-cedet")
 
 ;; -----------------------------------------------------------------------------
-;;; ECB
-(setq ecb-source-path nil)
-(autoload 'ecb-activate "init-ecb" "ECB" t)
-(autoload 'ecb-activate-2 "init-ecb" "ECB" t)
-(autoload 'ecb-layout-switch "init-ecb" "ECB" t)
-
-;; -----------------------------------------------------------------------------
 ;;; OpenFOAM settings
 (load "init-OpenFOAM")
 

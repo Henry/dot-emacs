@@ -5,21 +5,20 @@
 ;; Authors: Matsushita Akihisa <akihisa@mail.ne.jp>
 ;; Keywords: isearch
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation; either version 3, or (at
+;; your option) any later version.
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program; if not, you can either send email to this
-;; program's maintainer or write to: The Free Software Foundation,
-;; Inc.; 59 Temple Place, Suite 330; Boston, MA 02111-1307, USA.
-
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
 
@@ -102,7 +101,14 @@ catchall-regexp.")
   (after end-all-isearch-buffer activate)
   (setq isearch-all nil)
   (setq isearch-all-buffers nil)
+  (setq isearch-all-current-buffer nil)
   (setq isearch-all-direction nil))
+
+(defadvice isearch-abort
+  (before switch-start-buffer activate)
+  (if (and isearch-all-current-buffer
+           (buffer-live-p isearch-all-current-buffer))
+      (switch-to-buffer isearch-all-current-buffer)))
 
 (defadvice isearch-push-state
   (after push-all-isearch-buffer activate)
@@ -113,21 +119,23 @@ catchall-regexp.")
 (defadvice isearch-pop-state
   (before all-isearch-pop-state activate)
   (switch-to-buffer (car isearch-all-buffers))
-  (setq isearch-all-buffers (cdr isearch-all-buffers))
-  )
+  (setq isearch-all-buffers (cdr isearch-all-buffers)))
 
 (defun isearch-all-change-page (direction &optional buffer)
   (if buffer
       (progn
         (if (string= (buffer-name (car (reverse isearch-all-buffer-list)))
                      (buffer-name (current-buffer)))
-            (setq isearch-all-buffer-list (append
-                                           (list (car (reverse isearch-all-buffer-list)))
-                                           (reverse (cdr (reverse isearch-all-buffer-list))))))
-        (switch-to-buffer (buffer-name (car (reverse isearch-all-buffer-list))))
-        (setq isearch-all-buffer-list (append
-                                       (list (car (reverse isearch-all-buffer-list)))
-                                       (reverse (cdr (reverse isearch-all-buffer-list))))))
+            (setq isearch-all-buffer-list
+                  (append
+                   (list (car (reverse isearch-all-buffer-list)))
+                   (reverse (cdr (reverse isearch-all-buffer-list))))))
+        (switch-to-buffer
+         (buffer-name (car (reverse isearch-all-buffer-list))))
+        (setq isearch-all-buffer-list
+              (append
+               (list (car (reverse isearch-all-buffer-list)))
+               (reverse (cdr (reverse isearch-all-buffer-list))))))
     (progn
       (if (string= (buffer-name (car isearch-all-buffer-list))
                    (buffer-name (current-buffer)))
@@ -137,8 +145,7 @@ catchall-regexp.")
       (switch-to-buffer (buffer-name (car isearch-all-buffer-list)))
       (setq isearch-all-buffer-list (append
                                      (cdr isearch-all-buffer-list)
-                                     (list (car isearch-all-buffer-list)))))
-    )
+                                     (list (car isearch-all-buffer-list))))))
   (if (eq direction 'forward)
       (goto-char (point-min))
     (goto-char (point-max)))
@@ -150,14 +157,12 @@ catchall-regexp.")
 (defun isearch-all-next-page ()
   (interactive)
   (isearch-all-change-page isearch-all-direction)
-  (isearch-repeat isearch-all-direction)
-  )
+  (isearch-repeat isearch-all-direction))
 
 (defun isearch-all-prev-page ()
   (interactive)
   (isearch-all-change-page isearch-all-direction t)
-  (isearch-repeat isearch-all-direction)
-  )
+  (isearch-repeat isearch-all-direction))
 
 (defun isearch-all-first-page ()
   (interactive)

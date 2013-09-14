@@ -1,18 +1,17 @@
 #!/bin/sh
-
+set -x
 (cd anything-config && git pull)
 (cd apel && git pull)
 (cd babel && git pull)
 (cd bbdb && cvs up)
 (cd ebib && git pull)
-#(cd ecb && cvs up)
-(cd ecb && git pull)
 (cd emacs-calfw && git pull)
 (cd emacs-window-layout && git pull)
 (cd emacs-window-manager && git pull)
 (cd emms && git pull)
 (cd emsane && git pull)
 (cd flim && git pull)
+(cd git-modes && git pull)
 (cd gnuplot && git pull)
 (cd ioccur && git pull)
 (cd magit && git pull)
