@@ -1,25 +1,25 @@
 ;;; color-occur.el
 ;; -*- Mode: Emacs-Lisp -*-
 
-;;  $Id: color-occur.el,v 2.2 2005/05/14 03:05:59 akihisa Exp $
+;;  $Id: color-occur.el,v 2.4 2007/12/25 15:54:32 akihisa Exp $
 
 ;; Author: Matsushita Akihisa <akihisa@mail.ne.jp>
 ;; Keywords: occur highlight convenience
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation; either version 3, or (at
+;; your option) any later version.
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program; if not, you can either send email to this
-;; program's maintainer or write to: The Free Software Foundation,
-;; Inc.; 59 Temple Place, Suite 330; Boston, MA 02111-1307, USA.
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
 
@@ -43,11 +43,27 @@
 ;; <up>, n : next matches
 ;; <down>, p : previous matches
 
+;; Other related Elisp
+
+;; http://www.bookshelf.jp/elc/color-moccur.el
+;; http://www.bookshelf.jp/elc/moccur-edit.el
+
 ;;; History:
 
 ;; color-occur 1.0 was released to the net on 12/01/2002
 
 ;;; Code:
+
+(defgroup color-occur nil
+  "Customize color-occur"
+  :group 'matching)
+
+(defcustom color-occur-kill-occur-buffer nil
+  "*Non-nil means to kill *Occur* buffer automatically when you exit *Occur* buffer."
+  :group 'color-ooccur
+  :type 'boolean
+  )
+
 
 (defface color-occur-face
   '((((class color)
@@ -58,7 +74,9 @@
      (:background "ForestGreen" :bold t))
     (t
      ()))
-  "Face used for list-matching-lines-face")
+  "Face used for list-matching-lines-face"
+  :group 'color-occur
+  )
 
 (setq list-matching-lines-face 'color-occur-face)
 
@@ -148,7 +166,9 @@
   (if (featurep 'xemacs)
       (bury-buffer (get-buffer "*Occur*"))
     (color-occur-remove-overlays)
-    (kill-buffer (get-buffer "*Occur*")))
+    (if color-occur-kill-occur-buffer
+        (kill-buffer (get-buffer "*Occur*"))
+      (bury-buffer (get-buffer "*Occur*"))))
 ;;  (switch-to-buffer before-occur-buffer)
   (delete-other-windows))
 
@@ -158,12 +178,17 @@
   (if (featurep 'xemacs)
       (progn
         (color-occur-remove-overlays)
-        (kill-buffer (get-buffer "*Occur*")))))
+        (if color-occur-kill-occur-buffer
+            (kill-buffer (get-buffer "*Occur*"))
+        (bury-buffer (get-buffer "*Occur*"))))))
 
 (defun color-occur-exit ()
   "*Exit occur buffer"
   (interactive)
-  (kill-buffer (get-buffer "*Occur*"))
+  (if color-occur-kill-occur-buffer
+      (kill-buffer (get-buffer "*Occur*"))
+    (bury-buffer (get-buffer "*Occur*")))
+
   (switch-to-buffer before-occur-buffer)
   (goto-char before-occur-point)
   (color-occur-remove-overlays)
@@ -307,6 +332,12 @@
 (provide 'color-occur)
 
 ;;; $Log: color-occur.el,v $
+;;; Revision 2.4  2007/12/25 15:54:32  akihisa
+;;; *** empty log message ***
+;;;
+;;; Revision 2.3  2007/11/04 13:37:15  akihisa
+;;; *** empty log message ***
+;;;
 ;;; Revision 2.2  2005/05/14 03:05:59  akihisa
 ;;; for multi-occur
 ;;;

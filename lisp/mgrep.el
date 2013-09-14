@@ -1,25 +1,25 @@
-;;; mgrep.el --- Search in the directory previously specified
+;;; mgrep.el
 ;; -*- Mode: Emacs-Lisp -*-
 
-;;  $Id: mgrep.el,v 1.8.2.1 2003/10/24 10:28:46 akihisa Exp $
+;;  $Id: mgrep.el,v 2.1 2007/11/04 13:37:14 akihisa Exp $
 
 ;; Author: Matsushita Akihisa <akihisa@mail.ne.jp>
 ;; Keywords: grep memo
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation; either version 3, or (at
+;; your option) any later version.
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program; if not, you can either send email to this
-;; program's maintainer or write to: The Free Software Foundation,
-;; Inc.; 59 Temple Place, Suite 330; Boston, MA 02111-1307, USA.
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
 
@@ -45,8 +45,8 @@
 ;;       '(
 ;;          name   directory        mask   option
 ;;         ("dir" default-directory "*.el" dir)
-;;         ("config" "~/mylisp/"  "*.el" nil)
-;;         ("1.99" "d:/unix/Meadow2/1.99a6/" "*.*" sub)
+;;         ("config" "~/mylisp/"  ("\\.js" "\\.el$") nil)
+;;         ("1.99" "d:/unix/Meadow2/1.99a6/" (".*") sub)
 ;;         ))
 
 ;; name : Input your favorite name
@@ -60,11 +60,24 @@
 
 (require 'compile)
 
-(defvar mgrep-list
-      '(
-        ;; name directory filemask subdirectory
-        ("site" "C:/unix/Meadow2/1.99a6/site-lisp" "*.el" t)
-        ))
+(defcustom mgrep-list
+    ;;("lisp" (expand-file-name "../lisp" data-directory) "*.el" t)
+  nil
+  ""
+  :group 'matching
+  :type '(repeat
+          (list (string :tag "Name")
+                (choice
+                 (directory :tag "Directory")
+                 (symbol :tag "Variable"))
+                (string :tag "File Mask" "*.*")
+                (choice :tag "Option" :default nil
+                 (const :tag "Default" nil)
+                 (const :tag "Use Find" t)
+                 (const :tag "Select Directory" dir)
+                 (const :tag "Select Directory and Use Find" dirfind)
+                 (const :tag "Subdirectory" sub)
+                 (const :tag "Subdirectory and Use Find" subfind)))))
 
 ;;; Internal variables
 (defvar mgrep-word-history nil)
@@ -156,7 +169,7 @@
     (if (or (string= 'dir (nth 3 (assoc name mgrep-list)))
             (string= 'dirfind (nth 3 (assoc name mgrep-list))))
         (progn
-          (setq dir (expand-file-name (read-file-name "Directory: ")))
+          (setq dir (expand-file-name (read-file-name "Directory: " dir)))
           (if (file-directory-p dir)
               (setq dir (file-name-as-directory dir))
             (setq dir (file-name-directory dir)))))

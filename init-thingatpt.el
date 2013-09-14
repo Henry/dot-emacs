@@ -29,7 +29,7 @@
   (let ((things '((?l . list) (?f . filename) (?w . word) (?s . sexp)))
         (message-log-max)               ; don't write to *Message*
         beg t-a-p thing event)
-    (flet ((get-thing ()
+    (cl-flet ((get-thing ()
                       (save-excursion
                         (beginning-of-thing thing)
                         (setq beg (point))

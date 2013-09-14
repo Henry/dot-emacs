@@ -17,7 +17,7 @@
   ;; end of the adviced function. This is obviously brittle, but the
   ;; alternative approach of copy/pasting the original also has
   ;; downsides...
-  (flet ((eldoc-docstring-format-sym-doc
+  (cl-flet ((eldoc-docstring-format-sym-doc
           (sym doc face)
           (let* ((function-name (propertize (symbol-name sym)
                                             'face face))

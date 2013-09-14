@@ -5,6 +5,7 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/paredit"))
 
 ;; -----------------------------------------------------------------------------
 ;;; Load the quick initialisation file

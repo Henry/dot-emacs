@@ -38,6 +38,7 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L packages/mo-git-blame \
 	-L packages/org-mode/lisp \
 	-L packages/org-mode/contrib/lisp \
+        -L packages/paredit \
         -L packages/popup-el \
 	-L packages/semi \
 	-L packages/slime \

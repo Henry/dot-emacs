@@ -110,8 +110,8 @@
 (add-hook 'grep-setup-hook
           (lambda ()
             (define-key grep-mode-map "\M-r" 'grep-narrow-down)
-            (define-key grep-mode-map '[up] 'previous-error-no-select)
-            (define-key grep-mode-map '[down] 'next-error-no-select)
+            (define-key grep-mode-map '[up] 'color-grep-prev)
+            (define-key grep-mode-map '[down] 'color-grep-next)
             (define-key grep-mode-map "\M-p" 'color-grep-prev)
             (define-key grep-mode-map "\M-n" 'color-grep-next)
             (define-key grep-mode-map "\C-p" 'color-grep-prev)

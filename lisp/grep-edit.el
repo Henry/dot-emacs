@@ -1,7 +1,7 @@
 ;;; grep-edit --- edit grep buffer and apply the changes to files
 ;; -*- Mode: Emacs-Lisp -*-
 
-;;  $Id: grep-edit.el,v 2.9 2009/01/06 08:26:27 akihisa Exp $
+;;  $Id: grep-edit.el,v 2.12 2010-07-22 13:31:26 Akihisa Exp $
 
 ;; Author: Matsushita Akihisa <akihisa@mail.ne.jp>
 ;; Keywords: grep edit
@@ -37,13 +37,21 @@
 ;; The latest version of this program can be downloaded from
 ;; http://www.bookshelf.jp/elc/grep-edit.el
 
+;; related my elisp
+;; http://www.bookshelf.jp/elc/color-grep.el
+;; http://www.bookshelf.jp/elc/color-moccur.el
+;; http://www.bookshelf.jp/elc/moccur-edit.el
+
 ;; Usage:
-;; You can start editing the text on *grep* buffer. And the changed
-;; text is highlighted
+;; You can edit the text on *grep* buffer, and the changed text is
+;; highlighted. Then, type C-c C-e to apply the highlighting changes
+;; to files.
+
 ;; C-c C-e : apply the highlighting changes to files.
-;; C-c C-u : abort
+;; C-c C-u : All changes are ignored
 ;; C-c C-r : Remove the highlight in the region (The Changes doesn't
-;; apply to files)
+;; apply to files. Of course, if you type C-c C-e, the remained
+;; highlight changes are applied to files.)
 
 ;;; History:
 
@@ -236,7 +244,7 @@
 (defun grep-edit-check-file ()
   "*check the file status. If it is impossible to change file, return t"
   (cond
-   (buffer-read-only
+   ((not (file-writable-p grep-edit-filename))
     nil)
    ((not (file-exists-p grep-edit-filename))
     nil)
@@ -335,7 +343,7 @@ commands.  This advice only has effect in grep-edit mode."
       ,(format "Make %s to work better with grep-edit,\n%s."  command
                "skipping read-only matches when invoked without argument")
       ad-do-it
-      (if (eq major-mode 'compilation-mode)
+      (if (eq major-mode 'grep-mode)
           (while (and ad-return-value
                       (text-property-any
                        (max 1 (1- (match-beginning 0))) (match-end 0)
@@ -351,7 +359,7 @@ commands.  This advice only has effect in grep-edit mode."
    `(defadvice ,command (around grep-edit-grok-read-only activate)
       ,(format "Make %s to work better with grep-edit,\n%s."  command
                "skipping read-only matches when invoked without argument")
-      (if (eq major-mode 'compilation-mode)
+      (if (eq major-mode 'grep-mode)
           (progn
             (grep-edit-add-skip-in-replace 'search-forward)
             (grep-edit-add-skip-in-replace 're-search-forward)
