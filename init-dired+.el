@@ -86,7 +86,7 @@
   (hl-line-mode)
 
   ;; Use the same buffer for visited directories
-  (toggle-dired-find-file-reuse-dir 1)
+  (toggle-diredp-find-file-reuse-dir 1)
 
   ;; Set omit-mode by default
   (dired-omit-mode 1)
