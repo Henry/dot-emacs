@@ -158,7 +158,6 @@
 ;;;  moccur <regexp> shows all occurrences of <regexp>
 ;;;  in all buffers that refer to files.
 (require 'color-moccur)
-(setq moccur-use-ee t)
 
 ;; -----------------------------------------------------------------------------
 ;;; moccur-edit --- Edit *moccur* buffers and apply changes
