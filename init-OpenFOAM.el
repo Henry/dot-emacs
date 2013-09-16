@@ -40,14 +40,13 @@
   "`wmake' script wrapper callable from `eshell' and directly."
   (interactive)
   (save-some-buffers (not compilation-ask-about-save) nil)
-  (compile-internal
-   (concat "wmake " (eshell-flatten-and-stringify args))
-   "No more errors"))
+  (compilation-start
+   (concat "wmake " (eshell-flatten-and-stringify args))))
 
 (defun Allwmake ()
   (interactive)
   (save-some-buffers (not compilation-ask-about-save) nil)
-  (compile-internal "./Allwmake" "No more errors"))
+  (compilation-start "./Allwmake"))
 
 (defun wclean (&rest args)
   (interactive)
