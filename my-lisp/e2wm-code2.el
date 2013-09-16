@@ -15,7 +15,7 @@
 
 (defun e2wm:special-buffer (buf alist)
   (if (e2wm:managed-p)
-      (string-match "\\(\\*\\(Help\\|Compilation\\|magit\\)\\|COMMIT\\)" buf)
+      (string-match "\\(\\*\\(Help\\|grep\\|Compilation\\|magit\\)\\|COMMIT\\)" buf)
     nil))
 
 ;;; Use bottom-left window for completion buffer
@@ -117,7 +117,6 @@
    :extend     'two
    :title      "Coding2"
    :init       'e2wm:dp-code2-init
-   ;;:update     'e2wm:dp-code2-update
    :leave      'e2wm:dp-code2-leave))
 
 (defun e2wm:dp-code2-init ()
@@ -148,12 +147,6 @@
      (t
       (wlf:set-buffer code2-wm 'right (e2wm:history-get-prev buf))))
     code2-wm))
-
-(defun e2wm:dp-code2-update (wm)
-  (e2wm:message "#DP CODE2 update")
-  ;;(kill-buffer (get-buffer-create "*SPEEDBAR*"))
-  (kill-buffer (get-buffer-create dirtree-buffer))
-  (e2wm:$pst-class-super))
 
 (defun e2wm:dp-code2-leave (wm)
   ;;(kill-buffer (get-buffer-create "*SPEEDBAR*"))
