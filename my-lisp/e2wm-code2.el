@@ -15,7 +15,7 @@
 
 (defun e2wm:special-buffer (buf alist)
   (if (e2wm:managed-p)
-      (string-match "\\*\\(Help\\|Compilation\\)" buf)
+      (string-match "\\(\\*\\(Help\\|Compilation\\|magit\\)\\|COMMIT\\)" buf)
     nil))
 
 ;;; Use bottom-left window for completion buffer
