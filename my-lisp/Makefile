@@ -14,6 +14,8 @@ elc_files := $(shell ls *.el | sed 's:\.el:\.elc:g')
         -L ../packages/auctex/auctex \
 	-L ../packages/bbdb/lisp \
 	-L ../packages/completion-ui \
+        -L ../packages/emacs-window-manager \
+        -L ../packages/emacs-window-layout \
         -f batch-byte-compile $<
 
 all: $(elc_files)

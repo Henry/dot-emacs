@@ -5,9 +5,6 @@
 
 (require 'e2wm)
 (require 'windata)
-;(require 'tree-mode)
-;(require 'dirtree)
-(autoload 'dirtree "tree-mode" "tree-mode" t)
-(autoload 'dirtree "dirtree" "dirtree" t)
+(autoload 'e2wm:dp-code2 "e2wm-code2" "e2wm-code2" t)
 
-(global-set-key (kbd "M-+") 'e2wm:start-management)
+(global-set-key (kbd "M-+") 'e2wm:dp-code2)
