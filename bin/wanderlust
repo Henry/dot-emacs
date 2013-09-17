@@ -1,7 +1,8 @@
 #!/bin/sh
 
+cp $HOME/bin/linux/eemacs $HOME/bin/linux/wlemacs
 if [ `ps -u $USER -f | grep -v grep | grep -c " wl$"` == "0" ]; then
-    eemacs -q -l ~/.emacs.d/init-eemacs.el -f wl &
+    $HOME/bin/linux/wlemacs -q -l ~/.emacs.d/init-eemacs.el -f wl &
 else
-    echo "eemacs -f wl already running." >&2
+    echo "wlemacs -f wl already running." >&2
 fi
