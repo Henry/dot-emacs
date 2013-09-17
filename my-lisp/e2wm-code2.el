@@ -3,51 +3,37 @@
 
 (require 'e2wm)
 
+;;; Use middle window for source buffers
+;;;--------------------------------------------------
+
+(defun e2wm:code2-display-main-buffer (buf alist)
+  "Put the source buffers in the bottom-middle window"
+  (let ((target-window (window-at (/ (frame-width) 2) (- (frame-height) 4)))
+        (pop-up-windows t))
+    (set-window-buffer target-window buf)
+    (e2wm:history-add buf)
+    (e2wm:pst-show-history-main)
+    target-window))
+
 ;;; Use right window for special buffers
 ;;;--------------------------------------------------
 
-(defun e2wm:display-special-buffer (buf alist)
+(defun e2wm:code2-display-special-buffer (buf alist)
   "Put the special buffers in the bottom-right window"
   (let ((target-window (window-at (- (frame-width) 4) (- (frame-height) 4)))
         (pop-up-windows t))
     (set-window-buffer target-window buf)
     target-window))
 
-(defun e2wm:special-buffer (buf alist)
-  (if (e2wm:managed-p)
-      (string-match "\\(\\*\\(Help\\|grep\\|Compilation\\|magit\\)\\|COMMIT\\)" buf)
-    nil))
-
 ;;; Use bottom-left window for completion buffer
 ;;;--------------------------------------------------
 
-(defun e2wm:display-completion-buffer (buf alist)
+(defun e2wm:code2-display-completion-buffer (buf alist)
   "Put the special buffers in the bottom-left window"
   (let ((target-window (window-at 0 (- (frame-height) 4)))
         (pop-up-windows t))
     (set-window-buffer target-window buf)
     target-window))
-
-(defun e2wm:completion-buffer (buf alist)
-  (if (e2wm:managed-p)
-      (string-match "*Completions*" buf)
-    nil))
-
-;;; Speedbar plugin
-;;;--------------------------------------------------
-
-;; (require 'sr-speedbar)
-
-;; (defun e2wm:def-plugin-speedbar (frame wm winfo)
-;;   (let ((buf (get-buffer "*SPEEDBAR*")))
-;;     (unless (and buf (buffer-live-p buf))
-;;       (select-window (wlf:get-window wm (wlf:window-name winfo)))
-;;       (if (not (sr-speedbar-exist-p))
-;;           (sr-speedbar-open)))))
-
-;; (e2wm:plugin-register 'speedbar
-;;                      "Speedbar"
-;;                      'e2wm:def-plugin-speedbar)
 
 ;;; Dirtree plugin
 ;;;--------------------------------------------------
@@ -90,7 +76,7 @@
                      "dirtree"
                      'e2wm:def-plugin-dirtree)
 
-;;; Code2
+;;; Code2 perspective
 ;;;--------------------------------------------------
 
 (defvar e2wm:c-code2-recipe
@@ -108,9 +94,6 @@
     (:name sub :buffer "*Help*" :default-hide t)
     (:name history :plugin history-list)))
 
-(defvar e2wm:c-code2-show-main-regexp
-   "\\*\\(vc-diff\\)\\*")
-
 (e2wm:pst-class-register
   (make-e2wm:$pst-class
    :name       'code2
@@ -126,10 +109,22 @@
     :format         "%[%t%]\n"
     :button-face    'default
     :notify         'e2wm:dirtree-select)
+  ;; Set the window for particular buffers
   (customize-set-variable
    'display-buffer-alist
-   '((e2wm:completion-buffer e2wm:display-completion-buffer)
-     (e2wm:special-buffer e2wm:display-special-buffer)))
+   '(
+     ("*Completions*"
+      . (e2wm:code2-display-completion-buffer . nil))
+     ("\\*\\(Help\\|grep\\|Compilation\\|magit\\)"
+      . (e2wm:code2-display-special-buffer . nil))
+     ("COMMIT"
+      . (e2wm:code2-display-main-buffer . nil))
+     (".*"
+      . (e2wm:code2-display-special-buffer . nil))
+     ))
+  ;; Set the default window to main
+  (customize-set-variable
+   'display-buffer-base-action '(e2wm:code2-display-main-buffer))
   (let*
       ((code2-wm
         (wlf:no-layout
@@ -149,7 +144,6 @@
     code2-wm))
 
 (defun e2wm:dp-code2-leave (wm)
-  ;;(kill-buffer (get-buffer-create "*SPEEDBAR*"))
   (kill-buffer (get-buffer-create dirtree-buffer))
   ;; Reset dirtree-file-widget
   (define-widget 'dirtree-file-widget 'push-button
