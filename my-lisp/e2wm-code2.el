@@ -100,7 +100,10 @@
    :extend     'two
    :title      "Coding2"
    :init       'e2wm:dp-code2-init
-   :leave      'e2wm:dp-code2-leave))
+   :leave      'e2wm:dp-code2-leave
+   :popup      'e2wm:dp-code2-popup
+   :switch     'e2wm:dp-code2-popup
+   :display    'e2wm:dp-code2-popup))
 
 (defun e2wm:dp-code2-init ()
   ;; Set the dirtree-file-widget to us e2wm:dirtree-select
@@ -152,6 +155,12 @@
     :button-face    'default
     :notify         'dirtree-select)
   (customize-set-variable 'display-buffer-alist nil))
+
+(defun e2wm:dp-code2-popup (buf)
+  "Show the buffer BUF in sub if it is not recordable or document buffer.
+Otherwise show and select it."
+  (e2wm:message "#DP CODE2 popup : %s" buf)
+  (e2wm:code2-display-special-buffer buf nil))
 
 (defun e2wm:dp-code2 ()
   (interactive)
