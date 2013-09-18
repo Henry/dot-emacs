@@ -2,39 +2,7 @@
 ;;;--------------------------------------------------
 
 (require 'e2wm)
-(setq e2wm:debug t)
-
-;;; Use middle window for source buffers
-;;;--------------------------------------------------
-
-(defun e2wm:code2-display-main-buffer (buf alist)
-  "Put the source buffers in the bottom-middle window"
-  (let ((target-window (window-at (/ (frame-width) 2) (- (frame-height) 4)))
-        (pop-up-windows t))
-    (set-window-buffer target-window buf)
-    (e2wm:history-add buf)
-    (e2wm:pst-show-history-main)
-    target-window))
-
-;;; Use right window for special buffers
-;;;--------------------------------------------------
-
-(defun e2wm:code2-display-special-buffer (buf alist)
-  "Put the special buffers in the bottom-right window"
-  (let ((target-window (window-at (- (frame-width) 4) (- (frame-height) 4)))
-        (pop-up-windows t))
-    (set-window-buffer target-window buf)
-    target-window))
-
-;;; Use bottom-left window for completion buffer
-;;;--------------------------------------------------
-
-(defun e2wm:code2-display-completion-buffer (buf alist)
-  "Put the special buffers in the bottom-left window"
-  (let ((target-window (window-at 0 (- (frame-height) 4)))
-        (pop-up-windows t))
-    (set-window-buffer target-window buf)
-    target-window))
+;(setq e2wm:debug t)
 
 ;;; Dirtree plugin
 ;;;--------------------------------------------------
@@ -118,22 +86,6 @@
     :format         "%[%t%]\n"
     :button-face    'default
     :notify         'e2wm:dirtree-select)
-  ;; Set the window for particular buffers
-  ;; (customize-set-variable
-  ;;  'display-buffer-alist
-  ;;  '(
-  ;;    ("*Completions*"
-  ;;     . (e2wm:code2-display-completion-buffer . nil))
-  ;;    ("\\*\\(Help\\|grep\\|Compilation\\|magit\\)"
-  ;;     . (e2wm:code2-display-special-buffer . nil))
-  ;;    ("COMMIT"
-  ;;     . (e2wm:code2-display-main-buffer . nil))
-  ;;    (".*"
-  ;;     . (e2wm:code2-display-special-buffer . nil))
-  ;;    ))
-  ;; ;; Set the default window to main
-  ;; (customize-set-variable
-  ;;  'display-buffer-base-action '(e2wm:code2-display-main-buffer))
   (add-hook 'minibuffer-setup-hook 'e2wm:override-setup-completion)
   (let*
       ((code2-wm
