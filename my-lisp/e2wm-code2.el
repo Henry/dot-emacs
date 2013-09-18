@@ -182,7 +182,7 @@
      (t nil))))
 
 (defvar e2wm:c-code2-show-left-regexp
-   "COMM")
+   "COMMIT_EDITMSG")
 
 (defvar e2wm:c-code2-show-right-regexp
    "\\*\\(Help\\|grep\\|Compilation\\|magit\\)")
