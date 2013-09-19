@@ -18,6 +18,7 @@
       icicle-require-match-flag 'no-match-required
       icicle-buffer-require-match-flag 'no-match-required
       icicle-file-require-match-flag 'no-match-required
+      icicle-show-Completions-help-flag nil
       icicle-key-complete-keys '([C-M-tab])
       ;;icicle-default-value 'insert-end
       icicle-sort-functions-alist
