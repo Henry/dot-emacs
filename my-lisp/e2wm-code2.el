@@ -52,7 +52,7 @@
   '(| (:left-max-size 50)
       (- (:upper-size-ratio 0.7)
          files history)
-      (- (:upper-size-ratio 0.7)
+      (- (:lower-max-size 5)
          (| (:left-size 81) left right)
          sub)))
 
@@ -60,7 +60,7 @@
   '((:name left)
     (:name right)
     (:name files :plugin dirtree)
-    (:name sub :buffer "*Help*" :default-hide t)
+    (:name sub :buffer "*Completions*" :default-hide t)
     (:name history :plugin history-list2)))
 
 (defvar e2wm:c-code2-right-default 'prev)
@@ -137,16 +137,19 @@
    "COMMIT_EDITMSG")
 
 (defvar e2wm:c-code2-show-right-regexp
-   "\\*\\(Help\\|grep\\|Compilation\\|magit\\)")
+   "\\*\\(Help\\|eshell\\|grep\\|Compilation\\|Backtrace\\|magit\\)")
+
+(defvar e2wm:c-code2-max-sub-size 1000)
 
 (defun e2wm:dp-code2-popup (buf)
-  "Show the buffer BUF in sub if it is not recordable, a document buffer or
-specifically allocated to either the left or right windows by regexp.
-Otherwise show and select it."
+  "Show document buffers in 'right,
+   recordable buffers in 'left,
+   specifically allocated to either the 'left or 'right windows by regexp,
+   buffers to large for sub in 'right,
+   otherwise display the buffer in pop-up sub."
   (e2wm:message "#DP CODE2 popup : %s" buf)
   (let ((buf-name (buffer-name buf)))
-    (message "buf-name" buf-name)
-   (cond
+    (cond
     ((e2wm:document-buffer-p buf)
      (e2wm:pst-buffer-set 'right buf)
      t)
@@ -161,6 +164,10 @@ Otherwise show and select it."
           (string-match e2wm:c-code2-show-right-regexp buf-name))
      (e2wm:pst-buffer-set 'right buf t)
      t)
+    ((> (buffer-size buf) e2wm:c-code2-max-sub-size)
+     ;; Put large special buffers in 'right ...
+     (e2wm:pst-buffer-set 'right buf t)
+     t)
     (t
      (e2wm:dp-code2-popup-sub buf)
      t))))
@@ -172,12 +179,14 @@ Otherwise show and select it."
      (e2wm:pst-buffer-set 'sub buf t not-minibufp))))
 
 (defun e2wm:dp-code2-display (buf)
-  "Show the buffer BUF in sub if it is not recordable, a document buffer or
-specifically allocated to either the left or right windows by regexp.
-Do not select the buffer."
+  "Show document buffers in 'right,
+   recordable buffers in 'left,
+   specifically allocated to either the 'left or 'right windows by regexp,
+   buffers to large for sub in 'right,
+   otherwise display the buffer in pop-up sub.
+   Do not select the buffer."
   (e2wm:message "#DP CODE2 display : %s" buf)
   (let ((buf-name (buffer-name buf)))
-    (message "buf-name" buf-name)
     (cond
      ((or (e2wm:history-recordable-p buf) ; we don't need to distinguish
           (e2wm:document-buffer-p buf))   ; these two as we don't select
@@ -197,7 +206,21 @@ Do not select the buffer."
            (string-match e2wm:c-code2-show-right-regexp buf-name))
       (e2wm:pst-buffer-set 'right buf t)
       t)
+     ((> (buffer-size buf) e2wm:c-code2-max-sub-size)
+      ;; Put large special buffers in 'right ...
+      (e2wm:pst-buffer-set 'right buf t)
+      ;; ... and delete the pop-up 'sub if present
+      (let ((win (wlf:get-window (e2wm:pst-get-wm) 'sub)))
+        (when win
+          (delete-window win)))
+      t)
      (t
+      ;; If buf is already displayed in 'right revert to previous buffer ...
+      (let* ((rwin (wlf:get-window (e2wm:pst-get-wm) 'right))
+             (rbuf (window-buffer rwin)))
+        (when (eql buf rbuf)
+          (switch-to-prev-buffer rwin)))
+      ;; ... and display in pop-up 'sub
       (e2wm:pst-buffer-set 'sub buf t)
       t))))
 
