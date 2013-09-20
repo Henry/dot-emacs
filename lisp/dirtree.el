@@ -1,42 +1,62 @@
 ;;; dirtree.el --- Directory tree views
-
-;; Copyright (C) 2010 Free Software Foundation, Inc.
 ;;
 ;; Author: Ye Wenbin <wenbinye@gmail.com>
-;; Maintainer: Ye Wenbin <wenbinye@gmail.com>
+;; Maintainer: Henry G. Weller
+;; Copyright (C) 2010 Free Software Foundation, Inc.
 ;; Created: 09 Jan 2010
-;; Version: 0.01
-;; Keywords
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
+;; Version: 0.1
+;; Last-Updated: Fri Sep 20 19:04:32 2013 (+0100)
+;;           By: Henry G. Weller
+;;     Update #: 1
+;; URL:
+;; Keywords: files, convenience
+;; Compatibility: GNU Emacs 24.x (may work with earlier versions)
+;; This file is NOT part of Emacs.
 ;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program; if not, write to the Free Software
-;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
+;;------------------------------------------------------------------------------
 ;;; Commentary:
+;;
 ;; There are several dir-tree widget implements, but I need these features:
 ;;  1. display many directory in one buffer to reduce buffer numbers
 ;;  2. reuse directory tree when already there is one
 ;;  3. use my favarite key binding
 ;;
 ;; So I wrote this one use `tree-mode'.
-;; 
+;;
 ;; See also:
 ;; http://www.splode.com/~friedman/software/emacs-lisp/src/dirtree.el
 ;; http://svn.halogen.kharkov.ua/svn/repos/alex-emacs-settings/emhacks/dir-tree.el
-
+;;
 ;; Put this file into your load-path and the following into your ~/.emacs:
 ;;   (autoload 'dirtree "dirtree" "Add directory to tree view" t)
-
+;;
+;; -----------------------------------------------------------------------------
+;;
+;;; Change log:
+;;
+;; Version 0.1
+;; * Initial release
+;; * Added dirtree-up and dirtree-down to reset tree to parent or child
+;; * Changed dirtree-display to open a directory in same window
+;;
+;; -----------------------------------------------------------------------------
+;;
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation; either version 3, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program; see the file COPYING.  If not, write to
+;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth
+;; Floor, Boston, MA 02110-1301, USA.
+;;
+;; -----------------------------------------------------------------------------
 ;;; Code:
 
 (eval-when-compile
@@ -81,13 +101,17 @@ See `windata-display-buffer' for setup the arguments."
       (setq trees tree-mode-list)
       (while (and trees
                   (not tree))
-        (if (string-match (concat "^" (regexp-quote (widget-get (car trees) :file))) dir)
+        (if (string-match
+             (concat "^" (regexp-quote (widget-get (car trees) :file))) dir)
             ;; if parent directory in buffer
             (setq tree (car trees))
           (setq trees (cdr trees)))))
     (if tree
         (progn
-          (setq path (split-string (file-relative-name buffer-file-name (widget-get tree :file)) "/"))
+          (setq path
+                (split-string
+                 (file-relative-name buffer-file-name (widget-get tree :file))
+                 "/"))
           (dirtree (widget-get tree :file) t)
           (setq button (tree-mode-find-node tree path))
           (if button
@@ -165,7 +189,9 @@ With prefix arguement select `dirtree-buffer'"
   "Open file in other window"
   (let ((file (widget-get node :file)))
     (and file
-         (find-file-other-window file))))
+         (if (file-directory-p file)
+             (find-file file)
+           (find-file-other-window file)))))
 
 (defun dirtree-display ()
   "Open file under point"
@@ -173,8 +199,34 @@ With prefix arguement select `dirtree-buffer'"
   (let ((widget (widget-at (1- (line-end-position))))
         file)
     (if (setq file (widget-get widget :file))
-        (find-file-other-window file))))
+        (if (file-directory-p file)
+            (find-file file)
+          (find-file-other-window file)))))
 
+(defun dirtree-up ()
+  "Recreate the dirtree for the parent directory."
+  (interactive)
+  (kill-buffer dirtree-buffer)
+  (cd "..")
+  (dirtree default-directory t))
+
+(defun dirtree-down ()
+  "Recreate the dirtree for the child directory."
+  (interactive)
+  (let ((widget (widget-at (1- (line-end-position))))
+        file)
+    (when (and (setq file (widget-get widget :file))
+               (file-directory-p file))
+      (kill-buffer dirtree-buffer)
+      (cd file)
+      (dirtree default-directory t))))
+
+(define-key dirtree-mode-map "^" 'dirtree-up)
+(define-key dirtree-mode-map [(shift return)] 'dirtree-down)
 (define-key dirtree-mode-map "\C-o" 'dirtree-display)
+(define-key dirtree-mode-map [(control return)] 'dirtree-display)
+
 (provide 'dirtree)
+
+;; -----------------------------------------------------------------------------
 ;;; dirtree.el ends here
