@@ -5,17 +5,19 @@
 ;; Author: Lynn Slater
 ;;         Drew Adams
 ;; Maintainer: Drew Adams
-;; Copyright (C) 1996-2011, Drew Adams, all rights reserved.
+;; Copyright (C) 1996-2013, Drew Adams, all rights reserved.
 ;; Copyright (C) 1989 Free Software Foundation, Inc.
 ;; Copyright (C) 1988 Lynn Randolph Slater, Jr.
 ;; Created: Tue Aug  4 17:06:46 1987
-;; Version: 21.0
-;; Last-Updated: Tue Jan  4 09:54:59 2011 (-0800)
+;; Version: 0
+;; Package-Requires: ()
+;; Last-Updated: Tue Jul 23 16:16:47 2013 (-0700)
 ;;           By: dradams
-;;     Update #: 1784
-;; URL: http://www.emacswiki.org/cgi-bin/wiki/header2.el
+;;     Update #: 1841
+;; URL: http://www.emacswiki.org/header2.el
+;; Doc URL: http://emacswiki.org/AutomaticFileHeaders
 ;; Keywords: tools, docs, maint, abbrev, local
-;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x
+;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x, 24.x
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -40,19 +42,21 @@
 ;;   `header-blank', `header-code', `header-commentary',
 ;;   `header-compatibility', `header-copyright',
 ;;   `header-creation-date', `header-date-string',
-;;   `header-description', `header-end-line', `header-eof',
-;;   `header-file-name', `header-free-software', `header-history',
-;;   `header-keywords', `header-lib-requires', `header-maintainer',
-;;   `header-mode-line', `header-modification-author',
-;;   `header-modification-date', `header-prefix-string',
-;;   `header-rcs-id', `header-rcs-log', `header-sccs', `header-shell',
-;;   `header-status', `header-title', `header-toc',
-;;   `header-update-count', `header-version', `headerable-file-p',
-;;   `make-box-comment', `make-divider', `make-revision',
-;;   `register-file-header-action', `section-comment-start',
-;;   `true-mode-name', `uniquify-list', `update-file-name',
-;;   `update-last-modified-date', `update-last-modifier',
-;;   `update-lib-requires', `update-write-count'.
+;;   `header-description', `header-doc-url',`header-end-line',
+;;   `header-eof', `header-file-name', `header-free-software',
+;;   `header-history', `header-keywords', `header-lib-requires',
+;;   `header-maintainer', `header-mode-line',
+;;   `header-modification-author', `header-modification-date',
+;;   `header-multiline', `header-pkg-requires',
+;;   `header-prefix-string', `header-rcs-id', `header-rcs-log',
+;;   `header-sccs', `header-shell', `header-status', `header-title',
+;;   `header-toc', `header-update-count', `header-url',
+;;   `header-version', `headerable-file-p', `make-box-comment',
+;;   `make-divider', `make-revision', `register-file-header-action',
+;;   `section-comment-start', `true-mode-name', `uniquify-list',
+;;   `update-file-name', `update-last-modified-date',
+;;   `update-last-modifier', `update-lib-requires',
+;;   `update-write-count'.
 ;;
 ;; User options (variables) defined here:
 ;;
@@ -61,17 +65,20 @@
 ;;
 ;; Other variables defined here:
 ;;
-;;   `file-header-update-alist', `header-prefix-string', `return-to'.
+;;   `file-header-update-alist', `header-auto-update-enabled',
+;;   `header-multiline', `header-prefix-string', `return-to'.
 ;;
 ;;
 ;; To have Emacs update file headers automatically whenever you save a
 ;; file, put this in your init file (~/.emacs):
 ;;
+;;   (autoload 'auto-update-file-header "header2")
 ;;   (add-hook 'write-file-hooks 'auto-update-file-header)
 ;;
 ;; To have Emacs add a file header whenever you create a new file in
 ;; some mode, put this in your init file (~/.emacs):
 ;;
+;;   (autoload 'auto-make-header "header2")
 ;;   (add-hook 'emacs-lisp-mode-hook 'auto-make-header)
 ;;   (add-hook 'c-mode-common-hook   'auto-make-header)
 ;;   ...
@@ -160,8 +167,21 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; Change log:
+;;; Change Log:
 ;;
+;; 2013/07/22 dadams
+;;     Added: header-pkg-requires, for ELPA/package.el.  Added to make-header-hook.
+;; 2012/08/23 dadams
+;;     Added: header-doc-url.
+;;     make-header-hook: Added header-doc-url to default value.
+;; 2011/12/19 dadams
+;;     delete-and-forget-line: Use line-end-position, not end-of-line + point.
+;; 2011/11/15 dadams
+;;     header-date-string:
+;;       Use UTC format from http://www.w3.org/TR/NOTE-datetime.  Thx to Lennart Borgman.
+;; 2011/02/03 dadams
+;;     Added: header-auto-update-enabled.
+;;     auto-update-file-header: Respect header-auto-update-enabled.  Thx to Le Wang.
 ;; 2011/01/04 dadams
 ;;     Removed autoload cookies from non-interactive functions.
 ;; 2010/08/03 dadams
@@ -314,7 +334,6 @@
 ;;
 ;;; Code:
 
-(and (< emacs-major-version 20) (eval-when-compile (require 'cl))) ;; when, unless
 (require 'lib-requires nil t)
   ;; (no error if not found):
   ;; libreq-insert-lib-requires-as-comment, libreq-file-header
@@ -328,10 +347,8 @@
 ;; Quiet byte-compiler.
 (defvar comment-end-p)
 (defvar comment-start-p)
-
-;;;;;;;;;;;;;;;;;;;;;;
-
-
+(defvar c-style)
+(defvar explicit-shell-file-name)
  
 ;; User Options (Variables) --------------------------------
 
@@ -363,7 +380,7 @@ Don't forget to mention your Emacs and library versions."))
     :group 'Automatic-File-Header)
 
 (defcustom header-date-format t
-  "Date/time format for header timestamp.
+  "*Date/time format for header timestamp.
 The value can be a string, t, or nil.
 A string value is passed to `format-time-string'.
 t means use local time with timezone; nil means use UTC."
@@ -391,11 +408,13 @@ t means use local time with timezone; nil means use UTC."
                               header-creation-date
                               ;;header-rcs-id
                               header-version
+                              header-pkg-requires
                               ;;header-sccs
                               header-modification-date
                               header-modification-author
                               header-update-count
                               header-url
+                              header-doc-url
                               header-keywords
                               header-compatibility
                               header-blank
@@ -456,11 +475,15 @@ Floor, Boston, MA 02110-1301, USA."
 
   "*Text saying that this is free software"
   :type 'string :group 'Automatic-File-Header)
-
-
-
  
 ;;; Internal variables -------------------------------------
+
+(defvar header-auto-update-enabled t
+  "Non-nil means file-header updating is enabled for current buffer.")
+
+(make-variable-buffer-local 'header-auto-update-enabled)
+(when (boundp 'safe-local-variable-values)
+  (add-to-list 'safe-local-variable-values '(header-auto-update-enabled)))
 
 (defvar return-to nil
   "Position to move point to after header fns are processed.
@@ -477,12 +500,6 @@ the function to call if the string is found near the start of the file.")
 
 (defvar header-prefix-string ""
   "Mode-specific comment prefix string for use in headers.")
-
-;; To quiet the byte compiler.
-(defvar explicit-shell-file-name) (defvar c-style)
-
-
-
  
 ;;; Functions ----------------------------------------------
 
@@ -554,7 +571,7 @@ packages."
   (format-time-string
    (cond ((stringp header-date-format) header-date-format)
          (header-date-format "%a %b %e %T %Y (%z)")
-         (t "%a %b %e %T %Y (UTC)"))
+         (t                  "%Y-%m-%dT%T%z")) ; An alternative: "%a %b %e %T %Y (UTC)"
    (current-time)
    (not header-date-format)))
 
@@ -569,6 +586,10 @@ packages."
 (defsubst header-sccs ()
   "Insert a line to record SCCS version information."
   (insert header-prefix-string "Version: %W%    %E%    %U%\n"))
+
+(defsubst header-pkg-requires ()
+  "Insert a line to record `Package-Requires' information."
+  (insert header-prefix-string "Package-Requires: ()\n"))
 
 (defsubst header-commentary ()
   "Insert \"Commentary: \" line."
@@ -649,6 +670,10 @@ This is normally overwritten with each file save."
 (defsubst header-url ()
   "Insert \"URL: \" line."
   (insert header-prefix-string "URL: \n"))
+
+(defsubst header-doc-url ()
+  "Insert \"Doc URL: \" line."
+  (insert header-prefix-string "Doc URL: \n"))
 
 (defsubst header-keywords ()
   "Insert \"Keywords: \" line."
@@ -953,13 +978,18 @@ the strings that cause them to be invoked."
 
 (defun auto-update-file-header ()
   "Update file header if file is modified.
-If file is modified, size is greater than 100 and buffer is not
-read only then call `update-file-header."
-  (and (> (buffer-size) 100)
+Call `update-file-header' if:
+ `header-auto-update-enabled' is non-nil,
+ the file is modified,
+ it is longer than 100 chars,
+ and the buffer is not read-only.
+Return nil, for use on a hook."
+  (and header-auto-update-enabled
+       (> (buffer-size) 100)
        (buffer-modified-p)
        (not buffer-read-only)
        (update-file-header)
-       nil))                            ; Return nil for use as hook.
+       nil))
 
 
 
@@ -967,9 +997,9 @@ read only then call `update-file-header."
 ;; blocks of automatic header maintenance.
 ;; -----------------------------------------------------------------------
 (defsubst delete-and-forget-line ()
-  "Delete current line.  Do not add it to the `kill-ring'."
+  "Delete current line and return it.  Do not add it to the `kill-ring'."
   (let* ((start  (point))
-         (stop   (progn (end-of-line) (point)))
+         (stop   (line-end-position))
          (str    (buffer-substring start stop)))
     (delete-region start stop)
     str))
@@ -991,7 +1021,7 @@ read only then call `update-file-header."
 ;;; incremented."
 ;;;   (interactive)
 ;;;   (let* ((beg  (point))
-;;;          (eol  (save-excursion (end-of-line) (point)))
+;;;          (eol  (line-end-position))
 ;;;          (end  (re-search-forward "\\([^\\\"]+\\)\"" eol t))
 ;;;          (str  (buffer-substring beg (1- end)))
 ;;;          (num  (car (condition-case err
