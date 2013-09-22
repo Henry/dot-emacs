@@ -1,4 +1,4 @@
-;;; dirtree.el --- Directory tree views
+;;; dirtree.el --- Directory tree using tree-widget
 ;;
 ;; Author: Ye Wenbin <wenbinye@gmail.com>
 ;; Maintainer: Henry G. Weller
@@ -16,22 +16,23 @@
 ;;------------------------------------------------------------------------------
 ;;; Commentary:
 ;;
-;; There are several dir-tree widget implements, but I need these features:
-;;  1. display many directory in one buffer to reduce buffer numbers
-;;  2. reuse directory tree when already there is one
-;;  3. use my favarite key binding
+;; Basic functionality
+;;  1. Displays many directory in one buffer to reduce buffer numbers
+;;  2. Reuse directory tree
+;;  3. Use simple key bindings
 ;;
-;; So I wrote this one use `tree-mode'.
+;;------------------------------------------------------------------------------
+;;; Installation
 ;;
-;; See also:
-;; http://www.splode.com/~friedman/software/emacs-lisp/src/dirtree.el
-;; http://svn.halogen.kharkov.ua/svn/repos/alex-emacs-settings/emhacks/dir-tree.el
+;; 1. Download dependencies
+;;    wget http://www.emacswiki.org/cgi-bin/wiki/tree-mode.el
 ;;
-;; Put this file into your load-path and the following into your ~/.emacs:
+;; 2. Put this file into your load-path and the following into your ~/.emacs:
+;;   (require 'dirtree)
+;;   or
 ;;   (autoload 'dirtree "dirtree" "Add directory to tree view" t)
 ;;
 ;; -----------------------------------------------------------------------------
-;;
 ;;; Change log:
 ;;
 ;; Version 0.1
@@ -62,18 +63,11 @@
 (eval-when-compile
   (require 'cl))
 (require 'tree-mode)
-(require 'windata)
 (require 'dired-x)
 
 (defgroup dirtree nil
   "Directory tree views"
   :group 'tools)
-
-(defcustom dirtree-windata '(frame left 0.3 delete)
-  "*Arguments to set the window buffer display.
-See `windata-display-buffer' for setup the arguments."
-  :type 'sexp
-  :group 'dirtree)
 
 (defcustom dirtree-buffer "*dirtree*"
   "*Buffer name for `dirtree'"
@@ -118,12 +112,9 @@ See `windata-display-buffer' for setup the arguments."
               (goto-char (widget-get (car button) :from))))
       (call-interactively 'dirtree))))
 
-(defun dirtree (root select)
-  "create tree of `root' directory
-With prefix arguement select `dirtree-buffer'"
-  (interactive "DDirectory: \nP")
-  (let ((buffer (get-buffer-create dirtree-buffer))
-        tree win)
+(defun dirtree-build (buffer root &optional select win)
+  "Create tree of `root' directory in `buffer' and select if `select' is true."
+  (let (tree)
     (with-current-buffer buffer
       (unless (eq major-mode 'dirtree-mode)
         (dirtree-mode))
@@ -132,9 +123,9 @@ With prefix arguement select `dirtree-buffer'"
             (setq tree atree)))
       (or tree
           (setq tree (tree-mode-insert (dirtree-root-widget root)))))
-    (setq win (get-buffer-window dirtree-buffer))
     (unless win
-      (setq win (apply 'windata-display-buffer dirtree-buffer dirtree-windata))
+      (setq win (or (get-buffer-window dirtree-buffer)
+                    (display-buffer dirtree-buffer)))
       (select-window win))
     (with-selected-window win
       (unless (widget-get tree :open)
@@ -143,6 +134,13 @@ With prefix arguement select `dirtree-buffer'"
       (recenter 1))
     (if select
         (select-window win))))
+
+(defun dirtree (root select)
+  "create tree of `root' directory
+With prefix arguement select `dirtree-buffer'"
+  (interactive "DDirectory: \nP")
+  (let ((buffer (get-buffer-create dirtree-buffer)))
+    (dirtree-build buffer root select)))
 
 (define-derived-mode dirtree-mode tree-mode "Dir-Tree"
   "A mode to display tree of directory"
@@ -193,6 +191,9 @@ With prefix arguement select `dirtree-buffer'"
              (find-file file)
            (find-file-other-window file)))))
 
+;; -----------------------------------------------------------------------------
+;;; Commands / Keybindings
+
 (defun dirtree-display ()
   "Open file under point"
   (interactive)
@@ -206,9 +207,10 @@ With prefix arguement select `dirtree-buffer'"
 (defun dirtree-up ()
   "Recreate the dirtree for the parent directory."
   (interactive)
-  (kill-buffer dirtree-buffer)
   (cd "..")
-  (dirtree default-directory t))
+  (tree-mode-goto-root)
+  (tree-mode-delete (tree-mode-tree-ap))
+  (dirtree-build (current-buffer) default-directory t))
 
 (defun dirtree-down ()
   "Recreate the dirtree for the child directory."
@@ -217,9 +219,10 @@ With prefix arguement select `dirtree-buffer'"
         file)
     (when (and (setq file (widget-get widget :file))
                (file-directory-p file))
-      (kill-buffer dirtree-buffer)
       (cd file)
-      (dirtree default-directory t))))
+      (tree-mode-goto-root)
+      (tree-mode-delete (tree-mode-tree-ap))
+      (dirtree-build (current-buffer) default-directory t))))
 
 (define-key dirtree-mode-map "^" 'dirtree-up)
 (define-key dirtree-mode-map [(shift return)] 'dirtree-down)
