@@ -5,6 +5,7 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp/tree-mode"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/paredit"))
 
 ;; -----------------------------------------------------------------------------

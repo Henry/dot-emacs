@@ -8,6 +8,7 @@ elc_files := $(shell ls *.el | sed 's:\.el:\.elc:g')
 	$(EMACS) --batch \
         -L ./ \
         -L ../lisp \
+        -L tree-mode \
         -L ../packages/icicles \
 	-L ../packages/anything-config \
 	-L ../packages/anything-config/extensions \
@@ -19,3 +20,4 @@ elc_files := $(shell ls *.el | sed 's:\.el:\.elc:g')
         -f batch-byte-compile $<
 
 all: $(elc_files)
+	make -C tree-mode

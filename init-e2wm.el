@@ -4,7 +4,6 @@
  'load-path (expand-file-name "~/.emacs.d/packages/emacs-window-layout"))
 
 (require 'e2wm)
-(require 'windata)
 (autoload 'e2wm:start-management "e2wm-code2" "e2wm-code2" t)
 
 (global-set-key (kbd "M-+")

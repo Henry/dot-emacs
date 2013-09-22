@@ -1,15 +1,60 @@
-;;; Code2 / Side-by-Side Code editing perspective
-;;;--------------------------------------------------
+;;; e2wm-code2.el --- Side-by-Side Code editing perspective
+;;
+;; Author: Henry G. Weller <hweller0@gmail.com>
+;; Maintainer: Henry G. Weller
+;; Copyright (C) 2013, Henry G. Weller, all rights reserved.
+;; Created: Sun Sep 22 18:55:40 2013 (+0100)
+;; Version: 0.1
+;; Last-Updated: Sun Sep 22 19:00:54 2013 (+0100)
+;;           By: Henry G. Weller
+;;     Update #: 3
+;; URL:
+;; Keywords: tools, window manager
+;; Compatibility: GNU Emacs 24.x (may work with earlier versions)
+;; This file is NOT part of Emacs.
+;;
+;; -----------------------------------------------------------------------------
+;;; Commentary:
+;;
+;; Perspective for the e2wm window-manager for coding on a wide full-screen
+;; window supporting two code windows side-by-side with a directory tree and
+;; file history list on the left.
+;;
+;; Includes a dirtree plugin for the directory tree.
+;;
+;; -----------------------------------------------------------------------------
+;;; Change Log:
+;;
+;; Version 0.1
+;; * Initial release
+;;
+;; -----------------------------------------------------------------------------
+;;
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation; either version 3, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program; see the file COPYING.  If not, write to
+;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth
+;; Floor, Boston, MA 02110-1301, USA.
+;; -----------------------------------------------------------------------------
+;;; Code:
 
 (require 'e2wm)
-;(setq e2wm:debug t)
 
+;; -----------------------------------------------------------------------------
 ;;; Dirtree plugin
-;;;--------------------------------------------------
 
-(require 'windata)
 (require 'tree-mode)
 (require 'dirtree)
+(require 'imenu-tree)
 
 (defun e2wm:dirtree-select (node &rest ignore)
   "Open file in main window"
@@ -22,31 +67,18 @@
 (defun e2wm:def-plugin-dirtree (frame wm winfo)
   (let ((wname (wlf:window-name winfo))
         (win (wlf:window-live-window winfo))
-        (buf (get-buffer dirtree-buffer))
-        tree)
+        (buf (get-buffer dirtree-buffer))m)
     (unless (and buf (buffer-live-p buf))
       (setq buf (get-buffer-create dirtree-buffer))
-      (with-current-buffer buf
-        (unless (eq major-mode 'dirtree-mode)
-          (dirtree-mode))
-        (dolist (atree tree-mode-list)
-          (if (string= (widget-get atree :file) ".")
-              (setq tree atree)))
-        (or tree
-            (setq tree (tree-mode-insert (dirtree-root-widget ".")))))
-      (with-selected-window win
-        (unless (widget-get tree :open)
-          (widget-apply-action tree))
-        (goto-char (widget-get tree :from))
-        (recenter 1)))
+      (dirtree-build buf "." nil win))
     (wlf:set-buffer wm wname buf)))
 
 (e2wm:plugin-register 'dirtree
                      "dirtree"
                      'e2wm:def-plugin-dirtree)
 
+;; -----------------------------------------------------------------------------
 ;;; Code2 perspective
-;;;--------------------------------------------------
 
 (defvar e2wm:c-code2-recipe
   '(| (:left-max-size 50)
@@ -137,7 +169,7 @@
    "COMMIT_EDITMSG")
 
 (defvar e2wm:c-code2-show-right-regexp
-   "\\*\\(Help\\|eshell\\|grep\\|Compilation\\|Backtrace\\|magit\\)")
+   "\\*\\(Help\\|eshell\\|grep\\|Compilation\\|Backtrace\\|magit\\|imenu-tree\\)")
 
 (defvar e2wm:c-code2-max-sub-size 1000)
 
@@ -232,7 +264,8 @@
       (wlf:hide wm 'sub)
       (wlf:select wm (e2wm:$pst-main (e2wm:pst-get-instance))))))
 
-;; Commands / Keybindings
+;; -----------------------------------------------------------------------------
+;;; Commands / Keybindings
 
 (defun e2wm:dp-code2 ()
   (interactive)
@@ -314,12 +347,14 @@
      ("prefix M" . e2wm:dp-code2-main-maximize-toggle-command))
    e2wm:prefix-key))
 
+;; -----------------------------------------------------------------------------
 ;;; history-list2
-;;;--------------------------------------------------
 
 ;; Add mouse-1 as a select key
 (define-key e2wm:def-plugin-history-list2-mode-map [mouse-1]
   'e2wm:def-plugin-history-list2-select-command)
 
 (provide 'e2wm-code2)
+
+;; -----------------------------------------------------------------------------
 ;;; e2wm-code2.el ends here
