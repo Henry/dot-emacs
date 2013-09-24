@@ -46,6 +46,25 @@
         . forward-word)
       )
 
+;; Bind S-down to switch from the completion buffer back to the minibuffer
+(add-to-list 'icicle-completion-list-key-bindings
+               '([S-down] icicle-switch-to/from-minibuffer t))
+
+;; Bind S-up to switch from the minibuffer to the completion buffer
+(defun bind-my-icicles-keys ()
+  "Replace some default Icicles minibuffer bindings with others."
+  (dolist (map (append (list minibuffer-local-completion-map
+                             minibuffer-local-must-match-map)
+                       (and (fboundp 'minibuffer-local-filename-completion-map)
+                            (list minibuffer-local-filename-completion-map))))
+    (when icicle-mode
+      (define-key map (icicle-kbd "S-up")
+        'icicle-switch-to-Completions-buf)))
+  (add-to-list 'icicle-completion-list-key-bindings
+               '([S-down] icicle-switch-to/from-minibuffer t)))
+
+(add-hook 'icicle-mode-hook 'bind-my-icicles-keys)
+
 (defvar itap-mode-alist
   '(
     (emacs-lisp-mode . ffap-guesser)
