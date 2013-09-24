@@ -166,11 +166,12 @@
       (e2wm:pst-buffer-set 'right buf))
      (t nil))))
 
+(setq e2wm:c-document-buffer-p (lambda (buf) nil))
 
 (defvar e2wm:c-code2-show-left-regexp nil)
 
 (defvar e2wm:c-code2-show-right-regexp
-   "\\*\\(Help\\|eshell\\|grep\\|Compilation\\|Backtrace\\|magit\\|imenu-tree\\)")
+   "\\*\\(Help\\|eshell\\|grep\\|Compilation\\|Backtrace\\|magit\\|imenu-tree\\|Man\\|WoMan\\|info\\)")
 
 (defvar e2wm:c-code2-max-sub-size 1000)
 
@@ -199,7 +200,7 @@
      t)
     ((> (buffer-size buf) e2wm:c-code2-max-sub-size)
      ;; Put large special buffers in 'right ...
-     (e2wm:pst-buffer-set 'right buf t t)
+     (e2wm:pst-buffer-set 'right buf t)
      t)
     (t
      (e2wm:dp-code2-popup-sub buf)
@@ -241,7 +242,7 @@
       t)
      ((> (buffer-size buf) e2wm:c-code2-max-sub-size)
       ;; Put large special buffers in 'right ...
-      (e2wm:pst-buffer-set 'right buf t t)
+      (e2wm:pst-buffer-set 'right buf t)
       ;; ... and delete the pop-up 'sub if present
       (let ((win (wlf:get-window (e2wm:pst-get-wm) 'sub)))
         (when win
