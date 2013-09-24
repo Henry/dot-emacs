@@ -207,10 +207,10 @@
 ;; -----------------------------------------------------------------------------
 ;;; woman ---  Man-page reader without using man
 (setq woman-cache-filename (expand-file-name "woman.cache" "~/Emacs")
-      woman-bold-headings nil
+      woman-bold-headings t
       woman-imenu-title "Sections"
-      woman-imenu t
-      woman-use-own-frame t
+      woman-imenu nil
+      woman-use-own-frame nil
       woman-topic-at-point nil
       woman-fill-frame t)
 
