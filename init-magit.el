@@ -9,6 +9,9 @@
 (require 'magit)
 (require 'magit-blame)
 
+(add-hook 'magit-mode-hook 'font-lock-mode)
+(add-hook 'git-commit-mode-hook 'font-lock-mode)
+
 (define-key my-map "g" 'magit-status)
 
 ;; -----------------------------------------------------------------------------
