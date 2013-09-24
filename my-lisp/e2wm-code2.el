@@ -48,6 +48,7 @@
 ;;; Code:
 
 (require 'e2wm)
+(setq e2wm:debug t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Dirtree plugin
@@ -165,8 +166,8 @@
       (e2wm:pst-buffer-set 'right buf))
      (t nil))))
 
-(defvar e2wm:c-code2-show-left-regexp
-   "COMMIT_EDITMSG")
+
+(defvar e2wm:c-code2-show-left-regexp nil)
 
 (defvar e2wm:c-code2-show-right-regexp
    "\\*\\(Help\\|eshell\\|grep\\|Compilation\\|Backtrace\\|magit\\|imenu-tree\\)")
@@ -190,15 +191,15 @@
      t)
     ((and e2wm:c-code2-show-left-regexp
           (string-match e2wm:c-code2-show-left-regexp buf-name))
-     (e2wm:pst-buffer-set 'left buf t)
+     (e2wm:pst-buffer-set 'left buf t t)
      t)
     ((and e2wm:c-code2-show-right-regexp
           (string-match e2wm:c-code2-show-right-regexp buf-name))
-     (e2wm:pst-buffer-set 'right buf t)
+     (e2wm:pst-buffer-set 'right buf t t)
      t)
     ((> (buffer-size buf) e2wm:c-code2-max-sub-size)
      ;; Put large special buffers in 'right ...
-     (e2wm:pst-buffer-set 'right buf t)
+     (e2wm:pst-buffer-set 'right buf t t)
      t)
     (t
      (e2wm:dp-code2-popup-sub buf)
@@ -232,15 +233,15 @@
       t)
      ((and e2wm:c-code2-show-left-regexp
            (string-match e2wm:c-code2-show-left-regexp buf-name))
-      (e2wm:pst-buffer-set 'left buf t)
+      (e2wm:pst-buffer-set 'left buf t t)
       t)
      ((and e2wm:c-code2-show-right-regexp
            (string-match e2wm:c-code2-show-right-regexp buf-name))
-      (e2wm:pst-buffer-set 'right buf t)
+      (e2wm:pst-buffer-set 'right buf t t)
       t)
      ((> (buffer-size buf) e2wm:c-code2-max-sub-size)
       ;; Put large special buffers in 'right ...
-      (e2wm:pst-buffer-set 'right buf t)
+      (e2wm:pst-buffer-set 'right buf t t)
       ;; ... and delete the pop-up 'sub if present
       (let ((win (wlf:get-window (e2wm:pst-get-wm) 'sub)))
         (when win
