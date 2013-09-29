@@ -176,6 +176,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; Emms: Emacs Multimedia System
 (autoload 'emms-browser "init-emms" "Emms" t)
+(autoload 'emms-streams "init-emms" "Emms" t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Dictionary and thesaurus

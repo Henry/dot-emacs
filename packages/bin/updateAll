@@ -18,7 +18,7 @@ set -x
 (cd org-mode && git pull)
 (cd paredit && git pull)
 (cd semi && git pull)
-(cd slime && cvs up)
+#(cd slime && cvs up)
 (cd undo-tree && git pull)
 (cd w3m && cvs up)
 (cd wanderlust && git pull)

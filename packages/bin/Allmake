@@ -20,7 +20,7 @@
 (cd magit && make)
 (cd org-mode && make && make doc)
 (cd semi && make)
-(cd slime && make)
+#(cd slime && make)
 (cd undo-tree && make)
 (cd w3m && make)
 (cd wanderlust && make)

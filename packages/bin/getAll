@@ -26,7 +26,7 @@ git clone https://github.com/magit/magit.git
 git clone git://repo.or.cz/org-mode.git
 git clone http://mumble.net/~campbell/git/paredit.git
 git clone https://github.com/wanderlust/semi.git
-cvs -d :pserver:anonymous:anonymous@common-lisp.net:/project/slime/cvsroot co slime
+#cvs -d :pserver:anonymous:anonymous@common-lisp.net:/project/slime/cvsroot co slime
 git clone http://www.dr-qubit.org/git/undo-tree.git
 cvs -d :pserver:anonymous@cvs.namazu.org:/storage/cvsroot login
 cvs -d :pserver:anonymous@cvs.namazu.org:/storage/cvsroot co emacs-w3m
