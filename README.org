@@ -64,7 +64,6 @@ resource.
     + babel
     + bbdb
     + bin
-    + cl-lookup
     + completion-ui
     + doremi
     + doxymacs
@@ -89,7 +88,6 @@ resource.
     + predictive
     + save
     + semi
-    + slime
     + undo-tree
     + w3m
     + wanderlust
