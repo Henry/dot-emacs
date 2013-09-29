@@ -109,4 +109,13 @@
   (call-interactively 'isearch-forward))
 
 ;; -----------------------------------------------------------------------------
+;;; Streaming
+
+(require 'emms-streams)
+(require 'emms-stream-info)
+(setq emms-stream-bookmarks-file (concat emms-directory "/emms-streams"))
+(setq emms-stream-default-action "play")
+(define-key emms-stream-mode-map (kbd "s") 'emms-stop)
+
+;; -----------------------------------------------------------------------------
 ;;; init-emms.el ends here
