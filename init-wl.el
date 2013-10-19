@@ -339,6 +339,9 @@
 
 (define-key wl-summary-mode-map "\M-q" 'wl-summary-fill-message)
 
+(require 'wl-folder)
+(define-key wl-folder-mode-map [mouse-2] 'wl-folder-jump-to-current-entity)
+
 ;; -----------------------------------------------------------------------------
 ;;; Biff: Check for new mail
 

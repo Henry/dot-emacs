@@ -1,5 +1,14 @@
 ;;; init-mouse.el --- Initialize mouse settings
 ;; -----------------------------------------------------------------------------
+
+;;; Use the X primary selection for copy/paste
+(setq x-select-enable-clipboard t
+      x-select-enable-primary t
+      mouse-drag-copy-region t)
+
+;;; Set ^C-v to yank
+(global-set-key "\C-v" 'yank)
+
 ;;; mouse-yank-at-point
 ;; Set the middle-mouse button to paste at the selected point not at the
 ;; at the 'click'
