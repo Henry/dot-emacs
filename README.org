@@ -11,8 +11,8 @@ the [[http://www.emacswiki.org][EmacsWiki]] and I am indebted to all those who c
 resource.
 
 * Emacs Version
-  + For GNU Emacs 24.3.1
-  + May work with GNU Emacs 24.? but not earlier versions.
+  + For GNU Emacs 24.3.50.1
+  + May work with GNU Emacs 24.3.? but not earlier versions.
 
 * Building eemacs (fast-loading extended emacs)
   I use such an extensive set of packages and configurations that loading
@@ -57,7 +57,7 @@ resource.
   minor packages.
 *** Major packages (in the /packages/ directory)
     + anything-config
-    + apel
+    + apel (needs the latest from the Debian repository no git)
     + auctex
     + auto-complete
     + auto-complete-clang
@@ -82,7 +82,7 @@ resource.
     + ioccur
     + latexrefman
     + magit
-    + org-mode
+    + \org-mode
     + paredit
     + popup-el
     + predictive
