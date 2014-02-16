@@ -13,6 +13,7 @@ set -x
 (cd flim && git pull)
 (cd git-modes && git pull)
 (cd gnuplot && git pull)
+(cd haskell-mode && git pull)
 (cd ioccur && git pull)
 (cd magit && git pull)
 (cd org-mode && git pull)

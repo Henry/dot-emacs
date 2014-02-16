@@ -20,6 +20,7 @@ git clone https://github.com/magit/git-modes.git
 #wget http://cars9.uchicago.edu/~ravel/software/gnuplot-mode/gnuplot-mode.0.6.0.tar.gz
 #tar -xzf gnuplot-mode.0.6.0.tar.gz
 git clone https://github.com/bruceravel/gnuplot-mode.git gnuplot
+git clone https://github.com/haskell/haskell-mode.git
 wget http://sites.google.com/site/imaximaimath/download-and-install/imaxima-imath-1.0.tar.gz?attredirects=0
 hg clone http://mercurial.intuxication.org/hg/ioccur
 git clone https://github.com/magit/magit.git

@@ -34,6 +34,7 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L $(PACKAGES)/flim \
         -L $(PACKAGES)/git-modes \
 	-L $(PACKAGES)/gnuplot \
+	-L $(PACKAGES)/haskell-mode \
 	-L $(PACKAGES)/icicles \
 	-L $(PACKAGES)/ioccur \
 	-L $(PACKAGES)/imaxima \

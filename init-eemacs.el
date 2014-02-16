@@ -14,6 +14,8 @@
              (expand-file-name "~/.emacs.d/packages/completion-ui"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/icicles"))
 (add-to-list 'load-path
+             (expand-file-name "~/.emacs.d/packages/haskell-mode"))
+(add-to-list 'load-path
              (expand-file-name "~/.emacs.d/packages/gnuplot"))
 (add-to-list 'load-path
              (expand-file-name "~/.emacs.d/packages/emms/lisp"))
