@@ -7,9 +7,8 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 
 # implicit rule for byte-compiling elisp files
 %.elc: %.el Makefile
-	$(EMACS) --eval "(setq delete-old-versions t)" -batch -L . \
-        -L $(DOTEMACS)/init \
-        -L $(DOTEMACS)/init/personal \
+	$(EMACS) --eval "(setq delete-old-versions t)" -batch \
+	-L . \
 	-L $(DOTEMACS)/lisp \
 	-L $(DOTEMACS)/my-lisp \
 	-L $(PACKAGES)/anything-config \
@@ -55,15 +54,5 @@ elc_files := $(shell ls *.el | grep -v ecb | sed 's:\.el:\.elc:g')
 	-L $(PACKAGES)/yasnippet \
 	-f batch-byte-compile $<
 
-all: lisp my-lisp init $(elc_files)
-
-.PHONY: lisp my-lisp init
-
-lisp:
-	$(MAKE) -C lisp
-
-my-lisp:
-	$(MAKE) -C my-lisp
-
-init:
-	$(MAKE) -C init
+all: $(elc_files)
+	$(MAKE) -C personal

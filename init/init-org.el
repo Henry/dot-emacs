@@ -33,18 +33,21 @@
 ;; (load-library "~/.emacs.d/packages/org-mode/lisp/org-footnote")
 
 (require 'org)
+(require 'org-agenda)
+(require 'org-capture)
 (require 'org-macs)
 (require 'org-list)
 (require 'org-compat)
 (require 'org-faces)
-(require 'org-latex)
-(require 'org-html)
+;(require 'org-latex)
+;(require 'org-html)
 (require 'org-protocol)
 (require 'org-table)
-(require 'ob)
 (require 'ob-gnuplot)
-(require 'org-beamer)
-(require 'org-exp)
+(require 'ob-latex)
+(require 'ox-html)
+(require 'ox-beamer)
+(require 'ob-exp)
 (require 'org-footnote)
 
 ;;(require 'org-fstree)
@@ -140,7 +143,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; Remember
 
-(org-remember-insinuate)
+;;(org-remember-insinuate)
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 (global-set-key "\C-cr" 'org-remember)
 
@@ -331,7 +334,7 @@ in a full-height window"
 ;;; Use "minted" LaTeX package for listings
 
 (setq org-export-latex-listings 'minted)
-(add-to-list 'org-export-latex-packages-alist '("" "minted"))
+(add-to-list 'org-latex-packages-alist '("" "minted"))
 
 ;; -----------------------------------------------------------------------------
 ;;; Load personal information

@@ -3,7 +3,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; Add personal lisp directory to the search path
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/init"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp/tree-mode"))
@@ -115,7 +115,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; Eshell-mode settings
-(load "init-eshell")
+;;(load "init-eshell")
 
 ;; -----------------------------------------------------------------------------
 ;;; GIT-Emacs: Emacs front-end for GIT repositories
