@@ -1,18 +1,12 @@
-;;; init-haskell.el --- Initialize haskell-mode
+;;; init-rust.el --- Initialize rust-mode
 ;; -----------------------------------------------------------------------------
-
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/haskell-mode"))
-(add-to-list 'Info-default-directory-list
-             (expand-file-name "~/.emacs.d/packages/haskell-mode/"))
-
-(require 'haskell-mode-autoloads)
+(require 'rust-mode)
 
 ;; -----------------------------------------------------------------------------
 ;;; Mode hook
 
-(defun my-haskell-mode-hook ()
-  "Hook to apply my setting to the Haskell"
+(defun my-rust-mode-hook ()
+  "Hook to apply my setting to the Rust"
 
   (font-lock-mode 1)
 
@@ -24,17 +18,12 @@
 
   ;; Switch on fly-spell mode in comments
   (flyspell-prog-mode)
-
-  (turn-on-haskell-indent)
-  (turn-on-haskell-ghci)
-  (turn-on-haskell-doc-mode)
-  (hs-lint-mode-hook)
   )
 
 ;; -----------------------------------------------------------------------------
 ;;; Add hook
 
-(add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+(add-hook 'rust-mode-hook 'my-rust-mode-hook)
 
 ;; -----------------------------------------------------------------------------
-;;; init-haskell.el ends here
+;;; init-rust.el ends here
