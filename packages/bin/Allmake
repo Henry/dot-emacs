@@ -1,7 +1,7 @@
 (cd anything-config/extensions && make)
 (cd anything-config && make)
 (cd apel && make)
-(cd auctex-11.86 && aucDir=$HOME/.emacs.d/packages/auctex && mkdir -f $aucDir && ./configure --prefix=$aucDir --with-lispdir=$aucDir --with-texmf-dir=$aucDir --with-tex-dir=$aucDir --with-doc-dir=$aucDir && make && make install)
+(cd auctex-11.87 && aucDir=$HOME/.emacs.d/packages/auctex && mkdir -p $aucDir && ./configure --prefix=$aucDir --with-lispdir=$aucDir --with-texmf-dir=$aucDir --with-tex-dir=$aucDir --with-doc-dir=$aucDir && make && make install)
 (cd babel && make)
 (cd bbdb && make)
 (cd cl-lookup && make)
