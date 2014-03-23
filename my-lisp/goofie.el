@@ -126,9 +126,8 @@ Continuation lines follow a line terminated by a '('"
 
 (eval-when-compile
   (defvar goofie-keywords
-    '("initially" "generic" "is" "import" "include" "using" "use"
-      "in" "out" "variable" "constant" "var" "const"
-      "return" "other" "require" "ensure" "written" "yield"
+    '("initially" "generic" "import" "include" "using" "use"
+      "in" "out" "var" "return" "other" "require" "ensure" "written" "yield"
       "try" "catch" "retry" "raise" "transform" "into" "include"
       "while" "until" "for" "do" "loop" "exit" "restart"
       "translate" "when" "where" "with" "case"
@@ -144,7 +143,7 @@ Continuation lines follow a line terminated by a '('"
     "List of words highlighted as 'types' in Goofie mode")
 
   (defvar goofie-functors
-    '("function" "procedure" "to" "translation" "iterator")
+    '("function" "translation" "iterator")
     "List of words declaring functions in Goofie mode")
 
   (defvar goofie-type-declarators
@@ -174,7 +173,7 @@ Continuation lines follow a line terminated by a '('"
 
   (defun goofie-separators-regexp (sep-list)
     "Return a regexp matching the separator list"
-    (cons 'or (mapcar '(lambda(x)
+    (cons 'or (mapcar #'(lambda(x)
                          (if (cadr x)
                              (list 'and
                                    (car x)
@@ -248,7 +247,7 @@ Continuation lines follow a line terminated by a '('"
                  word-end))
        (1 font-lock-type-face))
 
-     ;; Executable types (procedures)
+     ;; Executable types (functions)
      `(,(rx (and word-start
                  (group (eval (cons 'or goofie-functors)))
                  (1+ space) (group (and (1+ word)
@@ -296,6 +295,14 @@ Continuation lines follow a line terminated by a '('"
        (1 font-lock-variable-name-face)
        (2 font-lock-type-face))
 
+     ;; Definition operator
+     `(,(rx (group ":="))
+       (1 font-lock-keyword-face))
+
+     ;; Return type operator
+     `(,(rx (group "->"))
+       (1 font-lock-keyword-face))
+
      ;; Mapping operator
      `(,(rx (group "=>"))
        (1 font-lock-keyword-face))
@@ -303,7 +310,7 @@ Continuation lines follow a line terminated by a '('"
      ;; Assignment
      `(,(rx (and word-start
                  (group (1+ word))
-                 (0+ space) (or ":=" "+=" "-=" "*=" "/=") (0+ space)))
+                 (0+ space) (or ";=" "=" "+=" "-=" "*=" "/=") (0+ space)))
        (1 font-lock-variable-name-face)))))
 
 
@@ -349,7 +356,7 @@ Continuation lines follow a line terminated by a '('"
         "-"
         ["Mark block" goofie-mark-block
          :help "Mark innermost block around point"]
-        ["Mark procedure/type" mark-defun
+        ["Mark function/type" mark-defun
          :help "Mark innermost definition around point"]
         "-"
         ["Start of block" goofie-beginning-of-block
@@ -447,7 +454,8 @@ or that the bracket/paren nesting depth is nonzero."
              (goofie-skip-comments/blanks t)
              (and (re-search-backward (rx graph) (point-min) t)
                   (looking-at (rx (syntax punctuation)))
-                  (not (looking-at (rx (or ";" ")" "]" "}"))))))
+                  (not (looking-at (rx (or ";" ")" "]" "}"))))
+                  (and (backward-char) (not (looking-at (rx ":="))))))
            (not (syntax-ppss-context (syntax-ppss))))
       (/= 0 (syntax-ppss-depth
              (save-excursion      ; syntax-ppss with arg changes point
@@ -1149,7 +1157,7 @@ no effect outside them.
 
 Supports Info-Look and Imenu.
 
-In Outline minor mode, `module', `procedure', `function', `to' and `type'
+In Outline minor mode, `module', `function' and `type'
 lines count as headers in addition to lines starting with `///'.
 
 \\{goofie-mode-map}"
