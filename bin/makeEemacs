@@ -26,7 +26,7 @@ grep -v "init-eemacs" ~/.emacs.d/init.el >> load-eemacs.el
 
 make
 
-$EMACS  --eval "(setq delete-old-versions t)" --batch -q  \
+/usr/local/src/emacs/src/temacs  --eval "(setq delete-old-versions t)" --batch -q  \
     --load load-eemacs.el \
     --execute "(setq command-line-processed nil)" \
     --execute "(dump-emacs \"~/bin/linux/eemacs\" \"`which emacs`\")"
