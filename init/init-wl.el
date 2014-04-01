@@ -463,6 +463,8 @@ e.g.
 
     ;; Keep track of recently used Email addresses
     ;;(recent-addresses-mode 1)
+
+    (local-set-key "\M-t" my-win-nav-map)
     ))
 
 (add-hook
@@ -470,6 +472,7 @@ e.g.
  '(lambda ()
     (hl-line-mode t)
     (local-set-key "\M-m" 'mairix-search)
+    (local-set-key "\M-t" my-win-nav-map)
     ))
 
 (add-hook
@@ -488,6 +491,7 @@ e.g.
                       (interactive)
                       (wl-summary-reply-with-citation 1)))
     (local-set-key "\M-m" 'mairix-search)
+    (local-set-key "\M-t" my-win-nav-map)
     ))
 
 (add-hook
@@ -496,6 +500,7 @@ e.g.
     ;; Synchronise the folder with the server after executing the summary
     ;; operation
     (wl-summary-sync-update)
+    (local-set-key "\M-t" my-win-nav-map)
     ))
 
 (add-hook
@@ -509,6 +514,7 @@ e.g.
  '(lambda ()
     ;; Key bindings
     (local-set-key "\C-c\C-k" 'my-wl-draft-kill-force)
+    (local-set-key "\M-t" my-win-nav-map)
     ))
 
 ;; Add supercite support
@@ -538,6 +544,7 @@ Set the `j' key to run `mime-preview-quit'."
                            (interactive)
                            (mime-preview-quit)
                            (wl-summary-sync)))
+    (local-set-key "\M-t" my-win-nav-map)
     ))
 
 (add-hook
