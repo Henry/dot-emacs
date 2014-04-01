@@ -4,7 +4,7 @@
 ;; with version numbers but without `~'s in a mirror of the original file's
 ;; directory hierarchy
 
-(setq backup-directory "~/Emacs/Backups"
+(setq backup-directory "~/.Emacs/Backups"
       backup-by-copying t
       delete-old-versions t
       kept-new-versions 6

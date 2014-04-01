@@ -16,7 +16,7 @@
 (require 'bm)
 
 ;; Set the location of the repository file
-(setq bm-repository-file (expand-file-name "~/Emacs/BM-repository"))
+(setq bm-repository-file (expand-file-name "~/.Emacs/BM-repository"))
 
 ;;;  Settings for persistency
 

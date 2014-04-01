@@ -8,7 +8,7 @@
  ;; If there is more than one, they won't work right.
  '(anything-show-completion-activate nil)
  '(bm-highlight-style (quote bm-highlight-only-line))
- '(bookmark-default-file "~/Emacs/Bookmarks")
+ '(bookmark-default-file "~/.Emacs/Bookmarks")
  '(disk-find-file-function (quote icicle-file))
  '(fill-column 80)
  '(ibuffer-formats (quote ((mark " " (name 30 -1 :left :elide) " " (filename -1 47 :left)) (mark modified read-only " " (name 18 18 :left :elide) " " (size 9 -1 :right) " " (mode 16 16 :left :elide) " " filename-and-process) (mark " " (name 16 -1) " " filename))))

@@ -14,7 +14,7 @@
 (setq w3m-profile-directory "~/Emacs/W3m"
       w3m-icon-directory "~/.emacs.d/packages/w3m/icons"
       w3m-use-cookies t
-      w3m-session-file "~/Emacs/W3m/session"
+      w3m-session-file "~/.Emacs/W3m/session"
       w3m-session-save-always nil
       w3m-session-load-always nil
       w3m-session-show-titles t

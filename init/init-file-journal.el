@@ -2,7 +2,7 @@
 ;; -----------------------------------------------------------------------------
 ;; Work with files as usual and use M-x fj-show to revisit them later by date.
 
-(setq fj-journal-file (expand-file-name "~/Emacs/file-journal"))
+(setq fj-journal-file (expand-file-name "~/.Emacs/file-journal"))
 (require 'file-journal)
 (defadvice switch-to-buffer-other-frame (after fj-switch-to-buffer activate)
   (fj-record-file))
