@@ -116,6 +116,7 @@
 (setq emms-stream-bookmarks-file (concat emms-directory "/emms-streams"))
 (setq emms-stream-default-action "play")
 (define-key emms-stream-mode-map (kbd "s") 'emms-stop)
+(define-key emms-stream-mode-map (kbd "p") 'emms-start)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-emms.el ends here
