@@ -1,6 +1,7 @@
 #!/bin/bash
 
 EMACS=`which emacs`
+TEMACS=/usr/local/src/emacs-24.3.93/src/temacs
 
 if which setarch >& /dev/null
 then
@@ -26,7 +27,7 @@ grep -v "init-eemacs" ~/.emacs.d/init.el >> load-eemacs.el
 
 make
 
-/usr/local/src/emacs/src/temacs  --eval "(setq delete-old-versions t)" --batch -q  \
+$TEMACS --eval "(setq delete-old-versions t)" --batch -q  \
     --load load-eemacs.el \
     --execute "(setq command-line-processed nil)" \
     --execute "(dump-emacs \"~/bin/linux/eemacs\" \"`which emacs`\")"
