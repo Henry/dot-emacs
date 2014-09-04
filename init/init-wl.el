@@ -345,14 +345,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; Biff: Check for new mail
 
-(setq wl-biff-check-folder-list
-      '("&***+h.weller/user@***.***.***:110!direct"
-        "%inbox:hweller0/clear@imap.gmail.com:993!"
-        "-gmane.emacs.sources@news.gmane.org"
-        "-gmane.mail.wanderlust.general@news.gmane.org"
-        "-gmane.mail.wanderlust.general.japanese@news.gmane.org"
-        )
-      wl-biff-check-interval 180
+(setq wl-biff-check-interval 180
       wl-biff-use-idle-timer t)
 
 ;; -----------------------------------------------------------------------------

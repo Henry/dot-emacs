@@ -40,32 +40,43 @@
 
 (setq wl-draft-config-alist
       '(
-        ((string-match ".*h\\.weller.*\\|.*OpenCFD/.*" wl-draft-parent-folder)
+        ((string-match "opencfd\\+h\\.weller.*" wl-draft-parent-folder)
          ("From" . "Henry Weller <H.Weller@OpenCFD.co.uk>")
          ("Organization" . "OpenCFD")
          ("X-Attribution" . "HGW")
          (signature . "~/Maildir/Signatures/OpenCFDAddress"))
+
         ((string-match "opencfd\\+enquiries.*" wl-draft-parent-folder)
          ("From" . "Enquiries <enquiries@opencfd.co.uk>")
          ("Bcc" . "Enquiries <enquiries@opencfd.co.uk>")
          ("X-Attribution" . "OCFD")
          (signature . "~/Maildir/Signatures/OpenCFDEnquiries"))
+
         ((string-match "hweller0.*@imap\\.gmail\\.com.*" wl-draft-parent-folder)
          ("From" . "Henry Weller <hweller0@gmail.com>")
          ("Organization" . nil)
          ("X-Attribution" . "HGW")
          (signature . "~/Maildir/Signatures/homeAddress"))
-        ((string-match "openfoam\\.foundation.*@imap\\.gmail\\.com.*" wl-draft-parent-folder)
-         ("From" . "The OpenFOAM Foundation <openfoam.foundation@gmail.com>")
+
+        ((string-match "h\\.weller\\+openfoam.*" wl-draft-parent-folder)
+         ("From" . "Henry Weller <h.weller@openfoam.org>")
          ("Organization" . nil)
          ("X-Attribution" . "OFF")
          (signature . "~/Maildir/Signatures/OpenFOAMFoundation"))
+
         ((string-match "enquiries\\+openfoam.*" wl-draft-parent-folder)
          ("From" . "Enquiries <enquiries@openfoam.org>")
          ("Bcc" . "Enquiries <enquiries@openfoam.org>")
          ("Organization" . "OpenFOAM Foundation")
          ("X-Attribution" . "OFF")
          (signature . "~/Maildir/Signatures/OpenFOAMFoundationEnquiries"))
+
+        ((string-match "openfoam\\.foundation.*@imap\\.gmail\\.com.*"
+                       wl-draft-parent-folder)
+         ("From" . "The OpenFOAM Foundation <openfoam.foundation@gmail.com>")
+         ("Organization" . nil)
+         ("X-Attribution" . "OFF")
+         (signature . "~/Maildir/Signatures/OpenFOAMFoundation"))
         )
       )
 
@@ -107,16 +118,16 @@
 ;; -----------------------------------------------------------------------------
 ;;; Biff: Check for new mail
 
-(setq wl-biff-check-folder-list
-      '("&opencfd+h.weller/user@mail.plus.net:110!direct"
-        "&opencfd+enquiries/user@mail.plus.net:110!direct"
-        ;;"%inbox:hweller0/clear@imap.gmail.com:993!"
-        ;;"%inbox:openfoam.foundation/clear@imap.gmail.com:993!"
-        ;;"-gmane.emacs.sources@news.gmane.org"
-        ;;"-gmane.mail.wanderlust.general@news.gmane.org"
-        ;;"-gmane.mail.wanderlust.general.japanese@news.gmane.org"
-        )
-      )
+;; (setq wl-biff-check-folder-list
+;;       '("&opencfd+h.weller/user@mail.plus.net:110!direct"
+;;         "&opencfd+enquiries/user@mail.plus.net:110!direct"
+;;         ;;"%inbox:hweller0/clear@imap.gmail.com:993!"
+;;         ;;"%inbox:openfoam.foundation/clear@imap.gmail.com:993!"
+;;         ;;"-gmane.emacs.sources@news.gmane.org"
+;;         ;;"-gmane.mail.wanderlust.general@news.gmane.org"
+;;         ;;"-gmane.mail.wanderlust.general.japanese@news.gmane.org"
+;;         )
+;;       )
 
 ;; -----------------------------------------------------------------------------
 ;;; Sending
