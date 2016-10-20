@@ -1,7 +1,9 @@
 #!/bin/bash
+set -x
 
 EMACS=`which emacs`
-TEMACS=/usr/local/src/emacs-24.3.93/src/temacs
+TEMACS=/usr/local/src/emacs-25.1/src/temacs
+#TEMACS=/usr/local/src/emacs/src/temacs
 
 if which setarch >& /dev/null
 then
@@ -30,6 +32,6 @@ make
 $TEMACS --eval "(setq delete-old-versions t)" --batch -q  \
     --load load-eemacs.el \
     --execute "(setq command-line-processed nil)" \
-    --execute "(dump-emacs \"~/bin/linux/eemacs\" \"`which emacs`\")"
+    --execute "(dump-emacs \"~/bin/linux/eemacs\" \"$TEMACS\")"
 
 bin/makeTAGS

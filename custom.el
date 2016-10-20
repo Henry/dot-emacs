@@ -6,7 +6,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(anything-show-completion-activate nil)
  '(bm-highlight-style (quote bm-highlight-only-line))
  '(bookmark-default-file "~/.Emacs/Bookmarks")
  '(disk-find-file-function (quote icicle-file))
@@ -27,7 +26,6 @@
  '(semantic-idle-scheduler-idle-time 5)
  '(server-host "10.0.0.37")
  '(server-kill-new-buffers t)
- '(w3m-fill-column 80)
  '(whitespace-style (quote (face tabs space-before-tab space-after-tab trailing empty lines-tail)))
  '(whole-line-or-region-mode t)
  '(word-wrap t))

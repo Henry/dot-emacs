@@ -22,29 +22,6 @@
   ))
 
 ;; -----------------------------------------------------------------------------
-;;; Character remapping for w3m
-;; Display using the original IBM graphics characters instead of
-;; plain ASCII +, -, and |
-
-(standard-display-ascii ?\200 [15])
-(standard-display-ascii ?\201 [21])
-(standard-display-ascii ?\202 [24])
-(standard-display-ascii ?\203 [13])
-(standard-display-ascii ?\204 [22])
-(standard-display-ascii ?\205 [25])
-(standard-display-ascii ?\206 [12])
-(standard-display-ascii ?\210 [23])
-(standard-display-ascii ?\211 [14])
-(standard-display-ascii ?\212 [18])
-(standard-display-ascii ?\214 [11])
-;; (standard-display-ascii ?\221 [?\'])
-;; (standard-display-ascii ?\222 [?\'])
-;; (standard-display-ascii ?\223 [?\"])
-;; (standard-display-ascii ?\224 [?\"])
-;; (standard-display-ascii ?\225 [?+])
-;; (standard-display-ascii ?\227 " -- ")
-
-;; -----------------------------------------------------------------------------
 ;;; Font settings
 
 (cond
@@ -167,26 +144,6 @@
   ;;    'prolog-mode
   ;;    '(("^%%%   [^ ].*" 0 'outline-4 t)))
   ))
-
-;; -----------------------------------------------------------------------------
-;;; Anything faces
-
-(if (facep 'header-line)
-    (copy-face 'header-line 'anything-header)
-
-  (defface anything-header
-    '((t (:bold t :underline t)))
-    "Face for header lines in the anything buffer." :group 'anything))
-
-(defface anything-file-name
-  '((t (:foreground "Blue")))
-  "*Face used for file names (without suffixes) in dired buffers."
-  :group 'anything)
-
-(defface anything-dir-priv
-  '((t (:foreground "DarkRed" :background "LightGray")))
-  "*Face used for directory privilege indicator (d) in dired buffers."
-  :group 'anything)
 
 ;; -----------------------------------------------------------------------------
 ;;; Read saved minibuffer command, search-string and kill-ring histories

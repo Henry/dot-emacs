@@ -23,7 +23,6 @@ resource.
   dump= function, in particular [[http://www.emacswiki.org/cgi-bin/wiki/DumpingEmacs][dumping emacs]].
 
 * My Packages (in /my-lisp/ directory)
-  + anything-config-ext
   + completion-selection
   + completion-ui-more-sources
   + etags-select
@@ -56,7 +55,6 @@ resource.
   In addition a =Makefile= is provided in the /lisp/ directory to compile the
   minor packages.
 *** Major packages (in the /packages/ directory)
-    + anything-config
     + apel (needs the latest from the Debian repository no git)
     + auctex
     + auto-complete
@@ -66,16 +64,13 @@ resource.
     + bin
     + completion-ui
     + doremi
-    + doxymacs
     + ebib
     + emacs-calfw
     + emacs-clang-complete-async
     + emacs-window-layout
     + emacs-window-manager
     + emms
-    + emsane
     + flim
-    + git-modes
     + gnuplot
     + icicles
     + imaxima
@@ -85,11 +80,8 @@ resource.
     + \org-mode
     + paredit
     + popup-el
-    + predictive
-    + save
     + semi
     + undo-tree
-    + w3m
     + wanderlust
     + wget
     + yasnippet
@@ -169,7 +161,6 @@ resource.
     + stumpwm-mode
     + synonyms
     + traverselisp
-    + w3m-session
     + webjump-plus
     + whole-line-or-region
     + window-number

@@ -2,7 +2,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; Name and Email configuration
 
-(setq user-mail-address "H.Weller@OpenCFD.co.uk"
+(setq user-mail-address "h.weller@cfd.direct"
       user-full-name "Henry Weller")
 
 ;; -----------------------------------------------------------------------------

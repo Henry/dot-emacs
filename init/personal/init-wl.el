@@ -2,28 +2,30 @@
 ;; -----------------------------------------------------------------------------
 ;;; Basic configuration
 
+;; (defun get-ip-address (&optional dev)
+;;   "get the IP-address for device DEV (default: enp5s0)"
+;;   (let ((dev (if dev dev "enp5s0")))
+;;     (format-network-address (car (network-interface-info dev)) t)))
 (defun get-ip-address (&optional dev)
-  "get the IP-address for device DEV (default: eth0)"
-  (let ((dev (if dev dev "eth0")))
+  "get the IP-address for device DEV (default: br0)"
+  (let ((dev (if dev dev "br0")))
     (format-network-address (car (network-interface-info dev)) t)))
 
 (setq support-file-path
       (let ((ip (get-ip-address)))
         (cond
          ((string= ip "10.0.0.37")
-          "~/OpenCFDAdmin/Accounts/Terms/CommercialSupport")
-         ((string= ip "10.0.0.7")
-          "~OpenCFDAdmin/Accounts/Terms/CommercialSupport"))))
+          "~CFDadmin/Accounts/CFDAdmin/SupportPackages"))))
 
-(setq wl-organization "OpenCFD"
+(setq wl-organization "CFD Direct"
 
       ;; Automatic signature insertion
-      signature-file-name "~/Maildir/Signatures/OpenCFDAddress"
+      signature-file-name "~/Maildir/Signatures/CFDdirect"
 
       ;; User Email addresses
       wl-user-mail-address-list nil
       ;; (list wl-from
-      ;;      "enquiries@OpenCFD.co.uk"
+      ;;      "enquiries@OpenFoam.org"
       ;;      "hweller0@gmail.com")
       )
 
@@ -31,8 +33,8 @@
 ;;; Folders
 
 (setq
-      my-wl-default-filing-folder ".OpenCFD"
-      wl-default-spec ".OpenCFD/Customers/"
+      my-wl-default-filing-folder ".CFDdirect"
+      wl-default-spec ".CFDdirect/Customers/"
       )
 
 ;; -----------------------------------------------------------------------------
@@ -40,23 +42,24 @@
 
 (setq wl-draft-config-alist
       '(
-        ((string-match "opencfd\\+h\\.weller.*" wl-draft-parent-folder)
-         ("From" . "Henry Weller <H.Weller@OpenCFD.co.uk>")
-         ("Organization" . "OpenCFD")
-         ("X-Attribution" . "HGW")
-         (signature . "~/Maildir/Signatures/OpenCFDAddress"))
-
-        ((string-match "opencfd\\+enquiries.*" wl-draft-parent-folder)
-         ("From" . "Enquiries <enquiries@opencfd.co.uk>")
-         ("Bcc" . "Enquiries <enquiries@opencfd.co.uk>")
-         ("X-Attribution" . "OCFD")
-         (signature . "~/Maildir/Signatures/OpenCFDEnquiries"))
-
         ((string-match "hweller0.*@imap\\.gmail\\.com.*" wl-draft-parent-folder)
          ("From" . "Henry Weller <hweller0@gmail.com>")
          ("Organization" . nil)
          ("X-Attribution" . "HGW")
          (signature . "~/Maildir/Signatures/homeAddress"))
+
+        ((string-match "h\\.weller\\+cfd.*" wl-draft-parent-folder)
+         ("From" . "Henry Weller <h.weller@cfd.direct>")
+         ("Organization" . nil)
+         ("X-Attribution" . "CFD")
+         (signature . "~/Maildir/Signatures/CFDdirect"))
+
+        ((string-match "enquiries\\+cfd.*" wl-draft-parent-folder)
+         ("From" . "Enquiries <enquiries@cfd.direct>")
+         ("Bcc" . "Enquiries <enquiries@cfd.direct>")
+         ("Organization" . nil)
+         ("X-Attribution" . "CFD")
+         (signature . "~/Maildir/Signatures/CFDdirectEnquiries"))
 
         ((string-match "h\\.weller\\+openfoam.*" wl-draft-parent-folder)
          ("From" . "Henry Weller <h.weller@openfoam.org>")
@@ -84,10 +87,10 @@
 (setq wl-template-alist
       '(("Commercial Support"
          (body-file . "~/Maildir/Templates/commercialSupport")
-         (signature . "~/Maildir/Signatures/OpenCFDEnquiries"))
+         (signature . "~/Maildir/Signatures/OpenFOAMEnquiries"))
         ("Academic Support"
          (body-file . "~/Maildir/Templates/academicSupport")
-         (signature . "~/Maildir/Signatures/OpenCFDEnquiries")
+         (signature . "~/Maildir/Signatures/OpenFOAMEnquiries")
          )))
 
 (defun my-wl-support-gbp ()
@@ -96,7 +99,7 @@
   (forward-char (cadr (insert-file-contents
                        "~/Maildir/Templates/commercialSupport")))
   (mime-edit-insert-file
-   (concat support-file-path "/OpenFOAMSupportPackagesGBP.pdf")))
+   (concat support-file-path "/CFDDirect-SupportPackage-GBP.pdf")))
 
 (defun my-wl-support-euro ()
   "Insert the standard commercial support contract details."
@@ -104,7 +107,7 @@
   (forward-char (cadr (insert-file-contents
                        "~/Maildir/Templates/commercialSupport")))
   (mime-edit-insert-file
-   (concat support-file-path "/OpenFOAMSupportPackagesEUR.pdf")))
+   (concat support-file-path "/CFDDirect-SupportPackage-EUR.pdf")))
 
 (defun my-wl-support-usd ()
   "Insert the standard commercial support contract details."
@@ -112,15 +115,13 @@
   (forward-char (cadr (insert-file-contents
                        "~/Maildir/Templates/commercialSupport")))
   (mime-edit-insert-file
-   (concat support-file-path "/OpenFOAMSupportPackagesUSD.pdf")))
+   (concat support-file-path "/CFDDirect-SupportPackage-USD.pdf")))
 
 
 ;; -----------------------------------------------------------------------------
 ;;; Biff: Check for new mail
 
 ;; (setq wl-biff-check-folder-list
-;;       '("&opencfd+h.weller/user@mail.plus.net:110!direct"
-;;         "&opencfd+enquiries/user@mail.plus.net:110!direct"
 ;;         ;;"%inbox:hweller0/clear@imap.gmail.com:993!"
 ;;         ;;"%inbox:openfoam.foundation/clear@imap.gmail.com:993!"
 ;;         ;;"-gmane.emacs.sources@news.gmane.org"
@@ -151,32 +152,11 @@
         wl-smtp-posting-server "mailhost.zen.co.uk"
         wl-local-domain "zen.co.uk"))
 
-(defun my-wl-plusnet-smtp-server ()
-  "Configure the use of the PlusNet SMTP server for sending"
-  (interactive)
-  (setq wl-smtp-connection-type nil
-        wl-smtp-authenticate-type nil
-        wl-smtp-posting-port 25
-        wl-smtp-posting-user "h.weller@opencfd.co.uk"
-        wl-smtp-posting-server "relay.plus.net"
-        wl-local-domain "plus.net"))
-
-(defun my-wl-opencfd-smtp-server ()
-  "Configure the use of the OpenCFD SMTP server for sending"
-  (interactive)
-  (setq wl-smtp-connection-type nil
-        wl-smtp-authenticate-type nil
-        wl-smtp-posting-port 25
-        wl-smtp-posting-user "h.weller@opencfd.co.uk"
-        ;;wl-smtp-posting-server "mr1.voxclever.net"
-        wl-smtp-posting-server "smtp.regusnet.com"
-        wl-local-domain "opencfd.co.uk"))
-
 (defun my-wl-default-smtp-server ()
   (let ((ip (get-ip-address)))
     (cond
-     ((string= ip "10.0.0.37") (my-wl-zen-smtp-server))
-     ((string= ip "10.0.0.7") (my-wl-opencfd-smtp-server)))))
+     ((string= ip "10.0.0.37")
+      (my-wl-zen-smtp-server)))))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-wl.el ends here

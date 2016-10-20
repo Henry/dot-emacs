@@ -37,11 +37,5 @@ tramp
 !/packages/icicles/
 /packages/icicles/*
 !/packages/icicles/Makefile
-!/packages/emsane/
-/packages/emsane/*
-!/packages/emsane/Makefile
-!/packages/anything-config/
-/packages/anything-config/*
-!/packages/anything-config/Makefile
 
 # end-of-file

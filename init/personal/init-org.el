@@ -6,7 +6,7 @@
 (setq org-agenda-files
       (list (concat org-directory "/Agenda")
             (concat org-directory "/OpenFOAM")
-            (concat org-directory "/OpenCFD/Contracts")
+            ;(concat org-directory "/OpenFOAM/Contracts")
             )
       )
 
@@ -41,7 +41,7 @@
 
 (add-to-list
  'org-latex-classes
- '("OpenCFDProposal"
+ '("OpenFOAMProposal"
    "\\input{.latex}
 \\input{\\macroPath/preambleReport}
 \\renewcommand{\\ReportType}{Project Proposal}"
@@ -53,7 +53,7 @@
 
 (add-to-list
  'org-latex-classes
- '("OpenCFDProgressReport"
+ '("OpenFOAMProgressReport"
    "\\input{.latex}
 \\input{\\macroPath/preambleReport}
 \\renewcommand{\\ReportType}{Progress Report}"
@@ -92,13 +92,13 @@
         ("Approved_ALL" . "\"[ ]\" \"[X]\"")))
 
 (defun org-tbl-push-support-data
-  (final values value-prop percent-prop value-curr exrate value-gbp-prop value-liab-prop)
+  (final values value-prop percent-prop value-curr fxrate value-gbp-prop value-liab-prop)
   "Calculate the sum of the VALUES and the percentage w.r.t. FINAL,
 push these results into the given properties VALUE-PROP and
 PERCENT-PROP.
 
 Read the project value in given currency VALUE_CURR and exchange
-rate EXRATE in GBP.  Evaluate the project value in GBP and return
+rate FXRATE in GBP.  Evaluate the project value in GBP and return
 the result and push it into VALUE-GBP-PROP.
 
 From the percent completed, evaluate the liability and push into
@@ -108,7 +108,7 @@ Return the sum of the VALUES."
   (let* ((total-20mins (apply '+ values))
          (total-hrs (/ (apply '+ values) 3.0))
          (percent-hrs (/ (* 100 total-hrs) final))
-         (value-gbp (/ value-curr exrate))
+         (value-gbp (* value-curr fxrate))
          (value-liab (/ (* value-gbp (- 100 percent-hrs)) 100)))
     (org-entry-put (point) value-prop
                    (format "%.1f" total-hrs))
@@ -122,7 +122,7 @@ Return the sum of the VALUES."
 
 (add-to-list
  'org-latex-classes
- '("OpenCFDSupport"
+ '("OpenFOAMSupport"
    "\\input{.latex}
 \\input{\\macroPath/preambleReport}
 \\usepackage[utf8]{inputenc}
@@ -139,7 +139,7 @@ Return the sum of the VALUES."
 
 (add-to-list
  'org-latex-classes
- '("OpenCFDQuote"
+ '("CFDDirectQuote"
    "\\input{.latex}
 \\input{\\macroPath/preambleQuote}
 \\usepackage[utf8]{inputenc}

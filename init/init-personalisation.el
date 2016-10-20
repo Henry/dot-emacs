@@ -282,6 +282,14 @@ rather than vertically.")
   (untabify (point-min) (point-max)))
 
 ;; -----------------------------------------------------------------------------
+;;; Indent whole buffer according to mode
+
+(defun indent-buffer ()
+  "Indent whole buffer"
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+;; -----------------------------------------------------------------------------
 ;;; Define acceleration of the cursor movement commands.
 
 (require 'accelerate)
@@ -342,6 +350,10 @@ rather than vertically.")
 
 (define-key my-map "1" 'my-single-frame)
 (define-key my-map "2" 'my-double-frame)
+
+;; -----------------------------------------------------------------------------
+;;; Enable font-lock for makefiles
+(add-hook 'makefile-mode-hook 'font-lock-mode)
 
 ;; -----------------------------------------------------------------------------
 ;;; Load personal information

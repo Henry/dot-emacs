@@ -8,18 +8,16 @@ elc_files := $(shell ls *.el | sed 's:\.el:\.elc:g')
 # implicit rule for byte-compiling elisp files
 %.elc: %.el
 	$(EMACS) --batch \
-        -L ./ \
-        -L $(DOTEMACS)/lisp \
-        -L tree-mode \
-        -L $(PACKAGES)/icicles \
-	-L $(PACKAGES)/anything-config \
-	-L $(PACKAGES)/anything-config/extensions \
-        -L $(PACKAGES)/auctex/auctex \
+	-L ./ \
+	-L $(DOTEMACS)/lisp \
+	-L tree-mode \
+	-L $(PACKAGES)/icicles \
+	-L $(PACKAGES)/auctex/auctex \
 	-L $(PACKAGES)/bbdb/lisp \
 	-L $(PACKAGES)/completion-ui \
-        -L $(PACKAGES)/emacs-window-manager \
-        -L $(PACKAGES)/emacs-window-layout \
-        -f batch-byte-compile $<
+	-L $(PACKAGES)/emacs-window-manager \
+	-L $(PACKAGES)/emacs-window-layout \
+	-f batch-byte-compile $<
 
 all: $(elc_files)
 	make -C tree-mode

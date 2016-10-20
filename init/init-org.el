@@ -53,6 +53,8 @@
 ;;(require 'org-fstree)
 (require 'find-lisp)
 
+(require 'htmlize)
+
 ;; -----------------------------------------------------------------------------
 ;;; Basic configuration
 
@@ -86,6 +88,12 @@
       org-columns-skip-arrchived-trees t
       )
 
+;; -----------------------------------------------------------------------------
+;;; Avoid problems with [n] being treated as footnotes
+(setq org-footnote-definition-re "^\\[fn:[-_[:word:]]+\\]"
+      org-footnote-re            (concat "\\[\\(?:fn:\\([-_[:word:]]+\\)?:"
+                                         "\\|"
+                                         "\\(fn:[-_[:word:]]+\\)\\)"))
 ;;;  My org-mode hook
 (defun my-org-mode-hook ()
   (setq fill-column 80)
@@ -211,13 +219,6 @@ i.e. the headings under the single top-level heading."
 ;;; Gnuplot tables
 
 (org-defkey org-mode-map "\M-\C-g" 'org-plot/gnuplot)
-
-;; -----------------------------------------------------------------------------
-;;; w3m integration
-;;   Allows copying HTML into org, transforming links.
-;;   Default key binding: M-w
-
-(eval-after-load "w3m" '(load "org-w3m"))
 
 ;; -----------------------------------------------------------------------------
 ;;; LaTeX export

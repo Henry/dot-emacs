@@ -14,9 +14,7 @@ git clone https://github.com/kiwanami/emacs-calfw.git
 git clone https://github.com/kiwanami/emacs-window-layout.git
 git clone https://github.com/kiwanami/emacs-window-manager.git
 git clone git://git.sv.gnu.org/emms.git
-git clone https://github.com/jave/emsane.git
 git clone https://github.com/wanderlust/flim.git
-git clone https://github.com/magit/git-modes.git
 #wget http://cars9.uchicago.edu/~ravel/software/gnuplot-mode/gnuplot-mode.0.6.0.tar.gz
 #tar -xzf gnuplot-mode.0.6.0.tar.gz
 git clone https://github.com/bruceravel/gnuplot-mode.git gnuplot
@@ -27,9 +25,10 @@ git clone https://github.com/magit/magit.git
 git clone git://repo.or.cz/org-mode.git
 git clone http://mumble.net/~campbell/git/paredit.git
 git clone https://github.com/wanderlust/semi.git
-#cvs -d :pserver:anonymous:anonymous@common-lisp.net:/project/slime/cvsroot co slime
 git clone http://www.dr-qubit.org/git/undo-tree.git
 cvs -d :pserver:anonymous@cvs.namazu.org:/storage/cvsroot login
 cvs -d :pserver:anonymous@cvs.namazu.org:/storage/cvsroot co emacs-w3m
 git clone https://github.com/wanderlust/wanderlust.git
 svn checkout http://yasnippet.googlecode.com/svn/trunk/ yasnippet-read-only
+git clone https://github.com/magnars/dash.el.git
+git clone https://github.com/magit/with-editor.git

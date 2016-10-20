@@ -4,10 +4,11 @@
 (setq browse-url-new-window-flag t
       browse-url-generic-program "conkeror"
 
-      ;; Set browse-url to use wget for ftp and conkeror/w3m for everything else
+      mime-view-text/html-previewer 'shr
+
+      ;; Set browse-url to use wget for ftp and conkeror for everything else
       browse-url-browser-function
       '(("^ftp:/.*" . wget)
-        ;;("."    . w3m-browse-url)
         ("."    . browse-url-generic)))
 
 ;;;  Dummy mailcap functions to stop URL and other packages complaining

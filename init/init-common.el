@@ -42,7 +42,8 @@
 (column-number-mode 1)
 
 ;;;  Disable tabs; always indent with spaces
-(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil
+              tab-width 4)
 
 ;;;  Enable the command `narrow-to-region' ("C-x n n") undo ("C-x n w")
 (put 'narrow-to-region 'disabled nil)
@@ -125,7 +126,8 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; igrep ---  An improved interface to `grep` and `find`
-(require 'igrep)
+(require 'grep)
+;;(require 'igrep)
 
 ;; -----------------------------------------------------------------------------
 ;;; color-grep --- Enhance igrep

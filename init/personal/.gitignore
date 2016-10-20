@@ -25,9 +25,6 @@ tramp
 !/packages/ioccur/
 /packages/ioccur/*
 !/packages/ioccur/Makefile
-!/packages/mo-git-blame/
-/packages/mo-git-blame/*
-!/packages/mo-git-blame/Makefile
 !/packages/babel/
 /packages/babel/*
 !/packages/babel/Makefile
@@ -37,11 +34,5 @@ tramp
 !/packages/icicles/
 /packages/icicles/*
 !/packages/icicles/Makefile
-!/packages/emsane/
-/packages/emsane/*
-!/packages/emsane/Makefile
-!/packages/anything-config/
-/packages/anything-config/*
-!/packages/anything-config/Makefile
 
 # end-of-file

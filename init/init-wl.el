@@ -85,15 +85,6 @@
 (autoload 'wl-user-agent-compose "wl-draft" "Compose with Wanderlust." t)
 
 ;; -----------------------------------------------------------------------------
-;;; w3m octet configuration for handling attachments
-
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/w3m"))
-(require 'octet)
-(require 'w3m-util)
-(octet-mime-setup)
-
-;; -----------------------------------------------------------------------------
 ;;; Basic configuration
 
 (setq wl-icon-directory "~/.emacs.d/packages/wanderlust/etc/icons"
@@ -102,6 +93,9 @@
 
       ;; Offline and synchronization
       wl-plugged t
+      elmo-imap4-default-authenticate-type 'clear
+      elmo-imap4-default-port '993
+      elmo-imap4-default-stream-type 'ssl
       elmo-imap4-use-modified-utf7 t
       elmo-imap4-use-cache t
       elmo-nntp-use-cache t
@@ -118,6 +112,7 @@
       wl-organization "***HGW"
 
       ;; Automatic signature insertion
+      mime-setup-use-signature t
       signature-file-name "***HGW"
       signature-insert-at-eof t
       signature-delete-blank-lines-at-eof t
@@ -225,7 +220,6 @@
       wl-summary-width nil
       wl-summary-weekday-name-lang "en"
       wl-summary-showto-folder-regexp ".Sent.*"
-      ;;wl-summary-line-format "%n%T%P%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"
       wl-summary-line-format "%T%P%M/%D(%W)%h:%m %[ %17f %]%[%1@%] %t%C%s"
 
       ;; Summary threads
@@ -293,14 +287,6 @@
         "^Date"
         "^To"
         "^Cc"))
-
-;; (eval-after-load "mime-view"
-;;   '(progn
-;;      (ctree-set-calist-strictly
-;;       'mime-acting-condition
-;;       '((mode . "play")
-;;         (type . application)(subtype . pdf)
-;;         (method . my-mime-save-content-find-file)))))
 
 ;;;  Re-fill messages that arrive poorly formatted
 
@@ -376,13 +362,40 @@ e.g.
 (require 'bbdb-wl)
 (bbdb-wl-setup)
 
-(setq bbdb-use-pop-up t ;; Allow pop-ups
+(setq bbdb-offer-save 1          ;; 1 means save-without-asking
+      bbdb-use-pop-up t          ;; Allow pop-ups
       bbdb-pop-up-target-lines 2
-      bbdb/mail-auto-create-p t ;; auto collection
       bbdb-wl-ignore-folder-regexp "^@" ;; folders without auto collection
       bbdb-north-american-phone-numbers-p nil
       bbdb-auto-notes-alist '(("X-ML-Name" (".*$" ML 0)))
       bbdb-dwim-net-address-allow-redundancy t
+
+      ;; Auto-create addresses from mail
+      ;;bbdb/mail-auto-create-p nil ;; Switch off auto collection
+      bbdb-always-add-addresses t   ;; add new addresses to automatically
+      bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook
+      bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
+      '(("From" . "github")
+        ("Reply-To" . "nim-lang/Nim")
+        ("To" . "nim-lang/Nim")
+        ("To" . "github"))
+
+      bbdb-electric-p t ;; be disposable with SPC
+
+      bbdb-dwim-net-address-allow-redundancy t ;; always use full name
+      bbdb-quiet-about-name-mismatches 2 ;; show name-mismatches 2 secs
+
+      bbdb-canonicalize-redundant-nets-p t ;; x@foo.bar.cx => x@bar.cx
+
+      bbdb-completion-type nil ;; complete on anything
+
+      bbdb-complete-name-allow-cycling t ;; cycle through matches
+      ;; this only works partially
+
+      bbbd-message-caching-enabled t ;; be fast
+      bbdb-use-alternate-names t ;; use AKA
+
+      bbdb-elided-display t ;; single-line
 
       ;; shows the name of bbdb in the summary
 
