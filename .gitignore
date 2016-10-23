@@ -2,6 +2,7 @@
 *.elc
 
 # Ignore personal and temporary files
+network-security.data
 /personal
 /save
 lisp/save
