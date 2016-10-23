@@ -691,11 +691,11 @@ so that the appropriate emacs mode is selected according to the file extension."
 (defun my-bbdb-insert-folder ()
   "Interactively select the destination folder and store in BBDB."
   (interactive)
-  (let* ((record (or (bbdb-current-record t)
+  (let* ((record (or (bbdb-current-record)
                      (error "current record unexists!")))
          (name (wl-summary-read-folder my-wl-default-filing-folder))
          (folder-path (wl-folder-get-elmo-folder name)))
-    (bbdb-insert-new-field
+    (bbdb-insert-field
      record 'folder (elmo-folder-name-internal folder-path)))
   ;; Update the wl refiling database
   (my-bbdb-wl-refile-alist))
