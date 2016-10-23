@@ -43,28 +43,17 @@ rather than vertically.")
 
 ;; -----------------------------------------------------------------------------
 ;;; Elisp implementations of rgrep, grep-find, grep, etc...
-
 (require 'traverselisp)
 
 ;; -----------------------------------------------------------------------------
-;;; autoinfo-mode
-;; Monitor if something is selected in the buffer and if the user is idle it
-;; fetches information about the selection in the background and shows it in a
-;; tooltip.
-;; Turn on: M-x autoinfo-mode
-
-(require 'autoinfo)
-
-;; -----------------------------------------------------------------------------
 ;;; babel --- interface to web translation services
-(require 'babel)
+(use-package babel)
 
 ;; -----------------------------------------------------------------------------
 ;;; Goto Last Change
 ;; Goto the point of the most recent edit in the buffer.
 ;; For key-bindings see my-map
-
-(require 'goto-chg)
+(use-package goto-chg)
 
 ;; -----------------------------------------------------------------------------
 ;;; Support for marking a rectangle of text with highlighting.
@@ -75,6 +64,7 @@ rather than vertically.")
 (define-key ctl-x-map "r\C-w" 'rm-kill-region)
 (define-key ctl-x-map "r\M-w" 'rm-kill-ring-save)
 (define-key global-map [S-down-mouse-1] 'rm-mouse-drag-region)
+(use-package rect-mark)
 (autoload 'rm-set-mark "rect-mark"
   "Set mark for rectangle." t)
 (autoload 'rm-exchange-point-and-mark "rect-mark"
@@ -125,20 +115,18 @@ rather than vertically.")
 ;;; Kill the whole line
 ;;  including its terminating newline by typing C-a C-k
 ;; when used at the beginning of a line
-
 (setq kill-whole-line t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Whole-line-or-region
 ;; Operate on the current line if they would normally operate on a region
 ;; and region is currently undefined (doesn't work with Emacs-23)
-
-(require 'whole-line-or-region)
+(use-package whole-line-or-region
+  :diminish whole-line-or-region-mode)
 
 ;; -----------------------------------------------------------------------------
 ;;; Battery status
 ;; If not on AC power line, then display battery status on the mode line
-
 (and (require 'battery nil t)
      (functionp 'battery-status-function)
      (or (equal (cdr (assoc ?L (funcall battery-status-function))) "on-line")
@@ -154,6 +142,7 @@ rather than vertically.")
  speedbar-update-flag nil
  speedbar-use-images t)
 
+(use-package sr-speedbar)
 ;; Same-frame speedbar
 (autoload 'sr-speedbar-open "sr-speedbar" "sr-speedbar" t)
 
@@ -315,8 +304,9 @@ rather than vertically.")
 ;;  to move the cursor to the beginning/end of the line on first press and
 ;;  buffer on second press
 
-(require 'sequential-command)
-(require 'sequential-command-config)
+(use-package sequential-command
+  :config
+  (require 'sequential-command-config))
 (global-set-key [(home)] 'seq-home)
 (global-set-key [(end)] 'seq-end)
 
@@ -337,8 +327,7 @@ rather than vertically.")
 (define-key my-map "l" 'linum-mode)
 (define-key my-map "o" 'occur-by-moccur)
 (define-key my-map "r" 'revert-buffer)
-(define-key my-map "s" 'multi-eshell)
-(define-key my-map "S" 'multi-shell)
+(define-key my-map "S" 'multishell)
 (define-key my-map [(control ?s)] 'support)
 (define-key my-map "t" 'toggle-truncate-lines)
 (define-key my-map "v" 'find-file-other-frame)

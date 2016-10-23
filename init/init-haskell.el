@@ -1,15 +1,10 @@
 ;;; init-haskell.el --- Initialize haskell-mode
 ;; -----------------------------------------------------------------------------
-
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/haskell-mode"))
-(add-to-list 'Info-default-directory-list
-             (expand-file-name "~/.emacs.d/packages/haskell-mode/"))
-
-(require 'haskell-mode-autoloads)
-
-;; -----------------------------------------------------------------------------
-;;; Mode hook
+(use-package haskell-mode
+  :mode "\\.hs\\'"
+  :commands haskell-mode
+  :config
+  (add-hook 'haskell-mode-hook 'my-haskell-mode-hook))
 
 (defun my-haskell-mode-hook ()
   "Hook to apply my setting to the Haskell"
@@ -30,11 +25,6 @@
   (turn-on-haskell-doc-mode)
   (hs-lint-mode-hook)
   )
-
-;; -----------------------------------------------------------------------------
-;;; Add hook
-
-(add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-haskell.el ends here

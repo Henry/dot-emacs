@@ -1,17 +1,13 @@
 ;;; init-wget.el --- Initialize wget interface
-;;;  Asynchronous download of files
 ;; -----------------------------------------------------------------------------
-
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/wget"))
-(require 'wget)
-
-(setq wget-download-directory-filter 'wget-download-dir-filter-regexp
-      wget-download-directory
-      '(("\\.\\(jpe?g\\|png\\)$" . "~/Download/Pictures")
-        ("\\.\\(ps\\|pdf\\|doc\\)$" . "~/Download/Documents")
-        ("\\.el$" . "~/Download/lisp")
-        ("." . "~/Download")))
+(use-package wget
+  :init
+  (setq wget-download-directory-filter 'wget-download-dir-filter-regexp
+        wget-download-directory
+        '(("\\.\\(jpe?g\\|png\\)$" . "~/Download/Pictures")
+          ("\\.\\(ps\\|pdf\\|doc\\)$" . "~/Download/Documents")
+          ("\\.el$" . "~/Download/lisp")
+          ("." . "~/Download"))))
 
 (defun wget-open (uri &optional arg)
   "Wget interface to open the file download by `wget'.

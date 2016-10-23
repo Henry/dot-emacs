@@ -1,6 +1,4 @@
 EMACS = emacs
-DOTEMACS = ~/.emacs.d
-PACKAGES = $(DOTEMACS)/packages
 
 # list of core elisp files
 elc_files := $(shell ls *.el | sed 's:\.el:\.elc:g')
@@ -9,8 +7,6 @@ elc_files := $(shell ls *.el | sed 's:\.el:\.elc:g')
 %.elc: %.el
 	$(EMACS) --batch \
 		-L ./ \
-		-L $(PACKAGES)/icicles \
-		-L $(PACKAGES)/auctex/auctex \
 		-f batch-byte-compile $<
 
 all: $(elc_files)

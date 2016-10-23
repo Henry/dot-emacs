@@ -2,21 +2,13 @@
 ;; -----------------------------------------------------------------------------
 
 (setq
-  diary-file "~/Emacs/Diaries/diary"
-  my-diary-file-list
-  '(
-    "~/Emacs/Diaries/anniversaries"
-    ;;"~hilary/Emacs/Diaries/homeDiary"
-    )
-
-  diary-number-of-entries 7
- )
+ diary-file "~/Emacs/Diaries/diary"
+ my-diary-file-list '("~/Emacs/Diaries/anniversaries")
+ diary-number-of-entries 7)
 
 (add-hook 'diary-list-entries-hook 'diary-include-other-diary-files)
 (add-hook 'diary-list-entries-hook 'my-diary-include-file-list)
 (add-hook 'diary-list-entries-hook 'diary-sort-entries)
-
-(add-hook 'diary-display-function  'diary-fancy-display)
 (add-hook 'diary-mark-entries-hook 'diary-mark-included-diary-files)
 (add-hook 'diary-mark-entries-hook 'my-diary-mark-included-file-list)
 
@@ -146,17 +138,13 @@ See also the documentation for `my-diary-mark-included-files'."
 
 ;; -----------------------------------------------------------------------------
 ;;; calfw settings
-
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/emacs-calfw"))
-
-(require 'calfw-cal)
-(require 'calfw-ical)
-(require 'calfw-org)
-
-;; -----------------------------------------------------------------------------
-;;; Load personal information
-
-(load "personal/init-diary")
+(use-package calfw
+  :config
+  (require 'calfw-cal)
+  (require 'calfw-ical)
+  (require 'calfw-org)
+  ;; Load personal information
+  (load "personal/init-diary"))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-diary.el ends here

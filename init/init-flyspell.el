@@ -6,6 +6,9 @@
 
 (require 'flyspell)
 
+(eval-after-load "flyspell"
+  '(diminish 'flyspell-mode))
+
 ;;;  Choose aspell which is better at suggesting alternatives
 (setq ispell-program-name "aspell")
 

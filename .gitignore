@@ -4,39 +4,10 @@
 # Ignore personal and temporary files
 /personal
 /save
-/packages/auctex
-/packages/save
+lisp/save
 my-lisp/save
-.svn
-CVS
-.cvs*
-.#*
 tramp
 *TAGS
-
 /elpa
-/packages/*
-!/packages/bin
-!/packages/yasnippet/
-/packages/yasnippet/*
-!/packages/yasnippet/Makefile
-!/packages/doremi/
-/packages/doremi/*
-!/packages/doremi/Makefile
-!/packages/ioccur/
-/packages/ioccur/*
-!/packages/ioccur/Makefile
-!/packages/mo-git-blame/
-/packages/mo-git-blame/*
-!/packages/mo-git-blame/Makefile
-!/packages/babel/
-/packages/babel/*
-!/packages/babel/Makefile
-!/packages/cl-lookup/
-/packages/cl-lookup/*
-!/packages/cl-lookup/Makefile
-!/packages/icicles/
-/packages/icicles/*
-!/packages/icicles/Makefile
 
 # end-of-file

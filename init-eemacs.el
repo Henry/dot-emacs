@@ -4,23 +4,31 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp/tree-mode"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/paredit"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/emacs-calfw"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/haskell-mode"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/imaxima"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/bbdb/lisp"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/auctex"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/ebib/src"))
-(add-to-list 'load-path (expand-file-name  "~/.emacs.d/packages/magit/lisp"))
-(add-to-list 'load-path (expand-file-name  "~/.emacs.d/packages/dash"))
-(add-to-list 'load-path (expand-file-name  "~/.emacs.d/packages/with-editor"))
-(add-to-list 'load-path (expand-file-name  "~/.emacs.d/packages/undo-tree"))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/window-number)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/haskell-mode-[0-9.]*"))))
 (add-to-list 'load-path
              (expand-file-name "~/.emacs.d/packages/completion-ui"))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/company-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/isearch+)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/bbdb-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/cdlatex)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/tex-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/auctex-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/bibtex-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/ebib)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/magit-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/with-editor-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/git-commit-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/magit-popup-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/dash)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/undo-tree-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/browse-kill-ring+)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/replace+)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/color-moccur-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/iedit)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/info-[0-9.]*"))))
+  :config (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/info+))-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/finder+-[0-9.]*"))))
 (add-to-list 'load-path
              (expand-file-name "~/.emacs.d/packages/nim-mode"))
 (add-to-list 'load-path
@@ -29,38 +37,59 @@
              (expand-file-name "~/.emacs.d/packages/emacs-deferred"))
 (add-to-list 'load-path
              (expand-file-name "~/.emacs.d/packages/emacs-ctable"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/emacs-calfw"))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/nim-mode-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/epc-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/deferred-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/ctable-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/openwith-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/calfw-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/synonyms)-[0-9.]*"))))
 ;; (add-to-list 'load-path
 ;;              (expand-file-name "~/.emacs.d/packages/org-mode/lisp"))
 ;; (add-to-list 'load-path
 ;;              (expand-file-name "~/.emacs.d/packages/org-mode/contrib/lisp"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/doremi"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/wanderlust/wl"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/wanderlust/elmo"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/wanderlust/utils"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/semi"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/flim"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/apel"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/bbdb"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/emms/lisp"))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/htmlize)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/dired+)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/dired-details+)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/dired-sort-menu+)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/outline-magic)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/doremi-[0-9.]*"))))
+  (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/doremi-frm)  ;; Incrementally adjust frame properties-[0-9.]*"))))
+  (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/doremi-cmd)  ;; Other Do Re Mi commands-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/babel)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/goto-chg)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/rect-mark)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/whole-line-or-region-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/sr-speedbar)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/sequential-command-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/wanderlust-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/apel-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/flim-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/semi-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/bbdb-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/e2wm-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/window-layout)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/rust-mode)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/header2)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/highlight-parentheses-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/hl-sexp-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/paredit-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/emms-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/multishell)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/etags-table)-[0-9.]*"))))
 ;;(add-to-list 'load-path
 ;;             (expand-file-name "~/EuLisp/EuLisp/emacs"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/gnuplot"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/wget"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/icicles"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/yasnippet"))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/highlight-parentheses)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/hl-sexp)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/gnuplot-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/wget-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/yaoddmuse)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/markdown-mode)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/mediawiki)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/icicles-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/icomplete+-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/eww-lnum)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/yasnippet-[0-9.]*"))))
 (setq inhibit-startup-message t)  ;; Include in init-eemacs
 (setq use-file-dialog nil)  ;; Include in init-eemacs
 (tool-bar-mode -1)  ;; Include in init-eemacs

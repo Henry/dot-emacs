@@ -1,10 +1,9 @@
 ;;; init-dired+.el --- Initialize better directory display
-
 ;; -----------------------------------------------------------------------------
 ;;;  Load packages
-(require 'dired+)
-(require 'dired-details+)
-(require 'dired-sort-menu+)
+(use-package dired+)
+(use-package dired-details+)
+(use-package dired-sort-menu+)
 
 ;;;   dired-tar: tar and untar (gz) from dired (bound to 'T')
 (require 'dired-tar)

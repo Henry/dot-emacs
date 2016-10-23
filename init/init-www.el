@@ -11,6 +11,8 @@
       '(("^ftp:/.*" . wget)
         ("."    . browse-url-generic)))
 
+(use-package eww-lnum)
+
 ;;;  Dummy mailcap functions to stop URL and other packages complaining
 (defun mailcap-parse-mailcaps (&optional path force))
 (defun mailcap-parse-mimetypes (&optional path force))

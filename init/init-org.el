@@ -53,7 +53,7 @@
 ;;(require 'org-fstree)
 (require 'find-lisp)
 
-(require 'htmlize)
+(use-package htmlize)
 
 ;; -----------------------------------------------------------------------------
 ;;; Basic configuration
@@ -104,10 +104,8 @@
   ;; Show trailing whitespace, tabs and lines > 80
   (whitespace-mode 1)
 
-  ;; Switch on the completion selection mode
-  ;; and set the default completion-selection to org-mode
-  (completion-selection-mode t)
-  (completion-selection-set 'complete-org)
+  ;; Add org-mode completion
+  ;;(add-to-list 'company-backends 'company-org t)
 
   (define-key org-mode-map [S-iso-lefttab] 'org-cycle)
   (define-key org-mode-map [C-S-iso-lefttab] 'org-global-cycle)

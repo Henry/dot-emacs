@@ -2,20 +2,35 @@
 ;; -----------------------------------------------------------------------------
 ;;; LaTeX settings
 
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/auctex"))
 (add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/auctex/share/info") t)
-(add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/latexrefman") t)
+             (expand-file-name "~/.emacs.d/doc/latexrefman") t)
 
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
-(load "cdlatex.el" nil t t)
+(use-package cdlatex)
 
-(add-to-list 'auto-mode-alist '("\\.tex$"  . LaTeX-mode))
+(use-package tex
+  :ensure auctex
+  :mode ("\\.tex\\'" . latex-mode)
+  :commands (latex-mode LaTeX-mode plain-tex-mode)
+  :init
+  (progn
+    (add-hook 'TeX-mode-hook 'turn-on-reftex)
+    (add-hook 'TeX-mode-hook 'my-TeX-mode-hook)
+    (add-hook 'LaTeX-mode-hook #'LaTeX-preview-setup)
+    (add-hook 'LaTeX-mode-hook #'flyspell-mode)
+    (add-hook 'LaTeX-mode-hook #'turn-on-reftex)
+    (add-hook 'LaTeX-mode-hook 'my-TeX-mode-hook)
+    (add-hook 'LaTeX-mode-hook 'my-LaTeX-mode-hook)
+    (setq TeX-auto-save t
+          TeX-parse-self t
+          TeX-save-query nil
+          TeX-PDF-mode t
+          reftex-plug-into-AUCTeX t)
+    (setq TeX-master t))
+  :config
+  (require 'preview))
 
 (defun my-TeX-mode-hook ()
+
   (setq fill-column 80
         truncate-lines nil)
   (turn-on-auto-fill)
@@ -58,7 +73,6 @@
   (define-key TeX-mode-map [f8] 'my-tex-run-dvipdf)
   (define-key TeX-mode-map [f9] 'my-tex-run-acroread)
   )
-(add-hook 'TeX-mode-hook 'my-TeX-mode-hook)
 
 (defun my-LaTeX-mode-hook ()
   (setq LaTeX-indent-level 4)
@@ -100,9 +114,6 @@
      '(("\\\\>" 0 'latex-tabbing-tab t)))
     ))
   )
-(add-hook 'LaTeX-mode-hook 'my-TeX-mode-hook)
-(add-hook 'LaTeX-mode-hook 'my-LaTeX-mode-hook)
-
 
 ;; Functions by Carsten Dominik <dominik@astro.uva.nl>
 (defun my-tex-run-command (cmd &optional recenter)
@@ -198,199 +209,35 @@
 
 ;;;  General settings
 
-(require 'bibtex)
-
-(add-to-list 'auto-mode-alist '("\\.bib$"  . bibtex-mode))
-
-(setq bibtex-autokey-name-case-convert 'identity
-      bibtex-autokey-year-length 2
-      bibtex-autokey-titlewords 3
-      bibtex-autokey-titlewords-stretch 0
-      bibtex-autokey-titleword-length -1
-      bibtex-autokey-name-year-separator ""
-      bibtex-autokey-year-title-separator ""
-      bibtex-autokey-titleword-separator nil
-      bibtex-autokey-edit-before-use nil
-      bibtex-autokey-before-presentation-function 'my-bibtex-autokey-unique
-      bibtex-align-at-equal-sign t
-      bibtex-entry-format '(opts-or-alts required-fields numerical-fields
-                                         whitespace realign last-comma
-                                         delimiters unify-case braces strings)
-      bibtex-autokey-titleword-ignore
-      '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
-        "[^[:upper:]].*" ".*[^[:upper:]0-9].*"
-        "the" "of" "a" "in" "on" "an" "for" "and" "terms"
-        "to" "it" "its" "by"))
-
-(defun my-bibtex-autokey-unique (key)
-  "Make a unique version of KEY
-   by converting the last character to an integer 1-9."
-  (save-excursion
-    (let ((trykey key)
-          (next ?1))
-      (while (and (bibtex-find-entry trykey t)
-                  (<= next ?9))
-        (aset trykey (1- (length trykey)) next)
-        (setq next (1+ next)))
-      trykey)))
-
-;;;  Key-change data and functions
-
-(require 'eieio)
-(require 'eieio-base)
-
-(defclass my-key-change-list-class (eieio-persistent)
-  ((map  :initarg :map
-         :initform nil
-         :type list
-         :documentation "The BibTeX key change map.")
-   (file-header-line :initform ";; BibTeX key map"))
-  "Class to hold the BibTeX key change map.")
-
-(defvar my-key-change-list
-  (my-key-change-list-class "BibTexMap" :file "~/Latex/bib/bibKeyMap.elo")
-  "Map of key changes made in the bibtex file")
-
-;;(eieio-persistent-save my-key-change-list)
-;;(eieio-persistent-read (oref my-key-change-list :file))
-
-(defun my-bibtex-correct-keys ()
-  "Correct all the keys in the buffer and store the change-map in my-key-change-list."
-  (interactive)
-  (dolist (key-map (oref my-key-change-list map))
-    (goto-char (point-min))
-    (while (search-forward (car key-map) nil t)
-      (replace-match (cdr key-map) t nil))))
-
-(defun my-bibtex-clean-entry (&optional called-by-reformat)
-  "Finish editing the current BibTeX entry and clean it up.
-Check that no required fields are empty and format entry dependent
-on the value of `bibtex-entry-format'.
-If the reference key of the entry is empty or a prefix argument is given,
-calculate a new reference key.  (Note: this works only if fields in entry
-begin on separate lines prior to calling `bibtex-clean-entry' or if
-'realign is contained in `bibtex-entry-format'.)
-Don't call `bibtex-clean-entry' on @Preamble entries.
-At end of the cleaning process, the functions in
-`bibtex-clean-entry-hook' are called with region narrowed to entry."
-  ;; Opt. arg CALLED-BY-REFORMAT is t if `bibtex-clean-entry'
-  ;; is called by `bibtex-reformat'
-  (interactive "P")
-  (let ((case-fold-search t)
-        (start (bibtex-beginning-of-entry))
-        (_ (or (looking-at bibtex-any-entry-maybe-empty-head)
-               (error "Not inside a BibTeX entry")))
-        (entry-type (bibtex-type-in-head))
-        (key (bibtex-key-in-head)))
-    (cond ((bibtex-string= entry-type "preamble")
-           ;; (bibtex-format-preamble)
-           (error "No clean up of @Preamble entries"))
-          ((bibtex-string= entry-type "string")
-           (setq entry-type 'string))
-          ;; (bibtex-format-string)
-          (t (bibtex-format-entry)))
-    ;; set key
-    (let ((old-key key))
-      (setq key (bibtex-generate-autokey))
-      (when (not (equal key old-key))
-        (object-add-to-list my-key-change-list :map (cons old-key key)) ; HGW
-      ;; Sometimes `bibtex-generate-autokey' returns an empty string
-      (if (or bibtex-autokey-edit-before-use (string= "" key))
-          (setq key (if (eq entry-type 'string)
-                        (bibtex-read-string-key key)
-                      (bibtex-read-key "Key to use: " key))))
-      (save-excursion
-        (re-search-forward (if (eq entry-type 'string)
-                               bibtex-string-maybe-empty-head
-                             bibtex-entry-maybe-empty-head))
-        (if (match-beginning bibtex-key-in-head)
-            (delete-region (match-beginning bibtex-key-in-head)
-                           (match-end bibtex-key-in-head)))
-        (insert key))))
-
-    (unless called-by-reformat
-      (let* ((end (save-excursion
-                    (bibtex-end-of-entry)
-                    (if (re-search-forward
-                         bibtex-entry-maybe-empty-head nil 'move)
-                        (goto-char (match-beginning 0)))
-                    (point)))
-             (entry (buffer-substring start end))
-             ;; include the crossref key in index
-             (index (let ((bibtex-maintain-sorted-entries 'crossref))
-                      (bibtex-entry-index))) ; moves point to end of head
-             error)
-        ;; sorting
-        (if (and bibtex-maintain-sorted-entries
-                 (not (and bibtex-sort-ignore-string-entries
-                           (eq entry-type 'string))))
-            (progn
-              (delete-region start end)
-              (setq error (not (bibtex-prepare-new-entry index))
-                    start (point)) ; update start
-              (save-excursion (insert entry)))
-          (bibtex-search-entry key)
-          (setq error (or (/= (point) start)
-                          (bibtex-search-entry key nil end))))
-        (if error
-            (error "New inserted entry yields duplicate key"))
-        (dolist (buffer (bibtex-initialize))
-          (with-current-buffer buffer
-            (if (cdr (assoc-string key bibtex-reference-keys))
-                (error "Duplicate key in %s" (buffer-file-name)))))
-
-        ;; Only update the list of keys if it has been built already.
-        (cond ((eq entry-type 'string)
-               (if (and (listp bibtex-strings)
-                        (not (assoc key bibtex-strings)))
-                   (push (cons key (bibtex-text-in-string
-                                    (bibtex-parse-string) t))
-                         bibtex-strings)))
-              ;; We have a normal entry.
-              ((listp bibtex-reference-keys)
-               (cond ((not (assoc key bibtex-reference-keys))
-                      (push (cons key t) bibtex-reference-keys))
-                     ((not (cdr (assoc key bibtex-reference-keys)))
-                      ;; Turn a crossref key into a header key
-                      (setq bibtex-reference-keys
-                            (cons (cons key t)
-                                  (delete (list key) bibtex-reference-keys)))))
-               ;; Handle crossref key.
-               (if (and (nth 1 index)
-                        (not (assoc (nth 1 index) bibtex-reference-keys)))
-                   (push (list (nth 1 index)) bibtex-reference-keys)))))
-
-      ;; final clean up
-      (if bibtex-clean-entry-hook
-          (save-excursion
-            (save-restriction
-              (bibtex-narrow-to-entry)
-              (run-hooks 'bibtex-clean-entry-hook)))))))
-
-(defun my-bibtex-clean-enties ()
-  (interactive)
-  (bibtex-progress-message "Formatting" 1)
-  (bibtex-map-entries (lambda (key beg end)
-                        (message "key %s" key)
-                        (bibtex-progress-message)
-                        (my-bibtex-clean-entry nil t)))
-  (bibtex-progress-message 'done))
+(use-package bibtex
+  :mode ("\\.bib" . bibtex-mode)
+  :init
+  (progn
+    (setq bibtex-align-at-equal-sign t
+          bibtex-autokey-name-case-convert 'identity
+          bibtex-autokey-year-length 2
+          bibtex-autokey-titlewords 3
+          bibtex-autokey-titlewords-stretch 0
+          bibtex-autokey-titleword-length -1
+          bibtex-autokey-name-year-separator ""
+          bibtex-autokey-year-title-separator ""
+          bibtex-autokey-titleword-separator nil
+          bibtex-autokey-edit-before-use nil
+          bibtex-align-at-equal-sign t
+          bibtex-entry-format '(opts-or-alts
+                                required-fields numerical-fields
+                                whitespace realign last-comma
+                                delimiters unify-case braces strings)
+          bibtex-autokey-titleword-ignore
+          '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
+            "[^[:upper:]].*" ".*[^[:upper:]0-9].*"
+            "the" "of" "a" "in" "on" "an" "for" "and" "terms"
+            "to" "it" "its" "by"))
+    (add-hook 'bibtex-mode-hook (lambda () (set-fill-column 120)))))
 
 ;; -----------------------------------------------------------------------------
 ;;;  Ebib
-
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/ebib/src"))
-(add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/ebib/manual") t)
-(require 'ebib)
-
-;; -----------------------------------------------------------------------------
-;;; RefTeX
-
-(setq reftex-plug-into-AUCTeX t)
-(add-hook 'TeX-mode-hook 'turn-on-reftex)     ; with AUCTeX TeX mode
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+(use-package ebib)
 
 ;;----------------------------------------------------------------------------
 ;;; init-latex.el ends here

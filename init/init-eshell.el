@@ -1,25 +1,6 @@
 ;;; init-eshell.el --- Initialize eshell
 ;; -----------------------------------------------------------------------------
 
-(add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/eshell/doc") t)
-
-;; -----------------------------------------------------------------------------
-;;; Support for multiple shells and convenient switching
-(require 'multi-eshell)
-
-;;;  Function to create an multi-eshell in a new frame
-(defun multi-eshell-frame ()
-  "Create a new eshell in a new frame."
-  (interactive)
-  (select-frame (make-frame))
-  (multi-eshell 1))
-
-;; -----------------------------------------------------------------------------
-;;; Apply elisp sexp editing sugar
-;(require 'highlight-parentheses)
-;(require 'paredit)
-
 ;; -----------------------------------------------------------------------------
 ;;; Set the list of modules to be loaded
 (setq eshell-modules-list
@@ -98,11 +79,6 @@
       )
 
 ;; -----------------------------------------------------------------------------
-;;; Add support for easy switching between edit and eshell windows
-(require 'esh-toggle)
-(global-set-key [(control meta ?1)] 'eshell-toggle-cd)
-
-;; -----------------------------------------------------------------------------
 ;;; Setup tooltip-help for the eshell (for elisp expressions only)
 (require 'tooltip-help)
 (setq th-max-tooltip-lines 30)
@@ -135,18 +111,6 @@
   (local-set-key [f1] 'th-show-help)
   (local-set-key [S-f1] 'describe-variable-or-function)
   (local-set-key [(meta ?.)] 'eshell-insert-previous-argument)
-
-  ;; Switch on the completion selection mode
-  ;; and set the default completion-selection to pcomplete
-  (completion-selection-mode t)
-  (completion-selection-set 'complete-pcomplete)
-
-  (local-set-key [(control ?\.)]
-   (lambda ()
-     "Call `completion-selection-select-complete' for the
-`pcomplete' completion mechanism."
-     (interactive)
-     (completion-selection-set-complete 'complete-pcomplete)))
 
   (define-key completion-overlay-map [(control ?c)]
     (lambda ()

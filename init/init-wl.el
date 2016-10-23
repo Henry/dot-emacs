@@ -54,94 +54,77 @@
 ;;
 ;;; Code:
 
-;;; Package paths
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/wanderlust/wl"))
-(add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/wanderlust/doc") t)
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/wanderlust/elmo"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/wanderlust/utils"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/semi"))
-(add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/semi") t)
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/flim"))
-(add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/flim") t)
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/apel"))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/bbdb"))
-
 ;; -----------------------------------------------------------------------------
-;;; Autoload Wanderlust on command "wl"
+(use-package wanderlust
+  :ensure apel
+  :ensure flim
+  :ensure semi
+  :ensure bbdb
+  :commands wl
 
-(autoload 'wl "wl" "Wanderlust" t)
-(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
-(autoload 'wl-user-agent-compose "wl-draft" "Compose with Wanderlust." t)
+  :init
+  ;; Autoload Wanderlust on command "wl"
+  (autoload 'wl "wl" "Wanderlust" t)
 
-;; -----------------------------------------------------------------------------
-;;; Basic configuration
+  (setq elmo-msgdb-directory "~/Emacs/Wanderlust/Elmo"
+        elmo-split-log-file "~/Emacs/Wanderlust/Elmo/split-log"
 
-(setq wl-icon-directory "~/.emacs.d/packages/wanderlust/etc/icons"
-      elmo-msgdb-directory "~/Emacs/Wanderlust/Elmo"
-      elmo-split-log-file "~/Emacs/Wanderlust/Elmo/split-log"
+          ;; Offline and synchronization
+          wl-plugged t
+          elmo-imap4-default-authenticate-type 'clear
+          elmo-imap4-default-port '993
+          elmo-imap4-default-stream-type 'ssl
+          elmo-imap4-use-modified-utf7 t
+          elmo-imap4-use-cache t
+          elmo-nntp-use-cache t
+          elmo-pop3-use-cache t
+          wl-ask-range nil
 
-      ;; Offline and synchronization
-      wl-plugged t
-      elmo-imap4-default-authenticate-type 'clear
-      elmo-imap4-default-port '993
-      elmo-imap4-default-stream-type 'ssl
-      elmo-imap4-use-modified-utf7 t
-      elmo-imap4-use-cache t
-      elmo-nntp-use-cache t
-      elmo-pop3-use-cache t
-      wl-ask-range nil
+          elmo-message-fetch-confirm t
+          elmo-message-fetch-threshold 250000
+          ;;elmo-network-session-idle-timeout 30
 
-      elmo-message-fetch-confirm t
-      elmo-message-fetch-threshold 250000
-      ;;elmo-network-session-idle-timeout 30
+          wl-fcc ".Sent"
+          wl-fcc-force-as-read t
+          wl-from (concat user-full-name " <" user-mail-address ">")
+          wl-organization "***HGW"
 
-      wl-fcc ".Sent"
-      wl-fcc-force-as-read t
-      wl-from (concat user-full-name " <" user-mail-address ">")
-      wl-organization "***HGW"
+          ;; Automatic signature insertion
+          mime-setup-use-signature t
+          signature-file-name "***HGW"
+          signature-insert-at-eof t
+          signature-delete-blank-lines-at-eof t
 
-      ;; Automatic signature insertion
-      mime-setup-use-signature t
-      signature-file-name "***HGW"
-      signature-insert-at-eof t
-      signature-delete-blank-lines-at-eof t
+          ;; User Email addresses
+          wl-user-mail-address-list nil
 
-      ;; User Email addresses
-      wl-user-mail-address-list nil
+          wl-draft-reply-buffer-style 'keep
+          wl-interactive-send nil
+          wl-interactive-exit nil
 
-      wl-draft-reply-buffer-style 'keep
-      wl-interactive-send nil
-      wl-interactive-exit nil
+          ;; Windows and decoration
+          wl-folder-use-frame nil
+          wl-highlight-body-too t
+          wl-use-highlight-mouse-line nil
+          wl-show-plug-status-on-modeline t
+          wl-message-window-size '(1 . 4)
 
-      ;; Windows and decoration
-      wl-folder-use-frame nil
-      wl-highlight-body-too t
-      wl-use-highlight-mouse-line nil
-      wl-show-plug-status-on-modeline t
-      wl-message-window-size '(1 . 4)
+          ;; Create draft in a new frame
+          wl-draft-use-frame t)
+  :config
+  (progn
+    ;;  Initialise bbdb with wanderlust and supercite support
+    (bbdb-initialize 'wl 'sc)
+    (bbdb-insinuate-wl)
+    (bbdb-mua-auto-update-init 'wl 'message)
 
-      ;; Create draft in a new frame
-      wl-draft-use-frame t
-      )
-
-;; Set mail-icon to be shown universally in the modeline.
-(setq global-mode-string
-      (cons
-       '(wl-modeline-biff-status
-         wl-modeline-biff-state-on
-         wl-modeline-biff-state-off)
-       global-mode-string))
+    ;; Set mail-icon to be shown universally in the modeline.
+    (setq global-mode-string
+          (cons
+           '(wl-modeline-biff-status
+             wl-modeline-biff-state-on
+             wl-modeline-biff-state-off)
+           global-mode-string))))
 
 ;; Use wanderlust for default compose-mail
 (if (boundp 'mail-user-agent)
@@ -254,18 +237,6 @@
         ("From" . (("From") nil nil)))
       )
 
-;;;  boxquote
-;; provides a set of functions for using a text quoting style that
-;; partially boxes in the left hand side of an area of text, such a marking
-;; style might be used to show externally included text or example code.
-;;
-;; ,----
-;; | The default style looks like this.
-;; `----
-;; using e.g. `boxquote-region'
-;; `boxquote-unbox' removes the box
-(require 'boxquote)
-
 ;; -----------------------------------------------------------------------------
 ;;; Message:
 
@@ -355,66 +326,6 @@ e.g.
 
 ;; Set the default value of wl-refile-rule-alist
 (setq wl-refile-rule-alist wl-general-refile-rule-alist)
-
-;; -----------------------------------------------------------------------------
-;;; Configure BBDB to manage Email addresses
-
-(require 'bbdb-wl)
-(bbdb-wl-setup)
-
-(setq bbdb-offer-save 1          ;; 1 means save-without-asking
-      bbdb-use-pop-up t          ;; Allow pop-ups
-      bbdb-pop-up-target-lines 2
-      bbdb-wl-ignore-folder-regexp "^@" ;; folders without auto collection
-      bbdb-north-american-phone-numbers-p nil
-      bbdb-auto-notes-alist '(("X-ML-Name" (".*$" ML 0)))
-      bbdb-dwim-net-address-allow-redundancy t
-
-      ;; Auto-create addresses from mail
-      ;;bbdb/mail-auto-create-p nil ;; Switch off auto collection
-      bbdb-always-add-addresses t   ;; add new addresses to automatically
-      bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook
-      bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
-      '(("From" . "github")
-        ("Reply-To" . "nim-lang/Nim")
-        ("To" . "nim-lang/Nim")
-        ("To" . "github"))
-
-      bbdb-electric-p t ;; be disposable with SPC
-
-      bbdb-dwim-net-address-allow-redundancy t ;; always use full name
-      bbdb-quiet-about-name-mismatches 2 ;; show name-mismatches 2 secs
-
-      bbdb-canonicalize-redundant-nets-p t ;; x@foo.bar.cx => x@bar.cx
-
-      bbdb-completion-type nil ;; complete on anything
-
-      bbdb-complete-name-allow-cycling t ;; cycle through matches
-      ;; this only works partially
-
-      bbbd-message-caching-enabled t ;; be fast
-      bbdb-use-alternate-names t ;; use AKA
-
-      bbdb-elided-display t ;; single-line
-
-      ;; shows the name of bbdb in the summary
-
-      ;; Not with wl-summary-showto-folder-regexp
-      ;;wl-summary-from-function 'bbdb-wl-from-func
-      ;; Use the default:
-      wl-summary-from-function 'wl-summary-default-from
-
-      ;; Using BBDB for pet names is OK
-      wl-summary-get-petname-function 'bbdb-wl-get-petname
-      )
-
-;; -----------------------------------------------------------------------------
-;;; Configure recently used Email addresses
-
-;;(require 'recent-addresses)
-
-;;(setq recent-addresses-file
-;;      (expand-file-name "~/Emacs/Wanderlust/recent-addresses"))
 
 ;; -----------------------------------------------------------------------------
 ;;; Configure supercite to manage citations
@@ -560,13 +471,16 @@ Set the `j' key to run `mime-preview-quit'."
     ))
 
 ;; Automatically add mailing list fields
-(add-hook 'bbdb-notice-hook 'bbdb-auto-notes-hook)
+(add-hook 'bbdb-notice-mail-hook 'bbdb-auto-notes)
 
 ;; Smilies
 (add-hook
  'wl-message-redisplay-hook
  '(lambda () (smiley-region (point-min) (point-max))
     ))
+
+(add-hook
+ 'wl-message-redisplay-hook 'bbdb-mua-auto-update)
 
 (add-hook
  'wl-draft-cited-hook
@@ -594,8 +508,8 @@ Set the `j' key to run `mime-preview-quit'."
         (record))
     (while records
       (setq record (car records))
-      (let ((email-addrs (bbdb-record-net record))
-            (folder (bbdb-record-getprop record 'folder))
+      (let ((email-addrs (bbdb-record-mail record))
+            (folder (bbdb-record-field record 'folder))
             (email-addr))
         (if folder
             (progn
@@ -718,10 +632,6 @@ and clean-up citation for replies."
   (turn-on-auto-fill)
   (flyspell-mode t)
   (wl-draft-config-exec)
-  ;; Switch on the completion selection mode
-  ;; and set the default completion-selection to bbdb
-  (completion-selection-mode t)
-  (completion-selection-set 'complete-bbdb)
   ;; Clean up reply citation
   (save-excursion
     ;; Goto the beginning of the message body

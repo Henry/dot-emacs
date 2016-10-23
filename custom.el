@@ -10,13 +10,48 @@
  '(bookmark-default-file "~/.Emacs/Bookmarks")
  '(disk-find-file-function (quote icicle-file))
  '(fill-column 80)
- '(ibuffer-formats (quote ((mark " " (name 30 -1 :left :elide) " " (filename -1 47 :left)) (mark modified read-only " " (name 18 18 :left :elide) " " (size 9 -1 :right) " " (mode 16 16 :left :elide) " " filename-and-process) (mark " " (name 16 -1) " " filename))))
+ '(ibuffer-formats
+   (quote
+    ((mark " "
+           (name 30 -1 :left :elide)
+           " "
+           (filename -1 47 :left))
+     (mark modified read-only " "
+           (name 18 18 :left :elide)
+           " "
+           (size 9 -1 :right)
+           " "
+           (mode 16 16 :left :elide)
+           " " filename-and-process)
+     (mark " "
+           (name 16 -1)
+           " " filename))))
  '(icicle-command-abbrev-alist (quote ((zone-mode z 3) (find-file ff 1))))
  '(initial-major-mode (quote emacs-lisp-mode))
  '(mairix-saved-searches (quote (("test1" "c:simon f:moni" nil nil))))
- '(org-emphasis-alist (quote (("*" bold "<b>" "</b>") ("/" italic "<i>" "</i>") ("_" underline "<span style=\"text-decoration:underline;\">" "</span>") ("=" org-code "<code>" "</code>" verbatim) ("~" org-verbatim "<code>" "</code>" verbatim) ("+" (:strike-through t) "<del>" "</del>") ("@" org-warning "<b>" "</b>"))))
- '(org-export-latex-emphasis-alist (quote (("*" "\\textbf{%s}" nil) ("/" "\\emph{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\protectedtexttt" t) ("~" "\\verb" t) ("@" "\\alert{%s}" nil))))
- '(org-latex-to-pdf-process (quote ("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")))
+ '(org-emphasis-alist
+   (quote
+    (("*" bold "<b>" "</b>")
+     ("/" italic "<i>" "</i>")
+     ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
+     ("=" org-code "<code>" "</code>" verbatim)
+     ("~" org-verbatim "<code>" "</code>" verbatim)
+     ("+"
+      (:strike-through t)
+      "<del>" "</del>")
+     ("@" org-warning "<b>" "</b>"))))
+ '(org-export-latex-emphasis-alist
+   (quote
+    (("*" "\\textbf{%s}" nil)
+     ("/" "\\emph{%s}" nil)
+     ("_" "\\underline{%s}" nil)
+     ("+" "\\st{%s}" nil)
+     ("=" "\\protectedtexttt" t)
+     ("~" "\\verb" t)
+     ("@" "\\alert{%s}" nil))))
+ '(org-latex-to-pdf-process
+   (quote
+    ("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")))
  '(proced-auto-update-flag t)
  '(proced-auto-update-interval 1)
  '(remember-data-file "~/Emacs/remember")
@@ -26,7 +61,9 @@
  '(semantic-idle-scheduler-idle-time 5)
  '(server-host "10.0.0.37")
  '(server-kill-new-buffers t)
- '(whitespace-style (quote (face tabs space-before-tab space-after-tab trailing empty lines-tail)))
+ '(whitespace-style
+   (quote
+    (face tabs space-before-tab space-after-tab trailing empty lines-tail)))
  '(whole-line-or-region-mode t)
  '(word-wrap t))
 

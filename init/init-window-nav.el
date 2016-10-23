@@ -14,7 +14,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; Number the windows and bind \M-t[1-9] to switch between them
 
-(require 'window-number)
+(use-package window-number)
 
 ;; Define \M-t 1 to switch to win 1, etc (\M-t 0 = win 10)
 ;; space after M-t is important

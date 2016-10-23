@@ -1,15 +1,11 @@
 ;;; init-gnuplot.el --- Initialize gnuplot-mode
 ;; -----------------------------------------------------------------------------
-
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/gnuplot"))
-
-(autoload 'gnuplot-mode "gnuplot" "gnuplot major mode" t)
-(autoload 'gnuplot-make-buffer "gnuplot" "open a buffer in gnuplot mode" t)
-
-;; this line automatically causes all files with the .gp extension to
-;; be loaded into gnuplot mode
-(setq auto-mode-alist (append '(("\\.gp$" . gnuplot-mode)) auto-mode-alist))
+(use-package gnuplot
+  :mode ("\\.gp\\'" . gnuplot-mode)
+  :config
+  (defun my-gnuplot-mode-hook ()
+    (font-lock-mode 1))
+  (add-hook 'gnuplot-mode-hook 'my-gnuplot-mode-hook))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-gnuplot.el ends here

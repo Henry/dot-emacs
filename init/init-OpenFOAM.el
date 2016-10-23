@@ -393,11 +393,6 @@
          (not (eq (get-text-property (point) 'face)
                   'font-lock-comment-face))))
 
-  ;; Switch on the completion selection mode
-  ;; and set the default completion-selection to dabbrev
-  (completion-selection-mode t)
-  (completion-selection-set 'complete-dabbrev-ordered)
-
   ;; Set the compile window to scroll as the output is generated
   (setq compilation-scroll-output t)
 

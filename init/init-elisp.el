@@ -2,10 +2,13 @@
 
 ;; -----------------------------------------------------------------------------
 (require 'newcomment) ; Include the uncomment-region function
-(require 'header2)
-(require 'highlight-parentheses)
-(require 'hl-sexp)
-(require 'paredit)
+(use-package header2)
+(use-package highlight-parentheses
+  :diminish highlight-parentheses-mode)
+(use-package hl-sexp
+  :diminish hl-sexp-mode)
+(use-package paredit
+  :diminish paredit-mode)
 
 ;; -----------------------------------------------------------------------------
 ;;; Add the first line of the documentation to the ElDoc in the minibuffer
@@ -117,11 +120,6 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
 
   ;; Switch on fly-spell mode in comments
   (flyspell-prog-mode)
-
-  ;; Switch on the completion selection mode
-  ;; and set the default completion-selection to org-mode
-  (completion-selection-mode t)
-  (completion-selection-set 'complete-elisp)
 
   (paredit-mode +1)
 

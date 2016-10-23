@@ -1,13 +1,6 @@
 ;;; init-diary.el  --- Personal settings
 ;; -----------------------------------------------------------------------------
-
 ;;; calfw settings
-
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/emacs-calfw"))
-
-(require 'calfw-cal)
-(require 'calfw-ical)
-(require 'calfw-org)
 
 (defun my-open-calendar ()
   (interactive)

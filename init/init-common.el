@@ -1,5 +1,32 @@
 ;;; init-common.el --- Initialize common packages
 ;; -----------------------------------------------------------------------------
+;;; Package initialization
+(require 'package)
+(setq package-enable-at-startup nil)
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+;; (unless (assoc-default "melpa-stable" package-archives)
+;;   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t))
+(unless (assoc-default "marmalade" package-archives)
+  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t))
+(package-initialize)
+
+;;; To recompile packages
+;; (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0)
+
+;;; Bootstrap `use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(setq use-package-verbose t)
+(setq use-package-always-ensure t)
+(require 'use-package)
+(setq load-prefer-newer t)
+
+;;; General packages
+(use-package dash)
+
+;; -----------------------------------------------------------------------------
 ;;; Default frame size and other settings
 
 ;;;  Default frame size
@@ -18,7 +45,6 @@
         (cons 'width my-default-frame-width)
         (cons 'height my-default-frame-height)
         '(cursor-type . bar)
-        ;;(cons 'background-color my-default-background-color)
         )
        default-frame-alist))
 
@@ -60,8 +86,7 @@
 ;;;  Minibuffer depth indicator
 (minibuffer-depth-indicate-mode 99)
 
-;;;  Remove trailing spaces
-;;  on buffer save
+;;;  Remove trailing spaces on buffer save
 (add-hook 'write-file-hooks 'delete-trailing-whitespace)
 
 ;;;  Typed text replaces the selection if the selection is active
@@ -69,16 +94,21 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; undo-tree --- maintain and operate on undo/redo as a tree
-(add-to-list 'load-path (expand-file-name  "~/.emacs.d/packages/undo-tree"))
-(require 'undo-tree)
-(global-undo-tree-mode)
-(global-set-key [M-up] 'undo-tree-undo)
-(global-set-key [M-down] 'undo-tree-redo)
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (progn
+    (global-undo-tree-mode)
+    (global-set-key [M-up] 'undo-tree-undo)
+    (global-set-key [M-down] 'undo-tree-redo)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
 
 ;; -----------------------------------------------------------------------------
 ;;; browse-kill-ring+ --- Browse kill-ring using M-y
-(require 'browse-kill-ring+)
+(use-package browse-kill-ring+)
 
+;; -----------------------------------------------------------------------------
 ;;;  Quick access and yank text from the kill ring.
 (global-set-key "\C-cy" '(lambda ()
                            (interactive)
@@ -92,7 +122,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; replace+ --- Replace enhancements
-(eval-after-load "replace" '(progn (require 'replace+)))
+(use-package replace+)
 
 ;; -----------------------------------------------------------------------------
 ;;; find-recursive --- Find-files recursively
@@ -125,9 +155,8 @@
 (require 'eiv)
 
 ;; -----------------------------------------------------------------------------
-;;; igrep ---  An improved interface to `grep` and `find`
+;;; grep
 (require 'grep)
-;;(require 'igrep)
 
 ;; -----------------------------------------------------------------------------
 ;;; color-grep --- Enhance igrep
@@ -159,24 +188,25 @@
 ;;; color-moccur --- An improved interface to occur and moccur
 ;;;  moccur <regexp> shows all occurrences of <regexp>
 ;;;  in all buffers that refer to files.
-(require 'color-moccur)
 
-;; -----------------------------------------------------------------------------
-;;; moccur-edit --- Edit *moccur* buffers and apply changes
-(require 'moccur-edit)
+(use-package color-moccur
+  :init (setq isearch-lazy-highlight t)
+  :config (require 'moccur-edit))
 
 ;; -----------------------------------------------------------------------------
 ;;; iedit --- Edit multiple regions with the same content simultaneously
-(require 'iedit)
+(use-package iedit)
 
 ;; -----------------------------------------------------------------------------
 ;;; info+ --- Better info display
-(eval-after-load "info" '(load "info+"))
+(use-package info
+  :commands (info Info-mode)
+  :config (use-package info+))
 
 ;; -----------------------------------------------------------------------------
 ;;; finder+ --- Better function finder
-(global-set-key (kbd "\C-hK") 'find-function-on-key)
-(require 'finder+)
+(use-package finder+
+  :config (global-set-key (kbd "\C-hK") 'find-function-on-key))
 
 ;; -----------------------------------------------------------------------------
 ;;; man --- Man-page reader
@@ -271,12 +301,10 @@ end of the line."
 
 ;; -----------------------------------------------------------------------------
 ;;; Turn-off font-lock for Postscript files
-;; (turn-on-font-lock)
 (add-hook 'postscript-mode-hook 'turn-off-font-lock)
 
 ;; -----------------------------------------------------------------------------
 ;;; Turn-on font-lock for FORTRAN files
-;; (turn-on-font-lock)
 (add-hook 'fortran-mode-hook 'turn-on-font-lock)
 
 ;; -----------------------------------------------------------------------------

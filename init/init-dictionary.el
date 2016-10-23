@@ -4,7 +4,7 @@
 
 (setq synonyms-file (expand-file-name "~/Emacs/Thesaurus/mthesaur.txt"))
 (setq synonyms-cache-file (expand-file-name "~/Emacs/Thesaurus/cache.txt"))
-(require 'synonyms)
+(use-package synonyms)
 ;;(global-set-key "\C-ct" 'synonyms)
 
 ;; -----------------------------------------------------------------------------

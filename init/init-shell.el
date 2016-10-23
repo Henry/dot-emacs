@@ -2,7 +2,7 @@
 ;; -----------------------------------------------------------------------------
 
 ;;;  Support for multiple shells and convenient switching between them
-(require 'multi-shell)
+(use-package multishell)
 (require 'sh-script)
 
 ;;;  Support for getting the cwd from the prompt

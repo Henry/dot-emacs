@@ -34,7 +34,7 @@
 ;;; outline-magic adds visibility cycling, promotion/demotion and
 ;;; sub-tree movement a la org-mode
 
-(require 'outline-magic)
+(use-package outline-magic)
 
 ;;;  Add the outline-magic visibility cycling key bindings
 

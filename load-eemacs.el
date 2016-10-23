@@ -191,12 +191,8 @@
 ;;(load "init-yasnippet")
 
 ;; -----------------------------------------------------------------------------
-;;; Maxima interface
-;;(load "init-imaxima")
-
-;; -----------------------------------------------------------------------------
-;;; completion-ui: Enhanced in-buffer completion packages
-(load "init-completion")
+;;; Enhanced in-buffer completion packages
+(load "init-company")
 
 ;; -----------------------------------------------------------------------------
 ;;; Buffer selection menu

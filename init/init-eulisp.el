@@ -6,8 +6,8 @@
 (require 'eulisp-mode)
 (require 'inf-eulisp)
 
-(require 'highlight-parentheses)
-(require 'hl-sexp)
+(use-package highlight-parentheses)
+(use-package hl-sexp)
 (require 'paredit)
 (require 'cldoc)
 (require 'outline)

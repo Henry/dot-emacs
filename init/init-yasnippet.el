@@ -1,24 +1,15 @@
 ;;; init-yasnippets.el ---  Yet another snippets extension
-
 ;; -----------------------------------------------------------------------------
-;;; Package path and load
+(use-package yasnippet
+  :config
+  (progn
+    (yas/initialize)
+    (yas/load-directory "~/Emacs/YASnippets")
+    ;;   Switch-off by default
+    (yas/minor-mode -1)))
 
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/yasnippet"))
-
-(require 'yasnippet)
-
-;; -----------------------------------------------------------------------------
-;;; Basic initialisation
-
-(yas/initialize)
-(yas/load-directory "~/Emacs/YASnippets")
-
-;;;   Switch-off by default
-(yas/minor-mode -1)
-
-;;;   Toggle on/off using `C-ty'
-(define-key my-map "y" 'yas/minor-mode)
+;;;   Toggle on/off using `C-zy'
+(define-key my-map "y" 'yas-minor-mode)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-yasnippets.el ends here

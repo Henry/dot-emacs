@@ -7,7 +7,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; Etags
 (require 'etags-select)
-(require 'etags-table)
+(use-package etags-table)
 
 (setq etags-table-alist
       `((".*\\.el$"

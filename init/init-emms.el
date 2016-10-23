@@ -1,37 +1,33 @@
 ;;; init-emms.el --- Initialize Emacs Multimedia System
 ;; -----------------------------------------------------------------------------
-
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/emms/lisp"))
-(add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/packages/emms/doc") t)
-
-(setq emms-directory "~/Emacs/Emms")
-(require 'emms-setup)
-(require 'emms-volume)
-;;(autoload 'emms "emms-setup" "Emms" t)
-
-;(eval-after-load "emms-setup"
-;  '(progn
-(require 'emms-info-libtag)
-(emms-all)
-;(emms-devel)
-(emms-default-players)
-;(emms-cache 0)
-
-;; General settings
-(setq emms-source-file-default-directory "~/Mp3"
-      emms-info-asynchronously t
-      later-do-interval 0.0001
-      emms-info-functions '(emms-info-libtag)
-      emms-mode-line-format " %s "
-      emms-show-format "Playing: %s")
-
-;;;  Show the current track each time EMMS starts to play it
-(add-hook 'emms-player-started-hook 'emms-show)
-
-;;;  Highlight current line in browser
-(add-hook 'emms-browser-show-display-hook '(lambda () (hl-line-mode 1)))
+(use-package emms
+  :init
+  (progn
+    (setq emms-directory "~/Emacs/Emms"
+          emms-source-file-default-directory "~/Music/"
+          emms-info-asynchronously t
+          later-do-interval 0.0001
+          emms-info-functions '(emms-info-libtag)
+          emms-mode-line-format " %s "
+          emms-show-format "Playing: %s"
+          emms-stream-bookmarks-file (concat emms-directory "/emms-streams")
+          emms-stream-default-action "play")
+    ;;  Show the current track each time EMMS starts to play it
+    (add-hook 'emms-player-started-hook 'emms-show)
+    ;;  Highlight current line in browser
+    (add-hook 'emms-browser-show-display-hook '(lambda () (hl-line-mode 1))))
+  :config
+  (progn
+    (require 'emms-volume)
+    (require 'emms-info-libtag)
+    (require 'emms-streams)
+    (require 'emms-stream-info)
+    (emms-all)
+    (emms-default-players)
+    (emms-add-directory-tree emms-source-file-default-directory)
+    ;;  Recenter the play-list on the current track
+    (add-hook 'emms-playlist-selection-changed-hook 'my-emms-focus-on-track)
+    ))
 
 ;; -----------------------------------------------------------------------------
 ;;; Emms buffer key-bindings
@@ -74,9 +70,9 @@
 (define-key emms-browser-mode-map "/" 'my-emms-search)
 (define-key emms-playlist-mode-map "/" 'my-emms-search)
 
-
-;;;  Recenter the play-list on the current track
-(add-hook 'emms-playlist-selection-changed-hook 'my-emms-focus-on-track)
+;;; Streaming
+(define-key emms-stream-mode-map (kbd "s") 'emms-stop)
+(define-key emms-stream-mode-map (kbd "p") 'emms-start)
 
 ;; -----------------------------------------------------------------------------
 ;;; Extension functions bound to key-pad keys
@@ -107,16 +103,6 @@
   (interactive)
   (goto-char (point-min))
   (call-interactively 'isearch-forward))
-
-;; -----------------------------------------------------------------------------
-;;; Streaming
-
-(require 'emms-streams)
-(require 'emms-stream-info)
-(setq emms-stream-bookmarks-file (concat emms-directory "/emms-streams"))
-(setq emms-stream-default-action "play")
-(define-key emms-stream-mode-map (kbd "s") 'emms-stop)
-(define-key emms-stream-mode-map (kbd "p") 'emms-start)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-emms.el ends here

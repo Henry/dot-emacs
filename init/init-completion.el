@@ -79,7 +79,7 @@
 
 ;; Re-bind the flyspell C-. to switch the completion-ui to ispell-correct
 ;; and cycle through the alternative spellings
-(define-key flyspell-mode-map [(control ?\.)]
+(define-key-rebound-commands flyspell-mode-map [(control ?\.)]
   (lambda ()
     "Call `completion-selection-select-complete' for the ispell-correct
 completion mechanism."
