@@ -6,8 +6,6 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/paredit"))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/window-number)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/haskell-mode-[0-9.]*"))))
-(add-to-list 'load-path
-             (expand-file-name "~/.emacs.d/packages/completion-ui"))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/company-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/isearch+)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/bbdb-[0-9.]*"))))
