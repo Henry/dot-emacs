@@ -17,7 +17,7 @@
   ;;(require 'company-cmake)
   (require 'company-capf)
   (require 'company-files)
-  ;;(require 'company-dabbrev-code)
+  (require 'company-dabbrev-code)
   (require 'company-gtags)
   (require 'company-etags)
   (require 'company-keywords)
@@ -25,26 +25,30 @@
   (require 'company-dabbrev)
   (require 'company-bbdb)
   (require 'company-elisp)
+
   (setq
    company-backends
    '(
-     company-files
-     company-dabbrev
-     company-keywords
-     company-capf
      company-bbdb
-     ))
-  (setq company-show-numbers t)
+     company-capf
+     company-files
+     (company-dabbrev-code company-gtags company-etags company-keywords)
+     company-dabbrev
+     )
+   company-show-numbers t)
 
+  ;; Add the Elisp backend in elisp-mode
   (add-hook
    'emacs-lisp-mode-hook
    (lambda ()
      (set (make-local-variable 'company-backends)
           (list (cons 'company-elisp company-backends)))))
 
+  ;; Enable company-bbdb in wl-draft-mode
   (add-to-list 'company-bbdb-modes 'wl-draft-mode)
   (add-hook 'wl-draft-mode-hook '(lambda () (company-mode)))
 
+  ;; Enable company-mode in all major model
   (global-company-mode t))
 
 ;; -----------------------------------------------------------------------------
