@@ -117,6 +117,12 @@ buffer and jump to any errors cited in the output using
 
 (define-key shell-mode-map [f9] 'jump-to-compilation-error-in-shell)
 
+;; (use-package readline-complete)
+;; (setq explicit-shell-file-name "bash")
+;; (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))
+;; (setq comint-process-echoes t)
+;; (push 'company-readline company-backends)
+;; (add-hook 'rlc-no-readline-hook (lambda () (company-mode -1)))
 
 ;; --------------------------------------------------------------------------
 ;;; init-shell.el ends here
