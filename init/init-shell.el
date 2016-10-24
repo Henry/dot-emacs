@@ -20,7 +20,11 @@
       comint-completion-autolist t        ; show completion list when ambiguous
       comint-input-ignoredups t           ; no duplicates in command history
       comint-completion-addsuffix t       ; insert space/slash after file completion
+      comint-buffer-maximum-size 1024     ; maximum size in lines for Comint buffers.
       )
+
+(add-hook 'comint-output-filter-functions
+          'comint-truncate-buffer)
 
 ;; Filter to get the cwd from the prompt
 (setq-default dirtrack-list '("^|\\([^|]*\\)|" 1 nil))
@@ -42,7 +46,7 @@
   (ansi-color-for-comint-mode-on)
   (setq toggle-truncate t)
 
-  ;; Get the cwd from the prompt
+  ;; Get the cwd from the prompt rather than by tracking 'cd' commands
   (shell-dirtrack-mode -1)
   (dirtrack-mode 1)
   (add-hook 'comint-preoutput-filter-functions

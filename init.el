@@ -6,7 +6,6 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp/tree-mode"))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/packages/paredit"))
 
 ;; -----------------------------------------------------------------------------
 ;;; Load the quick initialisation file
@@ -51,20 +50,12 @@
 (autoload 'my-open-calendar "init-diary" "Calendar/Diary" t)
 
 ;; -----------------------------------------------------------------------------
-;;; CEDET
-;;(load "init-cedet")
-
-;; -----------------------------------------------------------------------------
 ;;; OpenFOAM settings
 (load "init-OpenFOAM")
 
 ;; -----------------------------------------------------------------------------
 ;;; ELisp settings
 (load "init-elisp")
-
-;; -----------------------------------------------------------------------------
-;;; EuLisp settings
-;;(load "init-eulisp")
 
 ;; -----------------------------------------------------------------------------
 ;;; GOOFIE settings
@@ -122,16 +113,8 @@
 (load "init-shell")
 
 ;; -----------------------------------------------------------------------------
-;;; Eshell-mode settings
-;;(load "init-eshell")
-
-;; -----------------------------------------------------------------------------
 ;;; GIT-Emacs: Emacs front-end for GIT repositories
 (load "init-magit")
-
-;; -----------------------------------------------------------------------------
-;;; Insideous Big Brother Database
-(load "init-bbdb")
 
 ;; -----------------------------------------------------------------------------
 ;;; gnuplot-mode
@@ -148,6 +131,10 @@
 ;; -----------------------------------------------------------------------------
 ;;; outline-mode: outlining and folding
 (load "init-outline")
+
+;; -----------------------------------------------------------------------------
+;;; Insideous Big Brother Database
+(load "init-bbdb")
 
 ;; -----------------------------------------------------------------------------
 ;;; Email client: Wanderlust
@@ -172,10 +159,6 @@
 ;; -----------------------------------------------------------------------------
 ;;; Tags: Initialise all things tags related
 (load "init-tags")
-
-;; -----------------------------------------------------------------------------
-;;; Abbreviations
-;;(autoload 'abbrev-mode "init-abbrev" "Abbrev" t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Emms: Emacs Multimedia System
