@@ -23,8 +23,8 @@ expandpath()
 if [ $# -eq 0 ]
 then
     # If a file-name is not provided open an empty frame
-    (emacsclient -n -e "(new-frame)" 2>/dev/null || $eeserver 2>/dev/null) &
+    (emacsclient -n --eval "(new-frame)" 2>/dev/null || $eeserver 2>/dev/null) &
 else
     expandpath $1
-    (emacsclient -n -e "(find-file-other-frame \"$exPath\")" 2>/dev/null || $eeserver $1 2>/dev/null) &
+    (emacsclient -n --eval "(find-file-other-frame \"$exPath\")" 2>/dev/null || $eeserver $1 2>/dev/null) &
 fi
