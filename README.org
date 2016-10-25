@@ -138,7 +138,6 @@ resource.
     + cldoc
     + color-grep
     + color-moccur
-    + completing-help
     + dired-tar
     + ediff-trees
     + eiv
@@ -151,8 +150,6 @@ resource.
     + iman
     + isearch-all
     + iterator
-    + mcomplete
-    + mcomplete-history
     + mgrep
     + moccur-edit
     + no-word
