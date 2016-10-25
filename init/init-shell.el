@@ -1,12 +1,17 @@
 ;;; init-shell.el --- shell-mode settings
 ;; -----------------------------------------------------------------------------
 
-;;;  Support for multiple shells and convenient switching between them
-(use-package multishell)
-(require 'sh-script)
-
 ;;;  Support for getting the cwd from the prompt
-(require 'dirtrack)
+(use-package dirtrack
+  :init
+  ;; Filter to get the cwd from the prompt
+  (setq-default dirtrack-list '("^|\\([^|]*\\)|" 1 nil))
+
+  (defun dirtrack-filter-out-pwd-prompt (string)
+    "Remove the CWD from the prompt."
+    (if (and (stringp string) (string-match (first dirtrack-list) string))
+        (replace-match "" t t string 0)
+      string)))
 
 ;;;  Show colors in shell windows:
 (setq ansi-color-names-vector ; better contrast colors
@@ -17,59 +22,46 @@
       comint-scroll-to-bottom-on-input t  ; always insert at the bottom
       comint-scroll-to-bottom-on-output t ; always add output at the bottom
       comint-scroll-show-maximum-output t ; scroll to show max possible output
-      comint-completion-autolist t        ; show completion list when ambiguous
+      comint-completion-autolist nil      ; show completion list when ambiguous
       comint-input-ignoredups t           ; no duplicates in command history
       comint-completion-addsuffix t       ; insert space/slash after file completion
       comint-buffer-maximum-size 1024     ; maximum size in lines for Comint buffers.
       )
 
-(add-hook 'comint-output-filter-functions
-          'comint-truncate-buffer)
+;; Truncate the shell buffer to 1024 lines
+(add-hook 'comint-output-filter-functions 'comint-truncate-buffer)
 
-;; Filter to get the cwd from the prompt
-(setq-default dirtrack-list '("^|\\([^|]*\\)|" 1 nil))
+(defun comint-fix-window-size ()
+  "Change process window size."
+  (when (derived-mode-p 'comint-mode)
+    (let ((process (get-buffer-process (current-buffer))))
+      (unless (eq nil process)
+        (set-process-window-size process (window-height) (window-width))))))
 
-(defun dirtrack-filter-out-pwd-prompt (string)
-  "Remove the CWD from the prompt."
-  (if (and (stringp string) (string-match (first dirtrack-list) string))
-      (replace-match "" t t string 0)
-    string))
+(use-package shell
+  :init
+  (defun my-shell-mode-hook ()
 
-(defun my-shell-mode-hook ()
+    (font-lock-mode 1)
 
-  ;; Switch-on font-lock
-  (font-lock-mode 1)
+    ;; Get the cwd from the prompt rather than by tracking 'cd' commands
+    (shell-dirtrack-mode -1)
+    (dirtrack-mode 1)
+    (add-hook 'comint-preoutput-filter-functions
+              'dirtrack-filter-out-pwd-prompt t t)
 
-  ;; Show trailing whitespace, tabs and lines > 80
-  (whitespace-mode 1)
+    ;; Show the current directory in the mode-line
+    (add-to-list
+     'mode-line-buffer-identification
+     '(:propertize (" " default-directory " ") face dired-directory))
 
-  (ansi-color-for-comint-mode-on)
-  (setq toggle-truncate t)
+    ;; Inform the shell of the window size initially and following resize
+    (comint-fix-window-size)
+    (add-hook 'window-configuration-change-hook 'comint-fix-window-size nil t)
 
-  ;; Get the cwd from the prompt rather than by tracking 'cd' commands
-  (shell-dirtrack-mode -1)
-  (dirtrack-mode 1)
-  (add-hook 'comint-preoutput-filter-functions
-            'dirtrack-filter-out-pwd-prompt t t)
+    (company-mode 1))
 
-  ;; Show the current directory in the mode-line
-  (add-to-list 'mode-line-buffer-identification
-               '(:propertize (" " default-directory " ") face dired-directory))
-  )
-
-(add-hook 'shell-mode-hook 'my-shell-mode-hook)
-(add-hook 'sh-mode-hook 'my-shell-mode-hook)
-
-;;;  Override the global setting for the tab-key
-;;   and reset to the shell-completion
-(define-key shell-mode-map [(tab)] 'icicle-comint-dynamic-complete)
-;;(define-key shell-mode-map [(tab)] 'comint-dynamic-complete)
-(define-key shell-mode-map "\M-p" 'comint-previous-matching-input-from-input)
-(define-key shell-mode-map "\M-n" 'comint-next-matching-input-from-input)
-
-;; Better commenting/un-commenting
-(define-key shell-mode-map "\C-c\C-c" 'comment-dwim-line)
-(define-key sh-mode-map "\C-c\C-c" 'comment-dwim-line)
+  (add-hook 'shell-mode-hook 'my-shell-mode-hook))
 
 (defun shell-dwim (&optional create)
   "Start or switch to an inferior shell process, in a smart way.
@@ -93,6 +85,16 @@
     (shell buffer)))
 
 ;;(global-set-key [f4] 'shell-dwim)
+
+(use-package readline-complete
+  :init
+  (use-package company)
+  (setq explicit-shell-file-name "bash"
+        explicit-bash-args '("-c" "export EMACS=; stty echo; bash")
+        comint-process-echoes t)
+  (push 'company-readline company-backends)
+  (add-hook 'rlc-no-readline-hook (lambda () (company-mode -1)))
+  :bind (:map shell-mode-map ("<tab>" . company-readline)))
 
 (defun jump-to-compilation-error-in-shell()
   "From a shell buffer, copy the output of the last
@@ -121,12 +123,20 @@ buffer and jump to any errors cited in the output using
 
 (define-key shell-mode-map [f9] 'jump-to-compilation-error-in-shell)
 
-;; (use-package readline-complete)
-;; (setq explicit-shell-file-name "bash")
-;; (setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))
-;; (setq comint-process-echoes t)
-;; (push 'company-readline company-backends)
-;; (add-hook 'rlc-no-readline-hook (lambda () (company-mode -1)))
+;;;  Support for multiple shells and convenient switching between them
+(use-package multishell)
+
+;; --------------------------------------------------------------------------
+;;; sh-mode: for editing sh/bash scripts
+
+(use-package sh-script
+  :init
+  (defun my-sh-mode-hook ()
+    (font-lock-mode 1))
+  (add-hook 'sh-mode-hook 'my-sh-mode-hook)
+
+  ;; Better commenting/un-commenting
+  :bind (:map sh-mode-map ("\C-c\C-c" . comment-dwim-line)))
 
 ;; --------------------------------------------------------------------------
 ;;; init-shell.el ends here

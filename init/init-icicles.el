@@ -1,10 +1,29 @@
 ;;; init-icicles.el --- Minibuffer input completion
 ;; -----------------------------------------------------------------------------
 (use-package icicles
+  :diminish icicle-mode
   :init
   (setq icicle-functions-to-redefine
         (quote
-         (comint-completion-at-point comint-dynamic-complete-filename comint-replace-by-expanded-filename complete completion-pcm--all-completions ess-complete-object-name gud-gdb-complete-command Info-goto-node Info-index Info-menu lisp-complete-symbol elisp-completion-at-point minibuffer-default-add-completions read-char-by-name read-color read-from-minibuffer read-string recentf-make-menu-items)))
+         (
+          ;;comint-completion-at-point
+          ;;comint-dynamic-complete-filename
+          ;;comint-replace-by-expanded-filename
+          complete
+          completion-pcm--all-completions
+          ess-complete-object-name
+          gud-gdb-complete-command
+          Info-goto-node
+          Info-index
+          Info-menu
+          lisp-complete-symbol
+          elisp-completion-at-point
+          minibuffer-default-add-completions
+          read-char-by-name
+          read-color
+          read-from-minibuffer
+          read-string
+          recentf-make-menu-items)))
   :config
   (progn
     (when window-system (require 'hexrgb))
@@ -104,13 +123,6 @@ not under the point."
     (setq icomplete-prospects-height 2)
     (icomplete-mode t)
     (setq partial-completion-mode t)))
-
-;; -----------------------------------------------------------------------------
-;;; Completing-help: press \M-? to display info on possible completions
-
-(require 'completing-help)
-(define-key minibuffer-local-completion-map "\M-?" 'minibuffer-completion-help)
-(turn-on-completing-help-mode)
 
 ;; -----------------------------------------------------------------------------
 ;;; Switch-on icicles

@@ -1,44 +1,30 @@
 ;;; init-ido.el --- Initialize ido buffer switcher and file finder
 ;; -----------------------------------------------------------------------------
+(use-package ido
+  :init
+  (setq ido-enable-flex-matching t
+        ido-everywhere t
+        ido-case-fold nil
+        ido-default-file-method 'selected-window
+        ido-ignore-buffers (append ido-ignore-buffers (list "\\*BBDB\\*")))
+  :config
+  (ido-mode t))
 
-(require 'ido)
+(use-package ido-ubiquitous
+  :config
+  (ido-ubiquitous-mode 1))
 
-(setq ido-enable-flex-matching t
-      ido-case-fold nil
-      ido-ignore-buffers (append ido-ignore-buffers (list "\\*BBDB\\*")))
-(ido-mode t)
+(use-package ido-vertical-mode
+  :disabled t
+  :init
+  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+  :config
+  (ido-vertical-mode 0))
 
-;; -----------------------------------------------------------------------------
-;;; mcomplete: Enhanced minibuffer incremental completion preview and completion
-
-(require 'mcomplete)
-(load "mcomplete-history")
-
-(set-face-foreground
- 'mcomplete-prefix-method-fixed-part-face "blue")
-(set-face-foreground
- 'mcomplete-prefix-method-alternative-part-face "blue")
-
-(set-face-foreground
- 'mcomplete-substr-method-fixed-part-face "blue")
-(set-face-foreground
- 'mcomplete-substr-method-alternative-part-face "blue")
-
-;(add-hook 'ido-setup-hook 'turn-off-mcomplete-mode)
-;(add-hook 'ido-make-file-list-hook 'turn-off-mcomplete-mode)
-;(add-hook 'ido-make-dir-list-hook 'turn-off-mcomplete-mode)
-;(add-hook 'ido-make-buffer-list-hook 'turn-off-mcomplete-mode)
-(add-hook 'ido-minibuffer-setup-hook 'turn-off-mcomplete-mode)
-(add-hook 'ido-rewrite-file-prompt-functions 'turn-off-mcomplete-mode)
-;(add-hook 'ido-before-fallback-functions 'turn-off-mcomplete-mode)
-(add-hook 'post-command-hook 'turn-on-mcomplete-mode)
-
-
-;; -----------------------------------------------------------------------------
-;;; Completing-help: press '?' to display info on possible completions
-
-(require 'completing-help)
-(turn-on-completing-help-mode)
+(use-package smex
+  :init (smex-initialize)
+  :bind (("M-u" . smex)
+         ("S-M-u" . smex-major-mode-commands)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-ido.el ends here

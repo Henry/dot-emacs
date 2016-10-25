@@ -2,10 +2,12 @@
 ;; -----------------------------------------------------------------------------
 ;;; Thesaurus using the synonyms package
 
-(setq synonyms-file (expand-file-name "~/Emacs/Thesaurus/mthesaur.txt"))
-(setq synonyms-cache-file (expand-file-name "~/Emacs/Thesaurus/cache.txt"))
-(use-package synonyms)
-;;(global-set-key "\C-ct" 'synonyms)
+(use-package synonyms
+  :init
+  (setq synonyms-file (expand-file-name "~/Emacs/Thesaurus/mthesaur.txt")
+        synonyms-cache-file (expand-file-name "~/Emacs/Thesaurus/cache.txt"))
+  ;;:bind (("C-c t" . synonyms))
+  )
 
 ;; -----------------------------------------------------------------------------
 ;;; Thesaurus using the wn-org package
@@ -17,7 +19,6 @@
 ;;; Acronyms using the rw-acronyms package
 
 (require 'rw-acronyms)
-
 (setq rw-acronyms-files-data
       '(("~/Emacs/Acronyms/vera.txt"
          iso-8859-1 "=" nil)))

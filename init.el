@@ -101,10 +101,6 @@
 (load "init-runtime" nil t) ;; Include in init-eemacs
 
 ;; -----------------------------------------------------------------------------
-;;; Enable all save all histories function
-(load "init-history-saving")
-
-;; -----------------------------------------------------------------------------
 ;;; Ediff settings
 (load "init-ediff")
 
@@ -196,6 +192,10 @@
 ;; -----------------------------------------------------------------------------
 ;;; E2WM
 (load "init-e2wm")
+
+;; -----------------------------------------------------------------------------
+;;; Enable all save all histories function
+(load "init-history-saving")
 
 ;; -----------------------------------------------------------------------------
 ;;; Application generated customisations

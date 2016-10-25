@@ -1,6 +1,7 @@
 ;;; accelerate.el --- pump numeric arg for auto-repeated interactive commands
 ;; ---------------------------------------------------------------------------
 ;;
+;; Copyright (C) 2013, 2015, Andrey Yagunov <yagunov86@gmail.com>
 ;; Copyright (C) 2006, David Andersson
 ;;
 ;; This file is NOT part of Emacs.
@@ -24,7 +25,7 @@
 ;;
 ;; Author: David Andersson <l.david.andersson(at)sverige.nu>
 ;; Created: 2006-06-30
-;; Version: 0.2
+;; Version: 0.3
 ;;
 ;;; Commentary:
 ;;
@@ -57,6 +58,8 @@
 ;;
 ;; TODO: Problem accelerating backward-char and forward-char; defadvice does not
 ;;       take effect. (Is it because they are subs, and not functions?)
+;;
+;; TODO: Doesn't work with multiple-cursors.
 
 (require 'advice)
 
@@ -75,12 +78,12 @@ Assume TIME1 is before or equal to TIME2.
 Return 1000000 if diff is larger than one second.
 See `current-time' for time format."
   (let ((hi (- (car time2) (car time1)))
-	(s (- (nth 1 time2) (nth 1 time1)))
-	(us (- (nth 2 time2) (nth 2 time1))))
+        (s (- (nth 1 time2) (nth 1 time1)))
+        (us (- (nth 2 time2) (nth 2 time1))))
     (cond ((/= hi 0)    1000000)
-	  ((=  s 1)     (+ 1000000 us))
-	  ((/= s 0)     1000000)
-	  (t            us))
+          ((=  s 1)     (+ 1000000 us))
+          ((/= s 0)     1000000)
+          (t            us))
     ))
 
 ;; `accelerate' is a macro. It could have most of the logic in
@@ -94,9 +97,9 @@ See `current-time' for time format."
   ;; Basically the reverse of `defadvice'.
   (if (ad-find-advice funct 'before 'accelerate)
       (progn
-	(ad-remove-advice funct 'before 'accelerate)
-	(ad-activate-on funct)
-	nil)))
+        (ad-remove-advice funct 'before 'accelerate)
+        (ad-activate-on funct)
+        nil)))
 
 (defun acc-save-mult (multiplier symb)
   ;; Normalize MULTIPLIER, store it in a property of SYMB, and return it.
@@ -116,18 +119,18 @@ See `current-time' for time format."
   ;; Variables `acc--last-command-event', `acc--last-time' and/or
   ;; `acc--next-multiplier' are updated.
   (if (and (eq last-command-event acc--last-command-event)
-	   (not defining-kbd-macro)
-	   (not executing-kbd-macro)
-	   (eq arg0 1))
+           (not defining-kbd-macro)
+           (not executing-kbd-macro)
+           (eq arg0 1))
       (progn
-	(let ((curr (current-time)))
-	  (if (< (acc-time-diff acc--last-time curr) acc-auto-repeat-time)
-	      (setq arg0 (car acc--next-multiplier)
-		    acc--next-multiplier (or (cdr acc--next-multiplier)
-					     acc--next-multiplier))
-	    ;; else  too long since last time
-	    (setq acc--next-multiplier (get symb 'accelerate)))
-	  (setq acc--last-time curr)))
+        (let ((curr (current-time)))
+          (if (< (acc-time-diff acc--last-time curr) acc-auto-repeat-time)
+              (setq arg0 (car acc--next-multiplier)
+                    acc--next-multiplier (or (cdr acc--next-multiplier)
+                                             acc--next-multiplier))
+            ;; else  too long since last time
+            (setq acc--next-multiplier (get symb 'accelerate)))
+          (setq acc--last-time curr)))
     ;; else  temporary disabled
     (setq acc--last-command-event last-command-event))
   arg0)
@@ -146,9 +149,9 @@ the last number is used again in further repeated invocations.
 \nAlso see variable `acc-auto-repeat-time'."
   `(if (acc-save-mult ,multiplier ',command)
        (defadvice ,command (before accelerate activate)
-	 "Accelerated when auto-repeated. See `accelerate'"
-	 (if (interactive-p)
-	     (ad-set-arg 0 (acc-pump-arg (ad-get-arg 0) ',command))))
+         "Accelerated when auto-repeated. See `accelerate'"
+         (if (called-interactively-p 'any)
+             (ad-set-arg 0 (acc-pump-arg (ad-get-arg 0) ',command))))
      ;; else
      (acc-remove-advice ',command 'before 'accelerate)))
 

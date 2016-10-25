@@ -56,7 +56,7 @@
 ;; ;; ilisp users
 ;; (add-hook 'ilisp-mode-hook 'turn-on-cldoc-mode)
 ;; (setq ilisp-bindings-*bind-space-p* nil)
-;; 
+;;
 ;; ;; slime users
 ;; (add-hook 'slime-repl-mode-hook
 ;;           #'(lambda ()
@@ -70,6 +70,10 @@
 ;; * handling of operators with multiple syntax rules (e.g. file-position).
 ;; * handling of operators which implementations are allowed to extend
 ;;   (e.g. directory)
+
+;;; History:
+
+;; 2016-10-14 H.G.Weller: interactive-p -> called-interactively-p
 
 
 ;;; Code:
@@ -237,7 +241,7 @@ the mode, respectively."
   (setq cldoc-mode (if prefix
                        (>= (prefix-numeric-value prefix) 0)
                      (not cldoc-mode)))
-  (and (interactive-p)
+  (and (called-interactively-p)
        (if cldoc-mode
            (message "cldoc-mode is enabled")
          (message "cldoc-mode is disabled")))
@@ -736,7 +740,7 @@ the mode, respectively."
 (mapcar (lambda (entry)
           (let ((symbol (intern (symbol-name (car entry)) cl-operator-signatures)))
             (set symbol (cdr entry))))
-        
+
         '(;; evaluation and compilation
           (lambda . "lambda-list [[declaration* | documentation]] form* => function")
           (compile function-name-or-nil &optional lambda-expression-or-function => function warnings-p failure-p)
@@ -759,7 +763,7 @@ the mode, respectively."
           (special-operator-p symbol => generalized-boolean)
           (constantp form &optional (environment nil) => generalized-boolean)
 
-          
+
           ;; types and classes
           (coerce object result-type => result)
           (deftype . "name lambda-list [[declaration* | documentation]] form* => name")
@@ -848,7 +852,7 @@ the mode, respectively."
           (shiftf . "place+ newvalue => old-value-1")
           (rotatef . "place* => nil")
 
-          
+
           ;; iteration
           (do . "({var | (var [init-form [step-form]])}*) (end-test-form result-form*) declaration* {tag | statement}* => result*")
           (do* . "({var | (var [init-form [step-form]])}*) (end-test-form result-form*) declaration* {tag | statement}* => result*")
@@ -923,8 +927,8 @@ the mode, respectively."
           (break &optional (format-control *implementation-dependent-format-control*) &rest format-arguments => nil)
           (handler-bind . "({(type handler)}*) form* => result*")
           (handler-case . "expression [[{error-clause}* | no-error-clause]] => result*
-clause::= error-clause | no-error-clause 
-error-clause::= (typespec ([var]) declaration* form*) 
+clause::= error-clause | no-error-clause
+error-clause::= (typespec ([var]) declaration* form*)
 no-error-clause::= (:no-error lambda-list declaration* form*)")
           (ignore-errors . "form* => result*")
           (define-condition . "name (parent-type*) ({slot-spec}*) option* => name")
@@ -983,14 +987,14 @@ no-error-clause::= (:no-error lambda-list declaration* form*)")
           (unuse-package packages-to-unuse &optional (package *package*) => t)
           (use-package packages-to-use &optional (package *package*) => t)
           (defpackage . "defined-package-name [[option]] => package
-option::= (:nicknames nickname*)* |  
-          (:documentation string) |  
-          (:use package-name*)* |  
-          (:shadow {symbol-name}*)* |  
-          (:shadowing-import-from package-name {symbol-name}*)* |  
-          (:import-from package-name {symbol-name}*)* |  
-          (:export {symbol-name}*)* |  
-          (:intern {symbol-name}*)* |  
+option::= (:nicknames nickname*)* |
+          (:documentation string) |
+          (:use package-name*)* |
+          (:shadow {symbol-name}*)* |
+          (:shadowing-import-from package-name {symbol-name}*)* |
+          (:import-from package-name {symbol-name}*)* |
+          (:export {symbol-name}*)* |
+          (:intern {symbol-name}*)* |
           (:size integer) ")
           (do-symbols . "(var [package [result-form]]) declaration* {tag | statement}* => result*")
           (do-external-symbols . "(var [package [result-form]]) declaration* {tag | statement}* => result*")
@@ -1149,7 +1153,7 @@ option::= (:nicknames nickname*)* |
           (char-name character => name)
           (name-char name => character-or-nil)
 
-          
+
           ;; conses
           (cons car cdr => cons)
           (consp object => generalized-boolean)
@@ -1379,7 +1383,7 @@ option::= (:nicknames nickname*)* |
           (translate-logical-pathname pathname &key => physical-pathname)
           (translate-pathname source from-wildcard to-wildcard &key => translated-pathname)
           (merge-pathnames pathname &optional (default-pathname *default-pathname-defaults*) (default-version :newest) => merged-pathname)
-          
+
           ;; files
           (directory pathspec &key => pathnames)
           (probe-file pathspec => truename)

@@ -35,14 +35,18 @@
      (company-dabbrev-code company-gtags company-etags company-keywords)
      company-dabbrev
      )
-   company-show-numbers t)
+   company-show-numbers t
+   ;;company-dabbrev-ignore-case nil
+   ;;case-replace nil
+   ;;company-dabbrev-downcase nil
+   )
 
   ;; Add the Elisp backend in elisp-mode
   (add-hook
    'emacs-lisp-mode-hook
    (lambda ()
      (set (make-local-variable 'company-backends)
-          (list (cons 'company-elisp company-backends)))))
+          (cons 'company-elisp company-backends))))
 
   ;; Enable company-bbdb in wl-draft-mode
   (add-to-list 'company-bbdb-modes 'wl-draft-mode)

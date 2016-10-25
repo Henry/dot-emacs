@@ -63,7 +63,6 @@
 ;;; Global key bindings
 
 (global-set-key "\C-x\C-k"  'kill-this-buffer)
-;;(global-set-key [f2]        'kill-this-buffer)
 (global-set-key "\M-#"      'query-replace-regexp)
 (global-set-key "\C-xf"     'find-file-at-point)
 
@@ -114,21 +113,17 @@
 (global-set-key [C-down] 'up-some)
 
 ;;;  Remove tab-to-tab-stop from "\M-i" and bind undo to it
-(global-unset-key "\M-i") (global-set-key "\M-i" 'undo)
-
-;;;  Also bind undo to M-up
-(global-set-key [M-up] 'undo)
+(global-unset-key "\M-i")
+(global-set-key "\M-i" 'undo)
 
 ;;;  More aggressive quit usually bound to M-ESC-ESC and ESC-ESC-ESC
 (global-set-key "\C-c\C-g" 'keyboard-escape-quit)
 
 ;;;  Auto-indent on return
 (global-set-key (kbd "RET") 'newline-and-indent)
-;(global-set-key [return] 'newline-and-indent)
 
 ;;;  Toggle view-mode rather than toggle-read-only.
 (define-key ctl-x-map "\C-q" 'view-mode)
-
 
 ;; -----------------------------------------------------------------------------
 ;;; qinit.el ends here

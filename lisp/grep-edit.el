@@ -56,6 +56,8 @@
 ;;; History:
 
 ;; grep-edit 1.0 was released to the net on 12/03/2002
+;; 2016-10-14 H.G.Weller: toggle-read-only -> read-only-mode
+
 ;;; Code:
 
 (defgroup grep-edit nil
@@ -156,7 +158,7 @@
           (buffer-name (current-buffer)))
          (string= process-status "exit"))
         (progn
-          (toggle-read-only)
+          (read-only-mode)
           (buffer-enable-undo (current-buffer))
           (grep-edit-set-readonly-area t)
           (setq grep-edit-change-face-flg t)))))

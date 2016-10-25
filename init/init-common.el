@@ -18,8 +18,8 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(setq use-package-verbose t)
-(setq use-package-always-ensure t)
+(setq use-package-verbose t
+      use-package-always-ensure t)
 (require 'use-package)
 (setq load-prefer-newer t)
 
@@ -92,17 +92,21 @@
 ;;;  Typed text replaces the selection if the selection is active
 (delete-selection-mode t)
 
+;; query-replace should not preserve case in replacements
+(setq case-replace nil)
+
 ;; -----------------------------------------------------------------------------
 ;;; undo-tree --- maintain and operate on undo/redo as a tree
 (use-package undo-tree
   :diminish undo-tree-mode
-  :config
-  (progn
-    (global-undo-tree-mode)
-    (global-set-key [M-up] 'undo-tree-undo)
-    (global-set-key [M-down] 'undo-tree-redo)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
+  :init
+  (global-undo-tree-mode)
+  (global-unset-key "\M-i")
+  (global-set-key "\M-i" 'undo-tree-undo)
+  (global-unset-key "\M-x")
+  (global-set-key "\M-x" 'undo-tree-redo)
+  (setq undo-tree-visualizer-timestamps t)
+  (setq undo-tree-visualizer-diff t))
 
 ;; -----------------------------------------------------------------------------
 ;;; browse-kill-ring+ --- Browse kill-ring using M-y
@@ -201,7 +205,8 @@
 ;;; info+ --- Better info display
 (use-package info
   :commands (info Info-mode)
-  :config (use-package info+))
+  :config
+  (use-package info+))
 
 ;; -----------------------------------------------------------------------------
 ;;; finder+ --- Better function finder

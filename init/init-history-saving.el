@@ -1,6 +1,6 @@
-;;; init-save-all-hists.el --- Enable all save all histories function
+;;; init-history-saving.el --- Enable all save all histories function
 
-(defun enable-history-saving ()
+(defun enable-history-saving (&optional option)
   "Switch on the automatic saving of all history files."
   (interactive)
 
@@ -10,12 +10,10 @@
   ;; Save places in files
   (setq-default save-place t)
 
-  ;;(defvar fj-save-journal-timer
-  ;;  (run-with-timer fj-save-timer-interval fj-save-timer-interval 'fj-save-journal))
-
   (add-hook 'after-save-hook 'fj-save-journal)
-  ;;(add-hook 'kill-buffer-hook 'fj-save-journal)
   (add-hook 'kill-emacs-hook 'fj-save-journal)
+
+  (require 'bm)
 
   ;; Saving bookmark data on killing a buffer
   (add-hook 'kill-buffer-hook 'bm-buffer-save)
@@ -32,4 +30,4 @@
   )
 
 ;; -----------------------------------------------------------------------------
-;;; init-save-all-hists.el ends here
+;;; init-history-saving.el ends here

@@ -180,7 +180,7 @@ mode tends to pollute the list."
     (prin1 `(setq fj-journal ',fj-journal) (current-buffer))
     (insert ?\n)
     (write-region (point-min) (point-max) fj-journal-file nil
-                  (unless (interactive-p) 'quiet))))
+                  (unless (called-interactively-p) 'quiet))))
 
 ;;***HGW (defvar fj-save-journal-timer (run-with-timer fj-save-timer-interval fj-save-timer-interval 'fj-save-journal))
 
