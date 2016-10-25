@@ -1,10 +1,15 @@
-if which ectags >& /dev/null
+#!/bin/bash
+set -x -e
+
+EMACSLISP=/usr/local/share/emacs/25.1/lisp
+
+if which ctags-exuberant >& /dev/null
 then
 
 #tag=etags -
-tag="ectags -e -L -"
+tag="ctags-exuberant -e -L -"
 
-find /usr/local/share/emacs/24.3/lisp -name "*.el" | $tag -f systemTAGS
+find $EMACSLISP -name "*.el" | $tag -f systemTAGS
 find . -name save -prune -o -name pending -prune -o \( -name "*.el" -print \) | $tag
 
 fi
