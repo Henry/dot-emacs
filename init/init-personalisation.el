@@ -42,10 +42,6 @@ rather than vertically.")
         (indent-region (region-beginning) (region-end) nil))))
 
 ;; -----------------------------------------------------------------------------
-;;; Elisp implementations of rgrep, grep-find, grep, etc...
-(require 'traverselisp)
-
-;; -----------------------------------------------------------------------------
 ;;; babel --- interface to web translation services
 (use-package babel)
 

@@ -149,44 +149,17 @@
 (load "init-dired+")
 
 ;; -----------------------------------------------------------------------------
-;;; traverselisp --- walk through directories to find regex in files
-(require 'traverselisp)
-;;(setq max-lisp-eval-depth 40000)
-
-;; -----------------------------------------------------------------------------
-;;; eiv --- emacs image viewer
-;;;  walk through directories to view images (uses traverselisp)
-(require 'eiv)
-
-;; -----------------------------------------------------------------------------
 ;;; grep
-(require 'grep)
+(use-package grep
+  ;; Rebind the up and down keys so they don't automatically select the file
+  ;; the string is on to make it easier to edit the grep buffer.
+  :bind (:map grep-mode-map
+              ("<down>" . next-line)
+              ("<up>" . previous-line)))
 
 ;; -----------------------------------------------------------------------------
-;;; color-grep --- Enhance igrep
-;;;  with cursor-following file buffer matching line highlight
-(require 'color-grep)
-
-;; -----------------------------------------------------------------------------
-;;; grep-edit --- Edit grep buffer and apply the changes to files
-(require 'grep-edit)
-
-;; Rebind the up and down keys so they don't automatically select the file
-;; the string is on to make it easier to edit the grep buffer.
-(define-key grep-mode-map [down] 'next-line)
-(define-key grep-mode-map [up] 'previous-line)
-
-;; -----------------------------------------------------------------------------
-;;; mgrep --- Grep in a predefined list of directories
-(require 'mgrep)
-
-(setq mgrep-list
-      '(
-        ;; name   directory          mask   option
-        ("emacsd" default-directory  "*.el" nil)
-        ("lisp" (concat default-directory "/lisp") "*.el" nil)
-        ("OpenFOAM" (concat OPENFOAM_DIR "/src/OpenFOAM/lnInclude/") "*.[HC]" nil)
-        ))
+;;; wgrep --- Edit grep buffer and apply the changes to files
+(use-package wgrep)
 
 ;; -----------------------------------------------------------------------------
 ;;; color-moccur --- An improved interface to occur and moccur

@@ -22,6 +22,8 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/undo-tree-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/browse-kill-ring+)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/replace+)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/grep-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/wgrep)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/color-moccur-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/iedit)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/info-[0-9.]*"))))
