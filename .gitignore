@@ -3,7 +3,8 @@
 
 # Ignore personal and temporary files
 network-security.data
-/personal
+image-dired
+init/personal
 /save
 lisp/save
 lisp/new
