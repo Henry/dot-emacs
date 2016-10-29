@@ -92,21 +92,23 @@
 ;;;  Typed text replaces the selection if the selection is active
 (delete-selection-mode t)
 
-;; query-replace should not preserve case in replacements
+;;; query-replace should not preserve case in replacements
 (setq case-replace nil)
+
+;;; Speed-up rendering on Emacs-24
+(setq-default bidi-display-reordering nil)
 
 ;; -----------------------------------------------------------------------------
 ;;; undo-tree --- maintain and operate on undo/redo as a tree
 (use-package undo-tree
   :diminish undo-tree-mode
   :init
-  (global-undo-tree-mode)
-  (global-unset-key "\M-i")
-  (global-set-key "\M-i" 'undo-tree-undo)
-  (global-unset-key "\M-x")
-  (global-set-key "\M-x" 'undo-tree-redo)
-  (setq undo-tree-visualizer-timestamps t)
-  (setq undo-tree-visualizer-diff t))
+  (setq undo-tree-visualizer-timestamps t
+        undo-tree-visualizer-diff t)
+  :bind (("M-i" . undo-tree-undo)
+         ("M-x" . undo-tree-redo))
+  :config
+  (global-undo-tree-mode))
 
 ;; -----------------------------------------------------------------------------
 ;;; browse-kill-ring+ --- Browse kill-ring using M-y
@@ -155,11 +157,18 @@
   ;; the string is on to make it easier to edit the grep buffer.
   :bind (:map grep-mode-map
               ("<down>" . next-line)
-              ("<up>" . previous-line)))
+              ("<up>" . previous-line))
+  :config
+  (add-to-list 'grep-files-aliases '("CH" . "*.[CH]")))
 
 ;; -----------------------------------------------------------------------------
 ;;; wgrep --- Edit grep buffer and apply the changes to files
 (use-package wgrep)
+
+;; -----------------------------------------------------------------------------
+;;; phi-grep --- an Elisp implementation of grep
+(use-package phi-grep)
+
 
 ;; -----------------------------------------------------------------------------
 ;;; color-moccur --- An improved interface to occur and moccur
@@ -167,8 +176,13 @@
 ;;;  in all buffers that refer to files.
 
 (use-package color-moccur
-  :init (setq isearch-lazy-highlight t)
-  :config (require 'moccur-edit))
+  :commands (moccur moccur-grep moccur-grep-find)
+  :init
+  (require 'moccur-edit)
+  (setq isearch-lazy-highlight t)
+  :bind (:map moccur-mode-map
+              ("<down>" . next-line)
+              ("<up>" . previous-line)))
 
 ;; -----------------------------------------------------------------------------
 ;;; iedit --- Edit multiple regions with the same content simultaneously
