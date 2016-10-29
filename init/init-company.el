@@ -55,5 +55,17 @@
   ;; Enable company-mode in all major model
   (global-company-mode t))
 
+(defun company-bbdb-word (command &optional arg &rest ignore)
+  "`company-mode' completion backend for BBDB.
+Looks-up the Email addresses corresponding to the the word at the point
+ in any mode."
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend 'company-bbdb-word))
+    (prefix (company-grab-word))
+    (candidates (company-bbdb--candidates arg))
+    (sorted t)
+    (no-cache t)))
+
 ;; -----------------------------------------------------------------------------
 ;;; init-company.el ends here
