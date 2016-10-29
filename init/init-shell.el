@@ -94,7 +94,7 @@
         comint-process-echoes t)
   (push 'company-readline company-backends)
   (add-hook 'rlc-no-readline-hook (lambda () (company-mode -1)))
-  :bind (:map shell-mode-map ("<tab>" . company-readline)))
+  :bind (:map shell-mode-map ("<tab>" . company-complete)))
 
 (defun jump-to-compilation-error-in-shell()
   "From a shell buffer, copy the output of the last
