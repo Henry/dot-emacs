@@ -21,6 +21,9 @@
   (global-set-key "\M-u" 'execute-extended-command)
   ))
 
+(global-set-key "\M-i"      'undo-tree-undo)
+(global-set-key "\M-x"      'undo-tree-redo)
+
 ;; -----------------------------------------------------------------------------
 ;;; Font settings
 
