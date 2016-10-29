@@ -5,6 +5,8 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/my-lisp/tree-mode"))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/window-number-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/haskell-mode-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/eshell-[0-9.]*"))))
+  (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/esh-help)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/company-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/isearch+)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/bbdb-[0-9.]*"))))

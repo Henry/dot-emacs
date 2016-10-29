@@ -109,6 +109,10 @@
 (load "init-shell")
 
 ;; -----------------------------------------------------------------------------
+;;; Eshell-mode settings
+(load "init-eshell")
+
+;; -----------------------------------------------------------------------------
 ;;; GIT-Emacs: Emacs front-end for GIT repositories
 (load "init-magit")
 
