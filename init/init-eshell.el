@@ -44,9 +44,7 @@
   (use-package esh-help)
 
   :init
-  (setq multi-eshell-shell-function '(eshell)
-        multi-eshell-name "*eshell*"
-        eshell-directory-name (expand-file-name "~/Emacs/Eshell/")
+  (setq eshell-directory-name (expand-file-name "~/Emacs/Eshell/")
         eshell-aliases-file (concat eshell-directory-name "alias")
         eshell-history-file-name (concat eshell-directory-name "history")
         eshell-save-history-on-exit t
@@ -157,6 +155,11 @@
   ;(paredit-mode +1)
   ;(setq paredit-add-space-for-delimiter nil)
   )
+
+(use-package multi-eshell
+  :init
+  (setq multi-eshell-shell-function '(eshell)
+        multi-eshell-name "*eshell*"))
 
 ;; -----------------------------------------------------------------------------
 ;;; Generally useful additional functions
