@@ -25,8 +25,9 @@ resource.
   + e2wm-code2
   + etags-select
   + eulisp-mode
-  + goofie
   + inf-eulisp
+  + goofie
+  + key-cat
   + org-pua
   + thingatpt-ext
   + thing-cmds
@@ -37,8 +38,6 @@ resource.
   + em-last
   + file-journal (This is already on GitHub)
   + git-grep
-  + rw-acronyms
-  + xl
 
 * Third-party Packages (in the /elpa/ and /lisp/ directories)
   A =Makefile= is provided in the /lisp/ directory to compile the minor
@@ -112,6 +111,7 @@ resource.
     + packed
     + paredit
     + parsebib
+    + phi-grep
     + pkginfo
     + popup
     + rectmark
@@ -133,29 +133,18 @@ resource.
     + yasnippet
 
 *** Minor Packages (in the /lisp/ directory)
-    +  accelerate
+    + accelerate
     + bm
     + cldoc
-    + color-grep
-    + color-moccur
     + dired-tar
     + ediff-trees
-    + eiv
     + filladapt
     + find-recursive
     + fsdired
-    + grep-edit
-    + gtags
-    + idutils
     + iman
     + isearch-all
-    + iterator
-    + mgrep
     + moccur-edit
     + no-word
     + oprofile-mode
     + ppindent
-    + synonyms
-    + traverselisp
-    + xgtags
-    + xgtags-extension
+    + rw-acronyms
