@@ -1,4 +1,3 @@
-
 (require 'grep)
 
 (defvar git-grep-history nil)
@@ -33,7 +32,7 @@ in the grep output buffer, to go to the lines where grep found matches."
             (compilation-start regexp 'grep-mode))
       (setq dir (file-name-as-directory (expand-file-name dir)))
       (let ((command (concat
-                      "git grep -n "
+                      "git --no-pager grep -n --no-color -i "
                       "-e " (shell-quote-argument regexp)
                       (if (string= files "*")
                           ""
@@ -51,4 +50,4 @@ in the grep output buffer, to go to the lines where grep found matches."
               (setq default-directory dir)))))))
 
 (provide 'git-grep)
-;;; git.el ends here
+;;; git-grep.el ends here
