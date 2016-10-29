@@ -103,7 +103,8 @@
       isearch-forward-regexp
       isearch-backward-regexp
       query-replace-regexp
-      occur
+      occur-by-moccur
+      moccur
       lgrep
       rgrep
       wgrep
@@ -133,6 +134,14 @@
       undo-tree-undo
       undo-tree-redo
       undo-tree-visualize
+      ))
+    ("Email"
+     (commands
+      wl
+      bbdb-mua-display-sender
+      bbdb-mua-edit-field-sender
+      mairix-search
+      mairix-update-database
       ))
     ("Miscellaneous"
      (commands
