@@ -11,8 +11,6 @@
 ;;
 ;; Features that might be required by this library:
 ;;
-  ;; `cl'.
-;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
@@ -175,7 +173,7 @@ See also `key-cat-cmd-list'."
   (condition-case err
       (save-match-data ;; runs in timer
         (let ((result))
-          (help-setup-xref (list #'key-cat-help) (interactive-p))
+          (help-setup-xref (list #'key-cat-help) (called-interactively-p 'any))
           ;;         (push (list "Changing commands"
           ;;                     (list
           ;;                      'command
