@@ -2,9 +2,9 @@
 ;; -----------------------------------------------------------------------------
 
 ;;; Use the X primary selection for copy/paste
-(setq x-select-enable-clipboard t
-      x-select-enable-primary t
-      mouse-drag-copy-region t)
+;; (setq select-enable-clipboard t
+;;       select-enable-primary nil
+;;       mouse-drag-copy-region nil)
 
 ;;; Set ^C-v to yank
 (global-set-key "\C-v" 'yank)
