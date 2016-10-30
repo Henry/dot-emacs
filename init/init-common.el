@@ -106,7 +106,7 @@
   (setq undo-tree-visualizer-timestamps t
         undo-tree-visualizer-diff t)
   :bind (("M-i" . undo-tree-undo)
-         ("M-x" . undo-tree-redo))
+         ("M-u" . undo-tree-redo))
   :config
   (global-undo-tree-mode))
 

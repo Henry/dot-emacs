@@ -4,25 +4,10 @@
 ;;   Functions involving histories which must be read at run-time
 
 ;; -----------------------------------------------------------------------------
-;;; Dvorak layout re-bindings
-;; Swap the keys C-x <=> C-u and the global bindings M-x <=> M-u
-;; To put C-x and M-x under your index finger on the home row.
-
-(cond
- ((or (string= (getenv "HOSTNAME") "dm")
-      (not (string= (getenv "DISPLAY") ":0.0")))
-
-  ;; Key translation works for ctrl sequences:
-  (keyboard-translate ?\C-x ?\C-u)
-  (keyboard-translate ?\C-u ?\C-x)
-
-  ;; ... but not for meta-keys so swap the global bindings instead:
-  (global-set-key "\M-x" 'upcase-word)
-  (global-set-key "\M-u" 'execute-extended-command)
-  ))
+;;; Undo-tree
 
 (global-set-key "\M-i"      'undo-tree-undo)
-(global-set-key "\M-x"      'undo-tree-redo)
+(global-set-key "\M-u"      'undo-tree-redo)
 
 ;; -----------------------------------------------------------------------------
 ;;; Font settings
