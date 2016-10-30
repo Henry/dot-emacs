@@ -65,7 +65,8 @@
    (quote
     (face tabs space-before-tab space-after-tab trailing empty lines-tail)))
  '(whole-line-or-region-mode t)
- '(word-wrap t))
+ '(word-wrap t)
+ '(image-dired-dir (expand-file-name "~/Emacs/Thumbnails")))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -91,10 +92,6 @@
  '(diff-index ((t (:foreground "green4"))))
  '(diff-nonexistent ((t (:foreground "LightBlue"))))
  '(diff-removed ((t (:foreground "red2" :weight bold))))
- '(diredp-compressed-file-suffix ((t (:foreground "grey70"))))
- '(diredp-dir-heading ((t (:background "lightblue" :weight bold))))
- '(diredp-dir-priv ((t (:background "grey90" :weight bold))))
- '(diredp-file-suffix ((t (:foreground "DarkMagenta"))))
  '(emms-browser-album-face ((((class color) (background light)) (:inherit variable-pitch :foreground "purple2" :weight bold :height 1.0))))
  '(emms-browser-artist-face ((((class color) (background light)) (:inherit variable-pitch :foreground "blue3" :weight bold :height 1.2))))
  '(emms-browser-composer-face ((((class color) (background light)) (:inherit variable-pitch :foreground "black" :weight normal))))

@@ -1,48 +1,115 @@
 ;;; init-dired+.el --- Initialize better directory display
 ;; -----------------------------------------------------------------------------
-;;;  Load packages
-(use-package dired+)
-(use-package dired-details+)
-(use-package dired-sort-menu+)
 
-;;;   dired-tar: tar and untar (gz) from dired (bound to 'T')
-(require 'dired-tar)
+(use-package dired
+  :ensure nil ;; Work-around bug in use-package loading dired
 
-;;;   fsdired: sort files to go to different places in dired
-(require 'fsdired)
+  :preface
+  ;; Set the face for executable files
+  (defface diredp-executable-file-name
+    '((t (:foreground "dodger blue" :weight bold)))
+    "*Face used for names of executable files in dired buffers."
+    :group 'Dired-Plus :group 'font-lock-highlighting-faces)
+  (defvar diredp-executable-file-name 'diredp-executable-file-name)
 
-;; -----------------------------------------------------------------------------
-;;;  Set the ls options
+  :init
+  (require 'dired-x)
 
-;; Set the ls options to put directories first
-;; ideally by adding --group-directories-first
-;; but long options are not currently supported so ...
-(setq dired-listing-switches "-al")
+  (use-package dired+
+    :config
+    (progn
+        ;; Privilege indicator faces
+        (defun my-dired-update-privilege-faces ()
+          (set-face-attribute 'diredp-dir-priv nil
+                              :foreground "#7474FFFFFFFF"
+                              :background (face-background 'default))
+          (set-face-attribute 'diredp-exec-priv nil
+                              :foreground "dodger blue"
+                              :background (face-background 'default))
+          (set-face-attribute 'diredp-other-priv nil
+                              :background (face-background 'default))
+          (set-face-attribute 'diredp-write-priv nil
+                              :foreground "#25258F8F2929"
+                              :background (face-background 'default))
+          (set-face-attribute 'diredp-read-priv nil
+                              :foreground "#999932325555"
+                              :background (face-background 'default))
+          (set-face-attribute 'diredp-no-priv nil
+                              :foreground "#2C2C2C2C2C2C"
+                              :background (face-background 'default))
+          (set-face-attribute 'diredp-rare-priv nil
+                              :foreground "Green"
+                              :background (face-background 'default))
+          (set-face-attribute 'diredp-link-priv nil
+                              :foreground "#00007373FFFF"))
+        (add-hook 'dired-mode-hook 'my-dired-update-privilege-faces)))
 
-;; ... and hack the dired-insert-directory function to add the
-;; --group-directories-first option:
-(defadvice dired-insert-directory
-  (before my-dired-insert-directory
-          (dir switches &optional file-list wildcard hdr))
-  (setq switches (concat switches " --group-directories-first")))
-(ad-activate 'dired-insert-directory)
+  ;; tar and untar (gz) from dired (bound to 'T')
+  (require 'dired-tar)
 
-;; Set the face for executable files
-(defface diredp-executable-file-name
-  '((t (:foreground "Red" :weight bold)))
-  "*Face used for names of executable files in dired buffers."
-  :group 'Dired-Plus :group 'font-lock-highlighting-faces)
-(defvar diredp-executable-file-name 'diredp-executable-file-name)
+  ;; sort files to go to different places in dired
+  (require 'fsdired)
 
-(setq diredp-font-lock-keywords-1
-      (append
-       diredp-font-lock-keywords-1
-       (list
-        (list dired-re-exe
-              `(".+"
-                (dired-move-to-filename)
-                nil
-                (0 diredp-executable-file-name t))))))
+  (setq
+   ;; Set the ls options to put directories first
+   dired-listing-switches "-al --group-directories-first"
+   dired-omit-files "^\\.?#\\|^\\."
+   diredp-font-lock-keywords-1
+     (append
+      diredp-font-lock-keywords-1
+      (list
+       (list dired-re-exe
+             `(".+"
+               (dired-move-to-filename)
+               nil
+               (0 diredp-executable-file-name t)))))
+     )
+
+  (defun dired-next-file-line ()
+    "Move to the next dired line that have a file or directory name on it."
+    (interactive)
+    (call-interactively 'dired-next-line)
+    (if (eobp)
+        (dired-previous-line 1)))
+
+  (defun dired-previous-file-line ()
+    "Move to the previous dired line that have a file or directory name on it."
+    (interactive)
+    (call-interactively 'dired-previous-line)
+    (if (not (dired-move-to-filename))
+        (dired-next-line 1)))
+
+  (defun my-dired-mode-hook ()
+
+    ;; Switch-on font-lock
+    (font-lock-mode 1)
+
+    ;; hl-line - highlight current-line
+    (hl-line-mode)
+
+    ;; Use the same buffer for visited directories
+    (toggle-diredp-find-file-reuse-dir 1)
+
+    ;; Set omit-mode by default
+    (dired-omit-mode 1)
+
+    (substitute-key-definition
+     'dired-next-line 'dired-next-file-line dired-mode-map)
+    (substitute-key-definition
+     'dired-previous-line 'dired-previous-file-line dired-mode-map)
+    )
+  (add-hook 'dired-mode-hook 'my-dired-mode-hook)
+
+  :bind
+  (:map dired-mode-map
+        ;; wdired: make the file names writable
+        ("C-w" . wdired-change-to-wdired-mode)
+        ("[" . backward-page)
+        ("]" . forward-page)
+        ("<M-up>" . dired-up-directory)
+        ("/" . dired-omit-expunge)
+        ("<down>" . dired-next-file-line)
+        ("<up>" . dired-previous-file-line)))
 
 ;; -----------------------------------------------------------------------------
 ;;;  Better cursor movement functions
@@ -69,45 +136,20 @@
 (substitute-key-definition
  'dired-previous-line 'dired-previous-file-line dired-mode-map)
 
-;; wdired: make the file names writable
-(define-key dired-mode-map "\C-w" 'wdired-change-to-wdired-mode)
-
-(define-key dired-mode-map (kbd "[" ) 'backward-page)
-(define-key dired-mode-map (kbd "]" ) 'forward-page)
-(define-key dired-mode-map (kbd "<M-up>" ) 'dired-up-directory)
-(define-key dired-mode-map (kbd "/") 'dired-omit-expunge)
-
-(setq dired-omit-files "^\\.?#\\|^\\.")
-
-;; Set buffer-local variables
-(defun my-dired-mode-hook ()
-  ;; hl-line - highlight current-line
-  (hl-line-mode)
-
-  ;; Use the same buffer for visited directories
-  (toggle-diredp-find-file-reuse-dir 1)
-
-  ;; Set omit-mode by default
-  (dired-omit-mode 1)
-
-  ;; Ensure that the byte-compiled version picks-up the dired+ fonts
-  (set (make-local-variable 'font-lock-defaults)
-       (cons '(dired-font-lock-keywords diredp-font-lock-keywords-1)
-             (cdr font-lock-defaults)))
-
-  ;; Switch-on font-lock
-  (font-lock-mode 1)
-  )
-
-(add-hook 'dired-mode-hook 'my-dired-mode-hook)
-
 ;; -----------------------------------------------------------------------------
 ;;;  Image-dired
 
 (use-package image-dired
   :init
   ;; Set the directory for the thumbnail images generated by image-dired
-  (setq image-dired-dir (expand-file-name "~/Emacs/Thumbnails")))
+  (setq image-dired-dir
+        (expand-file-name "~/Emacs/Thumbnails")
+
+        image-dired-db-file
+        (expand-file-name ".image-dired_db" image-dired-dir)
+
+        image-dired-temp-image-file
+        (expand-file-name ".image-dired_temp" image-dired-dir)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-dired+.el ends here
