@@ -3,14 +3,12 @@
 
 # Ignore personal and temporary files
 network-security.data
-image-dired
 init/personal
 /save
 lisp/save
 lisp/new
 my-lisp/save
 tramp
-*TAGS
 /elpa
 
 # end-of-file

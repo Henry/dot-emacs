@@ -9,7 +9,7 @@ then
 #tag=etags -
 tag="ctags-exuberant -e -L -"
 
-find $EMACSLISP -name "*.el" | $tag -f systemTAGS
-find . -name save -prune -o -name pending -prune -o \( -name "*.el" -print \) | $tag
+find $EMACSLISP -name "*.el" | $tag -f ~/Emacs/systemTAGS
+find . -name save -prune -o -name pending -prune -o \( -name "*.el" -print \) | $tag -f ~/Emacs/TAGS
 
 fi

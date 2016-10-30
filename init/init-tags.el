@@ -17,8 +17,8 @@
   (setq tags-add-tables nil
         etags-table-alist
         `((".*\\.el$"
-           ,(expand-file-name "~/.emacs.d/TAGS")
-           ,(expand-file-name "~/.emacs.d/systemTAGS"))
+           ,(expand-file-name "~/Emacs/TAGS")
+           ,(expand-file-name "~/Emacs/systemTAGS"))
           (,(concat OPENFOAM_DIR "/.*\\.[CH]$")
            ,(concat OPENFOAM_TAGS_DIR "/etags"))
           )))
