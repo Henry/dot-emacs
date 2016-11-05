@@ -67,7 +67,7 @@
 (defun kill-buffer-and-frame ()
   "Kill the buffer and the frame it is in"
   (interactive)
-  (kill-this-buffer)
+  (kill-current-buffer)
   (delete-frame))
 
 ;;; Enlarge frame and split into two windows

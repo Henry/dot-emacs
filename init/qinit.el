@@ -28,12 +28,11 @@
       (lambda ()
         (unless (memq
                  this-command
-                 '(isearch-abort abort-recursive-edit
-                                 exit-minibuffer keyboard-quit))
+                 '(isearch-abort
+                   abort-recursive-edit
+                   exit-minibuffer
+                   keyboard-quit))
           (ding))))
-
-;;;  Set smooth scrolling (this seems to make the scrolling sluggish)
-;(setq scroll-conservatively 10000)
 
 ;;;  Point keeps its screen position if the scroll
 ;;   command moved it vertically out of the window, e.g. when scrolling
@@ -60,9 +59,18 @@
 (setq auto-save-interval 200)
 
 ;; -----------------------------------------------------------------------------
+;;; Kill current buffer without confirmation
+
+(defun kill-current-buffer ()
+  "Kill current buffer without confirmation."
+  (interactive)
+  (let ((buffer-modified-p nil))
+    (kill-buffer (current-buffer))))
+
+;; -----------------------------------------------------------------------------
 ;;; Global key bindings
 
-(global-set-key "\C-x\C-k"  'kill-this-buffer)
+(global-set-key "\C-x\C-k"  'kill-current-buffer)
 (global-set-key "\M-#"      'query-replace-regexp)
 (global-set-key "\C-xf"     'find-file-at-point)
 
@@ -70,12 +78,12 @@
 (global-set-key [f11]       'next-error)
 (global-set-key [f12]       'previous-error)
 
-(global-set-key [S-left]    "\M-b")     ;; Backward word
-(global-set-key [S-right]   "\M-f")     ;; Forward word
-(global-set-key [C-left]    "\M-a")     ;; Backward sentence
-(global-set-key [C-right]   "\M-e")     ;; Forward sentence
-(global-set-key [C-S-left]  "\C-\M-a")  ;; Backward function
-(global-set-key [C-S-right] "\C-\M-e")  ;; Forward function
+(global-set-key [S-left]    'backward-word)
+(global-set-key [S-right]   'forward-word)
+(global-set-key [C-left]    'backward-sentence)
+(global-set-key [C-right]   'forward-sentence)
+(global-set-key [C-S-left]  'beginning-of-defun)
+(global-set-key [C-S-right] 'end-of-defun)
 
 (global-set-key [M-S-left]  'previous-buffer)
 (global-set-key [M-S-right] 'next-buffer)
@@ -83,42 +91,48 @@
 (global-set-key [S-home]    'beginning-of-buffer)
 (global-set-key [S-end]     'end-of-buffer)
 
-;;; Bind x-clipboard-yank to the PrintScr key on the Kinesis keyboard
-(global-set-key [print] 'x-clipboard-yank)
-
+;; -----------------------------------------------------------------------------
 ;;;  Scolling while maintaining the cursor position
 (defun up-one (N)
   "Scroll the text up one line maintaining the cursor position"
   (interactive "p")
   (scroll-up N)
   (forward-line N))
+
 (defun down-one (N)
   "Scroll the text down one line maintaining the cursor position"
   (interactive "p")
   (scroll-down N)
   (forward-line (- N)))
+
 (global-set-key [S-up]   'down-one)
 (global-set-key [S-down] 'up-one)
 
 (defvar block-scroll-size 10)
+
 (defun up-some ()
   (interactive)
   (scroll-up block-scroll-size)
   (forward-line block-scroll-size))
+
 (defun down-some ()
   (interactive)
   (scroll-down block-scroll-size)
   (forward-line (- block-scroll-size)))
+
 (global-set-key [C-up]   'down-some)
 (global-set-key [C-down] 'up-some)
 
+;; -----------------------------------------------------------------------------
 ;;;  Remove tab-to-tab-stop from "\M-i" and bind undo to it
 (global-unset-key "\M-i")
 (global-set-key "\M-i" 'undo)
 
+;; -----------------------------------------------------------------------------
 ;;;  More aggressive quit usually bound to M-ESC-ESC and ESC-ESC-ESC
 (global-set-key "\C-c\C-g" 'keyboard-escape-quit)
 
+;; -----------------------------------------------------------------------------
 ;;;  Auto-indent on return
 (global-set-key (kbd "RET") 'newline-and-indent)
 
