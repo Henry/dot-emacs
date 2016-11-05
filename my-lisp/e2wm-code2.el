@@ -47,8 +47,9 @@
 ;; -----------------------------------------------------------------------------
 ;;; Code:
 
-(use-package e2wm)
-(setq e2wm:debug t)
+(use-package e2wm
+  :init
+  (setq e2wm:debug t))
 
 ;; -----------------------------------------------------------------------------
 ;;; Dirtree plugin
@@ -68,10 +69,11 @@
 (defun e2wm:def-plugin-dirtree (frame wm winfo)
   (let ((wname (wlf:window-name winfo))
         (win (wlf:window-live-window winfo))
-        (buf (get-buffer dirtree-buffer))m)
+        (buf (get-buffer dirtree-buffer)))
     (unless (and buf (buffer-live-p buf))
       (setq buf (get-buffer-create dirtree-buffer))
-      (dirtree-build buf "." nil win))
+      (select-window win)
+      (dirtree-build buf "." nil))
     (wlf:set-buffer wm wname buf)))
 
 (e2wm:plugin-register 'dirtree
