@@ -82,7 +82,6 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/shell-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/readline-complete-[0-9.]*"))))
   (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/company)-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/multishell)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/sh-script-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/sr-speedbar-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/.emacs.d/elpa/etags-select-[0-9.]*"))))
