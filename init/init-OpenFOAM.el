@@ -39,12 +39,17 @@
 (defun wmake (&rest args)
   "`wmake' script wrapper callable from `eshell' and directly."
   (interactive)
-  (progn
+  ;; Search up the directory tree for the directory containing Make/files
+  ;; and compile there
+  (let ((dir (locate-dominating-file default-directory "Make/files")))
     (save-some-buffers (not compilation-ask-about-save) nil)
-    (compilation-start
-     (concat "wmake " (eshell-flatten-and-stringify args)))))
+    (if dir
+        (compilation-start
+         (concat "cd " dir " && wmake " (eshell-flatten-and-stringify args)))
+      (compilation-start
+       (concat "wmake " (eshell-flatten-and-stringify args))))))
 
-(defun Allwmake ()
+(defun Allwmake (&rest args)
   "`Allwmake' script wrapper callable from `eshell' and directly."
   (interactive)
   ;; Search up the directory tree for the directory containing Allwmake
