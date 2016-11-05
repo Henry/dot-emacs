@@ -27,6 +27,7 @@
 ;;; Gtags
 (use-package ggtags
   :diminish ggtags-mode
+  :disabled t
   :init
   (add-hook 'prog-mode-hook 'ggtags-mode))
 
