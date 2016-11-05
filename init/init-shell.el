@@ -123,9 +123,6 @@ buffer and jump to any errors cited in the output using
 
 (define-key shell-mode-map [f9] 'jump-to-compilation-error-in-shell)
 
-;;;  Support for multiple shells and convenient switching between them
-(use-package multishell)
-
 ;; --------------------------------------------------------------------------
 ;;; sh-mode: for editing sh/bash scripts
 
