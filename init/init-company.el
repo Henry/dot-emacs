@@ -55,7 +55,9 @@
   (global-company-mode t)
 
   :bind (("<M-tab>" . company-complete)
-         :map flyspell-mode-map ("C-." . company-flyspell)))
+         :map flyspell-mode-map
+         ("C-." . company-flyspell)
+         ("C->" . company-ispell)))
 
 (defun company-bbdb-word (command &optional arg &rest ignore)
   "`company-mode' completion backend for BBDB.
