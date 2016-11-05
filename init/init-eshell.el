@@ -81,7 +81,7 @@
           eshell-pred
           eshell-prompt
           eshell-script
-          eshell-smart
+          ;; eshell-smart ;; Causes slow redraw
           eshell-term
           eshell-unix
           eshell-last
