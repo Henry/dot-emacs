@@ -131,7 +131,6 @@
 
   (turn-on-eldoc-mode)
 
-  (local-set-key (kbd "C-z") 'bury-buffer)
   (local-set-key (kbd "C-a") 'eshell-bol)
   (local-set-key [end] 'eshell-show-maximum-output)
   (local-set-key [home] 'eshell-previous-prompt)
@@ -150,10 +149,6 @@
   ;;     (if (eq major-mode 'eshell-mode)
   ;;         (eshell-interrupt-process))))
 
-  ;(show-matching-paren)
-  ;(highlight-parentheses-mode t)
-  ;(paredit-mode +1)
-  ;(setq paredit-add-space-for-delimiter nil)
   )
 
 (use-package multi-eshell
@@ -281,25 +276,25 @@ Completion is available."))
                    bookmark filename))
         (error "%s is not a bookmark" bookmark))))))
 
-(defun my-eshell-execute-current-line ()
-  "Insert text of current line in eshell and execute."
-  (interactive)
-  (require 'eshell)
-  (let ((command
-         (buffer-substring
-          (save-excursion (beginning-of-line) (point))
-          (save-excursion (end-of-line)(point)))))
-    (let ((buf (current-buffer)))
-      (unless (get-buffer eshell-buffer-name)
-        (eshell))
-      (display-buffer eshell-buffer-name t)
-      (switch-to-buffer-other-window eshell-buffer-name)
-      (goto-char (point-max))
-      (eshell-kill-input)
-      (insert command)
-      (eshell-send-input)
-      (goto-char (point-max))
-      (switch-to-buffer-other-window buf))))
+;; (defun my-eshell-execute-current-line ()
+;;   "Insert text of current line in eshell and execute."
+;;   (interactive)
+;;   (require 'eshell)
+;;   (let ((command
+;;          (buffer-substring
+;;           (save-excursion (beginning-of-line) (point))
+;;           (save-excursion (end-of-line)(point)))))
+;;     (let ((buf (current-buffer)))
+;;       (unless (get-buffer eshell-buffer-name)
+;;         (eshell))
+;;       (display-buffer eshell-buffer-name t)
+;;       (switch-to-buffer-other-window eshell-buffer-name)
+;;       (goto-char (point-max))
+;;       (eshell-kill-input)
+;;       (insert command)
+;;       (eshell-send-input)
+;;       (goto-char (point-max))
+;;       (switch-to-buffer-other-window buf))))
 
 ;;(global-set-key [f2] 'my-eshell-execute-current-line)
 
