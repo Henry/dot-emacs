@@ -138,5 +138,20 @@ buffer and jump to any errors cited in the output using
   ;; Better commenting/un-commenting
   :bind (:map sh-mode-map ("\C-c\C-c" . comment-dwim-line)))
 
+;;; Make scripts executable on save
+(defun my-make-script-executable ()
+  "If file starts with a shebang, make `buffer-file-name' executable"
+  (save-excursion
+    (save-restriction
+      (widen)
+      (goto-char (point-min))
+      (when (and (looking-at "^#!")
+                 (not (file-executable-p buffer-file-name)))
+        (set-file-modes buffer-file-name
+                        (logior (file-modes buffer-file-name) #o100))
+        (message (concat "Made " buffer-file-name " executable"))))))
+
+(add-hook 'after-save-hook 'my-make-script-executable)
+
 ;; --------------------------------------------------------------------------
 ;;; init-shell.el ends here

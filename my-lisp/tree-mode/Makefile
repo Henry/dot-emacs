@@ -8,3 +8,8 @@ elc_files := $(shell ls *.el | sed 's:\.el:\.elc:g')
 	$(EMACS) --batch -L . -L ../../lisp -f batch-byte-compile $<
 
 all: $(elc_files)
+
+.PHONY: clean
+
+clean:
+	rm -f *.elc

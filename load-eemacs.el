@@ -13,16 +13,27 @@
 (load "qinit")
 
 ;; -----------------------------------------------------------------------------
-;;; Personal key-map
-(load "init-my-map")
+;;; Package initialisation
+(load "init-package")
 
 ;; -----------------------------------------------------------------------------
 ;;; Common initialisation settings
+(load "init-frames")
+(load "init-display")
+(load "init-movement")
 (load "init-common")
+(load "init-rectangles")
+(load "init-speedbar")
+(load "init-editing")
 
 ;; -----------------------------------------------------------------------------
-;;; Personal key-bindings etc.
-(load "init-personalisation")
+;;; Load personal information
+
+(load "personal/init-personalisation")
+
+;; -----------------------------------------------------------------------------
+;;; Personal key-map
+(load "init-my-map")
 
 ;; -----------------------------------------------------------------------------
 ;;; Mouse configuration
@@ -30,11 +41,15 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; Window navigation
-(load "init-window-nav")
+(load "init-windows")
 
 ;; -----------------------------------------------------------------------------
 ;;; Controls for backup files
 (load "init-backups")
+
+;; -----------------------------------------------------------------------------
+;;; tramp --- Remote file editing
+(load "init-tramp")
 
 ;; -----------------------------------------------------------------------------
 ;;; Isearch configuration and extensions
@@ -113,7 +128,7 @@
 (load "init-eshell")
 
 ;; -----------------------------------------------------------------------------
-;;; GIT-Emacs: Emacs front-end for GIT repositories
+;;; Magit: Emacs front-end for GIT repositories
 (load "init-magit")
 
 ;; -----------------------------------------------------------------------------
@@ -174,6 +189,10 @@
 ;;(load "init-yasnippet")
 
 ;; -----------------------------------------------------------------------------
+;;; Do Re Mi: Incremental change using arrow keys or mouse wheel
+(load "init-doremi")
+
+;; -----------------------------------------------------------------------------
 ;;; Enhanced in-buffer completion packages
 (load "init-company")
 
@@ -186,16 +205,16 @@
 ;;(load "init-ido")
 
 ;; -----------------------------------------------------------------------------
-;;; Do Re Mi: Incremental change using arrow keys or mouse wheel
-(load "init-doremi")
-
-;; -----------------------------------------------------------------------------
 ;;; icicles: Enhanced minibuffer completion packages
 (load "init-icicles")
 
 ;; -----------------------------------------------------------------------------
 ;;; E2WM
 (load "init-e2wm")
+
+;; -----------------------------------------------------------------------------
+;;; Client-server operation
+(load "init-server")
 
 ;; -----------------------------------------------------------------------------
 ;;; Enable all save all histories function
