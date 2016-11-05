@@ -39,15 +39,10 @@
 (defun wmake (&rest args)
   "`wmake' script wrapper callable from `eshell' and directly."
   (interactive)
-  ;; Search up the directory tree for the directory containing Make/files
-  ;; and compile there
-  (let ((dir (locate-dominating-file default-directory "Make/files")))
-    (if dir
-        (progn
-          (save-some-buffers (not compilation-ask-about-save) nil)
-          (compilation-start
-           (concat "cd " dir " && wmake " (eshell-flatten-and-stringify args))))
-      (message "Cannot find Make/files in this or any parent directory"))))
+  (progn
+    (save-some-buffers (not compilation-ask-about-save) nil)
+    (compilation-start
+     (concat "wmake " (eshell-flatten-and-stringify args)))))
 
 (defun Allwmake ()
   "`Allwmake' script wrapper callable from `eshell' and directly."
@@ -58,7 +53,9 @@
     (if dir
         (progn
           (save-some-buffers (not compilation-ask-about-save) nil)
-          (compilation-start (concat "cd " dir " && ./Allwmake")))
+          (compilation-start
+           (concat "cd " dir " && ./Allwmake "
+                   (eshell-flatten-and-stringify args))))
       (message "Cannot find Allwmake in this or any parent directory"))))
 
 (defun wclean (&rest args)
@@ -525,6 +522,10 @@
   )
 
 (add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
+
+;; -----------------------------------------------------------------------------
+;;; Enable font-lock for makefiles
+(add-hook 'makefile-mode-hook 'font-lock-mode)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-OpenFOAM.el ends here
