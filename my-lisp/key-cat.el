@@ -89,12 +89,17 @@
       split-window-vertically
       split-window-horizontally
       delete-other-windows
+      my-single-frame
+      my-double-frame
       other-window
       switch-to-buffer
       ibuffer
+      revert-buffer
       ))
     ("Search and replace"
      (commands
+      goto-last-change
+      goto-last-change-reverse
       isearch-forward
       isearch-backward
       query-replace
@@ -105,13 +110,14 @@
       moccur
       lgrep
       rgrep
-      wgrep
+      wgrep-change-to-wgrep-mode
       ))
     ("Lines"
      (commands
       move-beginning-of-line
       move-end-of-line
       kill-line
+      linum-mode
       ))
     ("Words"
      (commands
@@ -144,6 +150,13 @@
     ("Miscellaneous"
      (commands
       image-dired
+      multi-eshell
+      multi-eshell-switch
+      goto-home
+      font-lock-mode
+      support
+      emms-browser
+      emms-streams
       ))
     )
   "List with common commands to display by `key-cat-help'.
