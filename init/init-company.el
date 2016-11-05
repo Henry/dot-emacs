@@ -5,8 +5,6 @@
 (use-package company
   :diminish company-mode
   :commands company-mode
-  :bind (("<M-tab>" . company-complete)
-         :map flyspell-mode-map ("C-." . company-ispell))
   :init
   ;;(require 'company-nxml)
   ;;(require 'company-css)
@@ -25,6 +23,7 @@
   (require 'company-dabbrev)
   (require 'company-bbdb)
   (require 'company-elisp)
+  (require 'company-flyspell)
 
   (setq
    company-backends
@@ -53,7 +52,10 @@
   (add-hook 'wl-draft-mode-hook '(lambda () (company-mode)))
 
   ;; Enable company-mode in all major model
-  (global-company-mode t))
+  (global-company-mode t)
+
+  :bind (("<M-tab>" . company-complete)
+         :map flyspell-mode-map ("C-." . company-flyspell)))
 
 (defun company-bbdb-word (command &optional arg &rest ignore)
   "`company-mode' completion backend for BBDB.
