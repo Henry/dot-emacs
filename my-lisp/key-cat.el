@@ -129,7 +129,9 @@
      (commands
       set-mark-command
       kill-region
-      copy-region-as-kill
+      mark-thing
+      cycle-thing-region
+      kill-ring-save-thingatpt
       yank
       yank-pop
       ))
