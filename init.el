@@ -206,7 +206,11 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; icicles: Enhanced minibuffer completion packages
-(load "init-icicles")
+;;(load "init-icicles")
+
+;; -----------------------------------------------------------------------------
+;;; Ivy: Enhanced minibuffer completion packages
+(load "init-ivy")
 
 ;; -----------------------------------------------------------------------------
 ;;; E2WM
