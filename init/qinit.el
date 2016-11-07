@@ -45,6 +45,9 @@
 ;;;  Set only the safe file-local variables and do not query.
 ;;(setq enable-local-variables :safe)
 
+;;; Set directory where temporary files are stored
+(setq user-emacs-directory "~/Emacs/")
+
 ;; -----------------------------------------------------------------------------
 ;;; Autosave
 
