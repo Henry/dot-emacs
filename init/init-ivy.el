@@ -1,5 +1,14 @@
+;;; init-ivy.el --- Initialize enhanced minibuffer completion package
+;; -----------------------------------------------------------------------------
+
+(use-package avy
+  :init
+  ;; Set the avy-keys to the Dvorak home-row
+  (setq avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n)))
+
 (use-package ivy
   :diminish ivy-mode
+  :ensure avy
   :init
   (setq ivy-height 10       ;; number of result lines to display
         ivy-wrap t          ;; Wrap at first and last entry
@@ -40,3 +49,6 @@
          ;;("C-x l" . counsel-locate)
          :map read-expression-map
          ("C-r" . counsel-expression-history)))
+
+;; -----------------------------------------------------------------------------
+;;; init-ivy.el ends here
