@@ -1,10 +1,10 @@
 ;;; init-company.el --- Initialize enhanced in-buffer completion package
 ;; -----------------------------------------------------------------------------
-;;; Load package
 
 (use-package company
   :diminish company-mode
   :commands company-mode
+  :ensure company-quickhelp
   :init
   ;;(require 'company-nxml)
   ;;(require 'company-css)
@@ -57,7 +57,11 @@
   :bind (("<M-tab>" . company-complete)
          :map flyspell-mode-map
          ("C-." . company-flyspell)
-         ("C->" . company-ispell)))
+         ("C->" . company-ispell)
+         :map company-active-map
+         ("M-h" . company-quickhelp-manual-begin))
+  :config
+  (company-quickhelp-mode))
 
 (defun company-bbdb-word (command &optional arg &rest ignore)
   "`company-mode' completion backend for BBDB.
