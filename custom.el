@@ -27,6 +27,7 @@
            (name 16 -1)
            " " filename))))
  '(icicle-command-abbrev-alist (quote ((zone-mode z 3) (find-file ff 1))))
+ '(image-dired-dir (expand-file-name "~/Emacs/Thumbnails"))
  '(initial-major-mode (quote emacs-lisp-mode))
  '(mairix-saved-searches (quote (("test1" "c:simon f:moni" nil nil))))
  '(org-emphasis-alist
@@ -65,8 +66,7 @@
    (quote
     (face tabs space-before-tab space-after-tab trailing empty lines-tail)))
  '(whole-line-or-region-mode t)
- '(word-wrap t)
- '(image-dired-dir (expand-file-name "~/Emacs/Thumbnails")))
+ '(word-wrap t))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

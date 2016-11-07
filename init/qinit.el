@@ -43,7 +43,7 @@
 (setq auto-hscroll-mode nil)
 
 ;;;  Set only the safe file-local variables and do not query.
-(setq enable-local-variables :safe)
+;;(setq enable-local-variables :safe)
 
 ;; -----------------------------------------------------------------------------
 ;;; Autosave
