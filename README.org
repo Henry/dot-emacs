@@ -6,10 +6,6 @@
 
 This is the contents of my /.emacs.d/ directory.
 
-Many of the code snippets and ideas collated here were obtained originally from
-the [[http://www.emacswiki.org][EmacsWiki]] and I am indebted to all those who contribute to this excellent
-resource.
-
 * Emacs Version
   + For GNU Emacs 25.1.3
 
@@ -19,7 +15,10 @@ resource.
   I build and dump an image of =emacs= containing nearly all of the packages and
   configuration files as =eemacs=.  The script to perform this task is
   =bin/makeEemacs= based on various sources of information on the =emacs dump=
-  function, in particular [[http://www.emacswiki.org/cgi-bin/wiki/DumpingEmacs][dumping emacs]].
+  function, in particular [[http://www.emacswiki.org/cgi-bin/wiki/DumpingEmacs][dumping emacs]].  Note that =emacs= no longer supports
+  dumping new images and =temacs= must be used which is obtained by compiling
+  =emacs= from sources.  I hope that eventually the option to dump =emacs=
+  images directly from =emacs= will be reinstated.
 
 * My Packages (in /my-lisp/ directory)
   + e2wm-code2
@@ -30,14 +29,12 @@ resource.
   + key-cat
   + org-pua
   + thingatpt-ext
-  + thing-cmds
   + tooltip-help (taken over from Tamas Patrovics)
   + wn-org
 
 * Other Packages without permanent home (in /my-lisp/ directory)
-  + em-last
   + file-journal (This is already on GitHub)
-  + git-grep
+  + git-grep (Replaced by counsel-git-grep?)
 
 * Third-party Packages (in the /elpa/ and /lisp/ directories)
   A =Makefile= is provided in the /lisp/ directory to compile the minor
@@ -57,6 +54,7 @@ resource.
     + color-moccur
     + commenter
     + company
+    + company-quickhelp
     + concurrent
     + ctable
     + dash
@@ -99,6 +97,7 @@ resource.
     + igrep
     + info+
     + isearch+
+    + ivy
     + log
     + magit
     + magitpopup
@@ -114,6 +113,7 @@ resource.
     + phi-grep
     + pkginfo
     + popup
+    + projectile
     + rectmark
     + replace+
     + rustmode
@@ -138,6 +138,7 @@ resource.
     + cldoc
     + dired-tar
     + ediff-trees
+    + em-last
     + filladapt
     + find-recursive
     + fsdired
@@ -148,3 +149,16 @@ resource.
     + oprofile-mode
     + ppindent
     + rw-acronyms
+
+* Packages to try
+*** Pretty modeline
+    https://melpa.org/#/powerline
+    https://melpa.org/#/smart-mode-line
+*** Region and rectangle editing
+    https://melpa.org/#/iedit
+*** Jump to link like conkeror
+    https://melpa.org/#/ace-link
+*** Key-maps with prompts
+    https://melpa.org/#/hydra
+*** Lookup word definition
+    https://melpa.org/#/define-word
