@@ -1,9 +1,8 @@
 ;;; init-tags.el --- Initialise all things tags related
 ;; -----------------------------------------------------------------------------
-
-;; -----------------------------------------------------------------------------
-;;; Etags
+;;; Etags-select (use local version)
 (use-package etags-select
+  :load-path "my-lisp"
   :init
   (add-hook 'etags-select-mode-hook
             '(lambda ()
@@ -12,24 +11,25 @@
   :bind (("\M-?" . etags-select-find-tag-at-point)
          ("\M-." . etags-select-find-tag)))
 
+;; -----------------------------------------------------------------------------
+;;; Etags-table
 (use-package etags-table
+  :ensure t
   :init
   (setq tags-add-tables nil
         etags-table-alist
         `((".*\\.el$"
            ,(expand-file-name "~/Emacs/TAGS")
            ,(expand-file-name "~/Emacs/systemTAGS"))
+
           (,(concat OPENFOAM_DIR "/.*\\.[CH]$")
            ,(concat OPENFOAM_TAGS_DIR "/etags"))
           )))
 
 ;; -----------------------------------------------------------------------------
-;;; Exuberant-ctags
-(require 'ectags-select)
-
-;; -----------------------------------------------------------------------------
 ;;; Gtags
 (use-package ggtags
+  :ensure t
   :diminish ggtags-mode
   :disabled t
   :init
