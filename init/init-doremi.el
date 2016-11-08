@@ -2,9 +2,12 @@
 ;;;  Incremental change using arrow keys or mouse wheel
 ;; -----------------------------------------------------------------------------
 (use-package doremi
+  :ensure t
   :config
-  (use-package doremi-frm)  ;; Incrementally adjust frame properties
-  (use-package doremi-cmd)  ;; Other Do Re Mi commands
+  (use-package doremi-frm
+    :ensure t)  ;; Incrementally adjust frame properties
+  (use-package doremi-cmd
+    :ensure t)  ;; Other Do Re Mi commands
 
   (defvar my-doremi-map (make-sparse-keymap "Do Re Mi"))
   (define-key my-map "d" my-doremi-map)

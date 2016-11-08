@@ -20,6 +20,7 @@
 ;;  to move the cursor to the beginning/end of the line on first press and
 ;;  buffer on second press
 (use-package sequential-command
+  :ensure t
   :config
   (require 'sequential-command-config)
   :bind (("<home>" . seq-home)

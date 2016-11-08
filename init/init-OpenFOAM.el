@@ -24,15 +24,12 @@
          ("\\.cfg$" . c++-mode)
          ("\\.c$"    . c-mode)
          ("\\.h$"    . c-mode)
-         ("ebrowse\\'" . ebrowse-tree-mode)
          )
        auto-mode-alist))
 
 ;; Better commenting/un-commenting
 (define-key c-mode-map "\C-c\C-c" 'comment-dwim-line)
 (define-key c++-mode-map "\C-c\C-c" 'comment-dwim-line)
-
-(require 'git-grep)
 
 (setq openfoam-source-path '("." ))
 
@@ -74,38 +71,11 @@
 
 (defvar OPENFOAM_DIR (getenv "WM_PROJECT_DIR"))
 (defvar OPENFOAM_TAGS_DIR (concat OPENFOAM_DIR "/.tags"))
-(defvar OpenFOAM-semantic-active-flag nil)
 
 (defun OpenFOAM-make-tags ()
-  "Create/update the tags files for etags and ebrowse."
+  "Create/update the tags files for etags."
   (interactive)
   (call-process "foamTags"))
-
-(defun OpenFOAM-ebrowse ()
-  "Run ebrowse on the table created by `OpenFOAM-make-tags'."
-  (interactive)
-  (find-file (concat OPENFOAM_TAGS_DIR "/ebrowse")))
-
-(defun OpenFOAM-dec ()
-  "Use `etags' to find the declaration of the tag at point."
-  (interactive)
-  (setq large-file-warning-threshold nil)
-  (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etags"))
-  (etags-select-find-tag))
-
-(defun OpenFOAM-def ()
-  "Use `etags' to find a definition of the tag at point."
-  (interactive)
-  (setq large-file-warning-threshold nil)
-  (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etagsDef"))
-  (etags-select-find-tag))
-
-(defun OpenFOAM-tag ()
-  "Use `etags' to find the definition or declaration of the tag at point."
-  (interactive)
-  (setq large-file-warning-threshold nil)
-  (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etags"))
-  (etags-select-find-tag))
 
 (defun OpenFOAM-tags ()
   "Load the etags table."
@@ -114,73 +84,11 @@
   ;; Set the etags table to use
   (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etags")))
 
-(defun OpenFOAM-dec-sig ()
-  "Use `ectags' to find the declaration of the tag at point."
+(defun OpenFOAM-tag ()
+  "Use `etags' to find the definition or declaration of the tag at point."
   (interactive)
-  (unless *ectags-obarray*
-    (setq large-file-warning-threshold nil)
-    (ectags-visit-tags-table (concat OPENFOAM_TAGS_DIR "/ectagsDec")))
-  (ectags-select-find-tag))
-
-(defun OpenFOAM-activate-semantic ()
-  "Activate semantic for the current session"
-  (interactive)
-  (cond
-   ((null OpenFOAM-semantic-active-flag)
-
-    ;; Add support for exuberant ctags in the c++ mode ...
-    (semantic-load-enable-all-exuberent-ctags-support)
-
-    ;;(global-srecode-minor-mode 1)
-    ;;(global-semantic-mru-bookmark-mode 1)
-    ;;(which-func-mode 1)
-    ;; This enables the auto-completion part of guady-code-helpers
-    ;;(global-semantic-idle-completions-mode 1)
-    ;;(semantic-load-enable-code-helpers)
-    (semantic-load-enable-excessive-code-helpers)
-    ;;(semantic-load-enable-guady-code-helpers)
-
-    ;;(OpenFOAM-semantic-create-ebrowse)
-    ;;(semanticdb-load-ebrowse-caches)
-
-    ;;(c++-mode) ;; Re-run the mode hooks to setup semantic
-    )))
-
-(defun OpenFOAM-deactivate-semantic ()
-  "Deactivate semantic for the current session"
- (interactive)
-  (cond
-   ((equal OpenFOAM-semantic-active-flag t)
-    (global-semantic-idle-scheduler-mode -1)
-    (global-semanticdb-minor-mode -1)
-    (global-semantic-idle-summary-mode -1)
-    (global-senator-minor-mode -1)
-    (global-semantic-decoration-mode -1)
-    (global-semantic-stickyfunc-mode -1)
-    (global-semantic-idle-completions-mode -1)
-    (which-func-mode -1)
-    (global-srecode-minor-mode -1)
-    (global-semantic-mru-bookmark-mode -1)
-    ;;(global-ede-mode nil)
-    )))
-
-(defun OpenFOAM-semantic-create-ebrowse ()
-  "Create and create the `semantic' database for `ebrowse'."
-  (interactive)
-  (setq semanticdb-ebrowse-file-match "\\.H")
-  (dolist (path openfoam-source-path)
-    (semanticdb-create-ebrowse-database (car path))))
-
-(defun OpenFOAM-semantic ()
-  "Toggle the active status of semantic"
-  (interactive)
-  (cond
-   ((null OpenFOAM-semantic-active-flag)
-    (OpenFOAM-activate-semantic)
-    (setq OpenFOAM-semantic-active-flag t))
-   (t
-    (OpenFOAM-deactivate-semantic)
-    (setq OpenFOAM-semantic-active-flag nil))))
+  (OpenFOAM-tags)
+  (etags-select-find-tag))
 
 (defun foam-create-C-file (className)
   (interactive "sclass name: ") ;   which is read with the Minibuffer.
@@ -338,10 +246,6 @@
 
   (define-key c++-mode-map [backtab] 'insert-spaces)
 
-  ;(setq special-display-buffer-names
-  ;  (append special-display-buffer-names (list "*compilation*"))
-  ;)
-
   (font-lock-mode 1)
 
   (prettify-symbols-mode)
@@ -383,18 +287,9 @@
   (easy-menu-define
     OpenFOAM-menu c++-mode-map "OpenFOAM"
     '("OpenFOAM"
-      ["Senator" OpenFOAM-semantic
-       :style toggle :selected OpenFOAM-semantic-active-flag]
       ["Make Tags" OpenFOAM-make-tags]
-      ["Tags" OpenFOAM-tags]
-      ["Ebrowse" OpenFOAM-ebrowse]
-      "---"
-      ("Find Tag..."
-       ["Declaration" OpenFOAM-dec]
-       ["Dec Sig" OpenFOAM-dec-sig]
-       ["Definition" OpenFOAM-def]
-       ["Tag" OpenFOAM-tag]
-       )
+      ["Load Tags" OpenFOAM-tags]
+      ["Find Tag" OpenFOAM-tag]
       "---"
       ["wmake" wmake]
       ["Allwmake" Allwmake]
@@ -476,6 +371,8 @@
 
 (defun my-c-mode-hook ()
 
+  (font-lock-mode 1)
+
   ;; Set the regexp used by outline-mode to find the headings
   (set (make-local-variable 'outline-regexp) "///[ ]+\\|(......")
 
@@ -496,8 +393,7 @@
 ;;;  compilation-mode
 
 (defun my-compilation-mode-hook ()
-  (font-lock-mode 1)
-  )
+  (font-lock-mode 1))
 
 (add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
 

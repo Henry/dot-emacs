@@ -2,6 +2,7 @@
 ;;;  openwith: Open files using specified application
 ;; -----------------------------------------------------------------------------
 (use-package openwith
+  :ensure t
   :init
   (setq
    openwith-associations

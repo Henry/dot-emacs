@@ -1,6 +1,7 @@
 ;;; init-gnuplot.el --- Initialize gnuplot-mode
 ;; -----------------------------------------------------------------------------
 (use-package gnuplot
+  :ensure t
   :mode ("\\.gp\\'" . gnuplot-mode)
   :config
   (defun my-gnuplot-mode-hook ()

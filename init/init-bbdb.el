@@ -1,6 +1,7 @@
 ;;; init-bbdb.el --- Initialize the Insideous Big Brother Database
 ;; -----------------------------------------------------------------------------
 (use-package bbdb
+  :ensure t
   :init
   (setq bbdb-file-coding-system 'utf-8
         bbdb-file "~/Emacs/bbdb"

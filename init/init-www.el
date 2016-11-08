@@ -10,7 +10,8 @@
       '(("^ftp:/.*" . wget)
         ("."    . browse-url-generic)))
 
-(use-package eww-lnum)
+(use-package eww-lnum
+  :ensure t)
 
 ;;;  Dummy mailcap functions to stop URL and other packages complaining
 (defun mailcap-parse-mailcaps (&optional path force))
@@ -19,6 +20,7 @@
 ;; -----------------------------------------------------------------------------
 ;;;  Web searches
 (use-package search-web
+  :ensure t
   :init
   (setq search-web-default-browser 'browse-url-generic
         search-web-in-emacs-browser 'eww-browse-url
@@ -29,7 +31,8 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; babel --- interface to web translation services
-(use-package babel)
+(use-package babel
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-www.el ends here

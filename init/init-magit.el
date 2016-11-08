@@ -1,6 +1,7 @@
 ;;; init-magit.el --- Initialize magit interface to git
 ;; -----------------------------------------------------------------------------
 (use-package magit
+  :ensure t
   :defer t
   :init (setq with-editor-emacsclient-executable "/usr/local/bin/emacsclient")
   :ensure with-editor

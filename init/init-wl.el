@@ -56,6 +56,7 @@
 
 ;; -----------------------------------------------------------------------------
 (use-package wanderlust
+  :ensure t
   :ensure apel
   :ensure flim
   :ensure semi
@@ -464,6 +465,7 @@ Set the `j' key to run `mime-preview-quit'."
 ;;; Configure supercite to manage citations
 
 (use-package supercite
+  :ensure t
   :init
   (setq sc-nested-citation-p t
         sc-citation-leader ""
@@ -721,6 +723,7 @@ so that the appropriate emacs mode is selected according to the file extension."
 ;;; General mairix interface
 
 (use-package mairix
+  :ensure t
   :init
   (setq mairix-file-path "~/Maildir/"
         mairix-search-file "Search"

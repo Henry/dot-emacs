@@ -1,6 +1,7 @@
 ;;; init-eshell.el --- Initialize eshell
 ;; -----------------------------------------------------------------------------
 (use-package eshell
+  :ensure t
   :commands (eshell eshell-command)
   :preface
   (defvar eshell-isearch-map
@@ -41,7 +42,8 @@
 
   (require 'pcomplete)
 
-  (use-package esh-help)
+  (use-package esh-help
+    :ensure t)
 
   :init
   (setq eshell-directory-name (expand-file-name "~/Emacs/Eshell/")
@@ -152,6 +154,7 @@
   )
 
 (use-package multi-eshell
+  :ensure t
   :init
   (setq multi-eshell-shell-function '(eshell)
         multi-eshell-name "*eshell*"))

@@ -53,7 +53,8 @@
 ;;(require 'org-fstree)
 (require 'find-lisp)
 
-(use-package htmlize)
+(use-package htmlize
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Basic configuration
@@ -190,13 +191,11 @@ i.e. the headings under the single top-level heading."
 
 ;; -----------------------------------------------------------------------------
 ;;; File annotation
-(require 'org-pua)
-
-(setq ;;org-pua-annotations-file (concat org-directory "/annotations.org")
-      org-pua-annotations-dir "~/Emacs/Annotations/")
-
-(global-set-key [(control c) f1] 'org-pua-annotate)
-(global-set-key [(control c) (control f1)] 'org-pua-toggle-buttons)
+(use-package org-pua
+  :init
+  (setq org-pua-annotations-dir "~/Emacs/Annotations/")
+  :bind (([(control c) f1] . org-pua-annotate)
+         ([(control c) (control f1)] . org-pua-toggle-buttons)))
 
 ;; -----------------------------------------------------------------------------
 ;;; Toggle inline images using C-i

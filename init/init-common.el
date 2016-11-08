@@ -3,11 +3,13 @@
 ;;; Goto Last Change
 ;; Goto the point of the most recent edit in the buffer.
 ;; For key-bindings see my-map
-(use-package goto-chg)
+(use-package goto-chg
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; replace+ --- Replace enhancements
-(use-package replace+)
+(use-package replace+
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; find-recursive --- Find-files recursively
@@ -24,6 +26,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; grep
 (use-package grep
+  :ensure t
   ;; Rebind the up and down keys so they don't automatically select the file
   ;; the string is on to make it easier to edit the grep buffer.
   :bind (:map grep-mode-map
@@ -34,11 +37,13 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; wgrep --- Edit grep buffer and apply the changes to files
-(use-package wgrep)
+(use-package wgrep
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; phi-grep --- an Elisp implementation of grep
-(use-package phi-grep)
+(use-package phi-grep
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; color-moccur --- An improved interface to occur and moccur
@@ -46,6 +51,7 @@
 ;;;  in all buffers that refer to files.
 
 (use-package color-moccur
+  :ensure t
   :commands (moccur moccur-grep moccur-grep-find)
   :init
   (require 'moccur-edit)
@@ -56,18 +62,22 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; iedit --- Edit multiple regions with the same content simultaneously
-(use-package iedit)
+(use-package iedit
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; info+ --- Better info display
 (use-package info
+  :ensure t
   :commands (info Info-mode)
   :config
-  (use-package info+))
+  (use-package info+
+  :ensure t))
 
 ;; -----------------------------------------------------------------------------
 ;;; finder+ --- Better function finder
 (use-package finder+
+  :ensure t
   :config (global-set-key (kbd "\C-hK") 'find-function-on-key))
 
 ;; -----------------------------------------------------------------------------

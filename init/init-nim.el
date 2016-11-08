@@ -13,6 +13,7 @@
              (expand-file-name "~/.emacs.d/packages/emacs-ctable"))
 
 (use-package nim-mode
+  :ensure t
   :ensure epc
   :ensure deferred
   :ensure ctable

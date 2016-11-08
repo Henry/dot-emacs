@@ -40,6 +40,7 @@
 ;;; Display key-bindings in key-map in minibuffer
 
 (use-package which-key
+  :ensure t
   :config
   (which-key-setup-minibuffer)
   (which-key-mode))

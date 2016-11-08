@@ -1,6 +1,7 @@
 ;;; init-wget.el --- Initialize wget interface
 ;; -----------------------------------------------------------------------------
 (use-package wget
+  :ensure t
   :init
   (setq wget-download-directory-filter 'wget-download-dir-filter-regexp
         wget-download-directory

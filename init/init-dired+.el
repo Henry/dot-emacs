@@ -2,8 +2,6 @@
 ;; -----------------------------------------------------------------------------
 
 (use-package dired
-  :ensure nil ;; Work-around bug in use-package loading dired
-
   :preface
   ;; Set the face for executable files
   (defface diredp-executable-file-name
@@ -16,6 +14,7 @@
   (require 'dired-x)
 
   (use-package dired+
+    :ensure t
     :config
     (progn
         ;; Privilege indicator faces
@@ -139,7 +138,8 @@
 ;; -----------------------------------------------------------------------------
 ;;;  Image-dired
 
-(use-package image-dired)
+(use-package image-dired
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-dired+.el ends here

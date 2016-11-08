@@ -8,7 +8,8 @@
 (define-key ctl-x-map "r\C-w" 'rm-kill-region)
 (define-key ctl-x-map "r\M-w" 'rm-kill-ring-save)
 (define-key global-map [S-down-mouse-1] 'rm-mouse-drag-region)
-(use-package rect-mark)
+(use-package rect-mark
+  :ensure t)
 (autoload 'rm-set-mark "rect-mark"
   "Set mark for rectangle." t)
 (autoload 'rm-exchange-point-and-mark "rect-mark"

@@ -3,6 +3,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; `thing'-based structured editing
 (use-package thing-cmds
+  :ensure t
   :ensure thingatpt+
   :ensure hide-comnt
   :init
@@ -26,7 +27,7 @@ This command is to be used interactively."
          ("M-w" . kill-ring-save-thingatpt)  ; relaces kill-ring-save
          ))
 
-(require 'thingatpt-ext)
+(use-package thingatpt-ext)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-thingatpt.el ends here

@@ -10,6 +10,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; bm: Visible bookmarks
 (use-package bm
+  :ensure t
   :init
   (setq
    ;; Make sure the repository is loaded as early as possible

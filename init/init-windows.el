@@ -60,6 +60,7 @@ rather than vertically.")
 ;;; Number the windows and bind \M-t[1-9] to switch between them
 
 (use-package window-number
+  :ensure t
   :init
   (setq window-number-inactive-background "dark slate blue")
   :config

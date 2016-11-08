@@ -1,6 +1,7 @@
 ;;; init-icicles.el --- Minibuffer input completion
 ;; -----------------------------------------------------------------------------
 (use-package icicles
+  :ensure t
   :diminish icicle-mode
   :init
   (setq icicle-functions-to-redefine
@@ -118,6 +119,7 @@ not under the point."
 ;;; Minibuffer incremental completion preview, sorted and coloured
 
 (use-package icomplete+
+  :ensure t
   :config
   (progn
     (setq icomplete-prospects-height 2)

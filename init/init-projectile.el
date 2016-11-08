@@ -2,6 +2,7 @@
 ;; -----------------------------------------------------------------------------
 
 (use-package projectile
+  :ensure t
   :ensure counsel-projectile
   :init
   (setq projectile-completion-system 'ivy)

@@ -1,6 +1,7 @@
 ;;; init-speedbar.el --- Speedbar configuration
 ;; -----------------------------------------------------------------------------
 (use-package sr-speedbar
+  :ensure t
   :defer t
   :commands (sr-speedbar-open)
   :init

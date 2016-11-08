@@ -1,6 +1,7 @@
 ;;; init-yasnippets.el ---  Yet another snippets extension
 ;; -----------------------------------------------------------------------------
 (use-package yasnippet
+  :ensure t
   :config
   (progn
     (yas/initialize)

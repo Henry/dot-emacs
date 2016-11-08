@@ -79,18 +79,21 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; browse-kill-ring+ --- Browse kill-ring using M-y
-(use-package browse-kill-ring+)
+(use-package browse-kill-ring+
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; Whole-line-or-region
 ;; Operate on the current line if they would normally operate on a region
 ;; and region is currently undefined (doesn't work with Emacs-23)
 (use-package whole-line-or-region
+  :ensure t
   :diminish whole-line-or-region-mode)
 
 ;; -----------------------------------------------------------------------------
 ;;; undo-tree --- maintain and operate on undo/redo as a tree
 (use-package undo-tree
+  :ensure t
   :diminish undo-tree-mode
   :init
   (setq undo-tree-visualizer-timestamps t

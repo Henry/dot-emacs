@@ -139,6 +139,7 @@ See also the documentation for `my-diary-mark-included-files'."
 ;; -----------------------------------------------------------------------------
 ;;; calfw settings
 (use-package calfw
+  :ensure t
   :config
   (require 'calfw-cal)
   (require 'calfw-ical)

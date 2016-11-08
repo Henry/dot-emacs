@@ -5,7 +5,8 @@
 (add-to-list 'Info-directory-list
              (expand-file-name "~/.emacs.d/doc/latexrefman") t)
 
-(use-package cdlatex)
+(use-package cdlatex
+  :ensure t)
 
 (use-package tex
   :ensure auctex
@@ -210,6 +211,7 @@
 ;;;  General settings
 
 (use-package bibtex
+  :ensure t
   :mode ("\\.bib" . bibtex-mode)
   :init
   (progn
@@ -237,7 +239,8 @@
 
 ;; -----------------------------------------------------------------------------
 ;;;  Ebib
-(use-package ebib)
+(use-package ebib
+  :ensure t)
 
 ;;----------------------------------------------------------------------------
 ;;; init-latex.el ends here

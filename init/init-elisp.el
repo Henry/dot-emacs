@@ -2,12 +2,16 @@
 
 ;; -----------------------------------------------------------------------------
 (require 'newcomment) ; Include the uncomment-region function
-(use-package header2)
+(use-package header2
+  :ensure t)
 (use-package highlight-parentheses
+  :ensure t
   :diminish highlight-parentheses-mode)
 (use-package hl-sexp
+  :ensure t
   :diminish hl-sexp-mode)
 (use-package paredit
+  :ensure t
   :diminish paredit-mode)
 
 ;; -----------------------------------------------------------------------------
@@ -54,8 +58,9 @@
 ;; -----------------------------------------------------------------------------
 ;;; Tooltip-help
 
-(require 'tooltip-help)
-(setq tooltip-help-max-lines 40)
+(use-package tooltip-help
+  :init
+  (setq tooltip-help-max-lines 40))
 
 (defun describe-variable-or-function ()
   "Display the full documentation of VARIABLE (a symbol) if it is a variable

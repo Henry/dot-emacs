@@ -3,6 +3,7 @@
 
 ;;;  Support for getting the cwd from the prompt
 (use-package dirtrack
+  :ensure t
   :init
   ;; Filter to get the cwd from the prompt
   (setq-default dirtrack-list '("^|\\([^|]*\\)|" 1 nil))
@@ -39,6 +40,7 @@
         (set-process-window-size process (window-height) (window-width))))))
 
 (use-package shell
+  :ensure t
   :init
   (defun my-shell-mode-hook ()
 
@@ -87,8 +89,10 @@
 ;;(global-set-key [f4] 'shell-dwim)
 
 (use-package readline-complete
+  :ensure t
   :init
-  (use-package company)
+  (use-package company
+    :ensure t)
   (setq explicit-shell-file-name "bash"
         explicit-bash-args '("-c" "export EMACS=; stty echo; bash")
         comint-process-echoes t)
@@ -127,6 +131,7 @@ buffer and jump to any errors cited in the output using
 ;;; sh-mode: for editing sh/bash scripts
 
 (use-package sh-script
+  :ensure t
   :init
   (defun my-sh-mode-hook ()
     (font-lock-mode 1))

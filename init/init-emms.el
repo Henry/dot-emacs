@@ -1,6 +1,7 @@
 ;;; init-emms.el --- Initialize Emacs Multimedia System
 ;; -----------------------------------------------------------------------------
 (use-package emms
+  :ensure t
   :init
   (progn
     (setq emms-directory "~/Emacs/Emms"

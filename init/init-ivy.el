@@ -2,11 +2,13 @@
 ;; -----------------------------------------------------------------------------
 
 (use-package avy
+  :ensure t
   :init
   ;; Set the avy-keys to the Dvorak home-row
   (setq avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n)))
 
 (use-package ivy
+  :ensure t
   :diminish ivy-mode
   :ensure avy
   :init
@@ -30,6 +32,7 @@
   (ivy-mode 1))
 
 (use-package counsel
+  :ensure t
   :ensure swiper
   :ensure smex
   :init (setq counsel-find-file-at-point t)
