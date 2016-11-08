@@ -27,7 +27,6 @@
            (name 16 -1)
            " " filename))))
  '(icicle-command-abbrev-alist (quote ((zone-mode z 3) (find-file ff 1))))
- '(image-dired-dir (expand-file-name "~/Emacs/Thumbnails"))
  '(initial-major-mode (quote emacs-lisp-mode))
  '(mairix-saved-searches (quote (("test1" "c:simon f:moni" nil nil))))
  '(org-emphasis-alist
@@ -59,6 +58,10 @@
  '(remember-in-new-frame t)
  '(remember-leader-text "*** ")
  '(remember-mailbox "~/Maildir/remember")
+ '(safe-local-variable-values
+   (quote
+    ((header-auto-update-enabled)
+     (projectile-project-compilation-cmd . "makeEemacs"))))
  '(semantic-idle-scheduler-idle-time 5)
  '(server-host "10.0.0.37")
  '(server-kill-new-buffers t)
@@ -74,6 +77,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "white" :foreground "black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 103 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
+ '(Man-overstrike ((t (:inherit bold :foreground "blue"))))
+ '(Man-reverse ((t (:inherit bold :foreground "orange"))))
+ '(Man-underline ((t (:inherit bold :foreground "red"))))
  '(bm-face ((((class color) (background light)) (:background "pale goldenrod"))))
  '(bm-fringe-face ((((class color) (background light)) (:background "pale goldenrod"))))
  '(bm-fringe-persistent-face ((((class color) (background light)) (:background "light goldenrod"))))
@@ -137,7 +143,11 @@
  '(wl-highlight-folder-path-face ((t (:foreground "red" :underline nil :weight bold))))
  '(wl-highlight-summary-displaying-face ((t (:foreground "red" :underline nil :weight bold))))
  '(wl-highlight-summary-normal-face ((((class color) (background light)) (:foreground "blue3"))))
- '(wl-highlight-summary-thread-top-face ((((class color) (background light)) (:foreground "black")))))
+ '(wl-highlight-summary-thread-top-face ((((class color) (background light)) (:foreground "black"))))
+ '(woman-addition ((t (:inherit font-lock-builtin-face :foreground "orange"))))
+ '(woman-bold ((t (:inherit bold :foreground "blue"))))
+ '(woman-italic ((t (:inherit bold :foreground "red"))))
+ '(woman-unknown ((t (:inherit font-lock-warning-face :foreground "cyan")))))
 
 ;; -----------------------------------------------------------------------------
 ;;; custom.el ends here

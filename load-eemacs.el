@@ -25,6 +25,7 @@
 (load "init-rectangles")
 (load "init-speedbar")
 (load "init-editing")
+(load "init-man")
 
 ;; -----------------------------------------------------------------------------
 ;;; Load personal information
@@ -46,6 +47,10 @@
 ;; -----------------------------------------------------------------------------
 ;;; Controls for backup files
 (load "init-backups")
+
+;; -----------------------------------------------------------------------------
+;;; dired+ --- Directory display and manipulation
+(load "init-dired+")
 
 ;; -----------------------------------------------------------------------------
 ;;; tramp --- Remote file editing

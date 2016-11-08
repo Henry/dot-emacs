@@ -65,7 +65,7 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/dired-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/nil ;; Work-around bug in use-package loading dired-[0-9.]*"))))
   (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/dired+-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/image-dired-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/image-dired)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/outline-magic)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/doremi-[0-9.]*"))))
   (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/doremi-frm)  ;; Incrementally adjust frame properties-[0-9.]*"))))

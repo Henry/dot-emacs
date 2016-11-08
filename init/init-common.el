@@ -22,10 +22,6 @@
 (require 'jka-compr)
 
 ;; -----------------------------------------------------------------------------
-;;; dired+ --- Directory display and manipulation
-(load "init-dired+")
-
-;; -----------------------------------------------------------------------------
 ;;; grep
 (use-package grep
   ;; Rebind the up and down keys so they don't automatically select the file
@@ -73,53 +69,6 @@
 ;;; finder+ --- Better function finder
 (use-package finder+
   :config (global-set-key (kbd "\C-hK") 'find-function-on-key))
-
-;; -----------------------------------------------------------------------------
-;;; man --- Man-page reader
-
-(defface my-Man-overstrike-face '((t (:foreground "blue" :weight bold)))
-  "Face used for overstrike in man pages.")
-
-(defface my-Man-underline-face '((t (:foreground "red" :weight bold)))
-  "Face used for overstrike in man pages.")
-
-(defface my-Man-reverse-face '((t (:foreground "orange" :weight bold)))
-  "Face used for reverse in man pages.")
-
-(setq Man-notify            'bully   ; resize man page to take up whole screen
-      Man-overstrike-face   'my-Man-overstrike-face
-      Man-underline-face    'my-Man-underline-face
-      Man-reverse-face      'my-Man-reverse-face
-      Man-see-also-regexp   "SEE ALSO\\|RELATED INFORMATION")
-
-(setq Man-mode-hook (lambda () (local-set-key [f12] 'man-follow)))
-
-;; -----------------------------------------------------------------------------
-;;; iman --- man (and info) lookup with completion
-(autoload 'iman "iman"
-  "Call the viewers of man pages and GNU Info with completion."
-  t nil)
-
-(global-set-key "\C-cm" 'iman) ; `control c', then `m' calls `iman'
-
-;; -----------------------------------------------------------------------------
-;;; woman ---  Man-page reader without using man
-(setq woman-cache-filename (expand-file-name "woman.cache" "~/Emacs")
-      woman-bold-headings t
-      woman-imenu-title "Sections"
-      woman-imenu nil
-      woman-use-own-frame nil
-      woman-topic-at-point nil
-      woman-fill-frame t)
-
-(defun my-woman-pre-format-fn ()
-  "Function added to `woman-pre-format-hook'."
-  (copy-face 'my-Man-overstrike-face 'woman-bold-face)
-  (copy-face 'my-Man-underline-face 'woman-italic-face)
-  (face-spec-set 'woman-addition-face '((t (:foreground "orange"))))
-  (face-spec-set 'woman-unknown-face  '((t (:foreground "cyan")))))
-
-(add-hook 'woman-pre-format-hook 'my-woman-pre-format-fn)
 
 ;; -----------------------------------------------------------------------------
 ;;; doc-view --- Convert postscript files into images and display them
