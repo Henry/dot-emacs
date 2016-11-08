@@ -77,16 +77,9 @@
 (defvar OpenFOAM-semantic-active-flag nil)
 
 (defun OpenFOAM-make-tags ()
-  "Create/update the tags files for etags, gtags and ebrowse."
+  "Create/update the tags files for etags and ebrowse."
   (interactive)
   (call-process "foamTags"))
-
-(defun OpenFOAM-initialise-gtags ()
-  "Set the location of the gtags tables and initialise xgtags."
-  (setenv "GTAGSDBPATH" OPENFOAM_TAGS_DIR)
-  (setenv "GTAGSROOT" OPENFOAM_DIR)
-  (setq xgtags-rootdir OPENFOAM_DIR)
-  (xgtags-mode 1))
 
 (defun OpenFOAM-ebrowse ()
   "Run ebrowse on the table created by `OpenFOAM-make-tags'."
@@ -96,45 +89,36 @@
 (defun OpenFOAM-dec ()
   "Use `etags' to find the declaration of the tag at point."
   (interactive)
-  (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etagsDec"))
+  (setq large-file-warning-threshold nil)
+  (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etags"))
   (etags-select-find-tag))
 
 (defun OpenFOAM-def ()
   "Use `etags' to find a definition of the tag at point."
   (interactive)
+  (setq large-file-warning-threshold nil)
   (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etagsDef"))
   (etags-select-find-tag))
 
 (defun OpenFOAM-tag ()
   "Use `etags' to find the definition or declaration of the tag at point."
   (interactive)
+  (setq large-file-warning-threshold nil)
   (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etags"))
   (etags-select-find-tag))
 
-(defun OpenFOAM-use ()
-  "Use `gtags' to find all the usages of the tag at point."
-  (interactive)
-  (OpenFOAM-initialise-gtags)
-  (xgtags-find-rtag))
-
-(defun OpenFOAM-sym ()
-  "Use `gtags' to find all the usages of the symbol at point."
-  (interactive)
-  (OpenFOAM-initialise-gtags)
-  (xgtags-find-symbol))
-
 (defun OpenFOAM-tags ()
-  "Load the etags and gtags tables and setup the `xgtags' minor mode."
+  "Load the etags table."
   (interactive)
+  (setq large-file-warning-threshold nil)
   ;; Set the etags table to use
-  (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etags"))
-  (OpenFOAM-initialise-gtags)
-  (xgtags-make-complete-list))
+  (visit-tags-table (concat OPENFOAM_TAGS_DIR "/etags")))
 
 (defun OpenFOAM-dec-sig ()
   "Use `ectags' to find the declaration of the tag at point."
   (interactive)
-  (unless ectags-obarray
+  (unless *ectags-obarray*
+    (setq large-file-warning-threshold nil)
     (ectags-visit-tags-table (concat OPENFOAM_TAGS_DIR "/ectagsDec")))
   (ectags-select-find-tag))
 
@@ -143,15 +127,6 @@
   (interactive)
   (cond
    ((null OpenFOAM-semantic-active-flag)
-
-    ;; Set paths for global gtags
-    (setenv "GTAGSDBPATH" OPENFOAM_TAGS_DIR)
-    (setenv "GTAGSROOT" OPENFOAM_DIR)
-
-    ;; Add support for global gtags in the c++ mode ...
-    (semanticdb-enable-gnu-global-databases 'c++-mode)
-    ;; ... and for this buffer
-    (semanticdb-enable-gnu-global-in-buffer t)
 
     ;; Add support for exuberant ctags in the c++ mode ...
     (semantic-load-enable-all-exuberent-ctags-support)
@@ -407,8 +382,8 @@
 
   (easy-menu-define
     OpenFOAM-menu c++-mode-map "OpenFOAM"
-   '("OpenFOAM"
-     ["Senator" OpenFOAM-semantic
+    '("OpenFOAM"
+      ["Senator" OpenFOAM-semantic
        :style toggle :selected OpenFOAM-semantic-active-flag]
       ["Make Tags" OpenFOAM-make-tags]
       ["Tags" OpenFOAM-tags]
@@ -419,8 +394,6 @@
        ["Dec Sig" OpenFOAM-dec-sig]
        ["Definition" OpenFOAM-def]
        ["Tag" OpenFOAM-tag]
-       ["Use" OpenFOAM-use]
-       ["Symbol" OpenFOAM-sym]
        )
       "---"
       ["wmake" wmake]
@@ -428,21 +401,21 @@
       ["wclean" wclean t]
       "---"
       ("New source file"
-        ["{class name}.H" foam-create-H-file]
-        ["{class name}.C" foam-create-C-file]
-        ["{class name}I.H" foam-create-I-file]
-        ["{class name}IO.C" foam-create-IO-file]
-      )
+       ["{class name}.H" foam-create-H-file]
+       ["{class name}.C" foam-create-C-file]
+       ["{class name}I.H" foam-create-I-file]
+       ["{class name}IO.C" foam-create-IO-file]
+       )
       ("New templated source file"
-        ["{class name}.H" foam-create-template-H-file]
-        ["{class name}.C" foam-create-template-C-file]
-        ["{class name}I.H" foam-create-template-I-file]
-        ["{class name}IO.C" foam-create-template-IO-file]
-      )
+       ["{class name}.H" foam-create-template-H-file]
+       ["{class name}.C" foam-create-template-C-file]
+       ["{class name}I.H" foam-create-template-I-file]
+       ["{class name}IO.C" foam-create-template-IO-file]
+       )
       ["New application" foam-create-application-file]
       ["New Make/files, options" foam-create-wmake-files-options]
+      )
     )
-  )
   (easy-menu-add OpenFOAM-menu)
 
   ;; Set the OPENFOAM source paths
@@ -454,7 +427,7 @@
                      "finiteVolumelnInclude"))
 
   (c-set-style "openfoam")
-)
+  )
 
 (add-hook 'c-mode-common-hook 'OpenFOAM-mode-hook)
 (add-hook 'c++-mode-hook 'OpenFOAM-mode-hook)
