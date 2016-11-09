@@ -52,7 +52,7 @@
 ;;; Autosave
 
 ;;;  Set the location for all the auto-saved files
-(defvar user-temporary-file-directory (expand-file-name "~/.Emacs/Autosaves/"))
+(defvar user-temporary-file-directory (expand-file-name "~/Emacs/Autosaves/"))
 (make-directory user-temporary-file-directory t)
 (setq auto-save-list-file-prefix
       (concat user-temporary-file-directory ".auto-saves-"))

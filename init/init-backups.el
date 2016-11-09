@@ -1,18 +1,22 @@
 ;;; init-backups.el --- Initialize controls for backup files
 ;; -----------------------------------------------------------------------------
-;; Reworked version of the standard backup mechanism with now stores backup files
+;; Reworked version of the standard backup mechanism which stores backup files
 ;; with version numbers but without `~'s in a mirror of the original file's
 ;; directory hierarchy
 
-(setq backup-directory "~/.Emacs/Backups"
+(setq make-backup-files t
       backup-by-copying t
+      backup-directory "~/Emacs/Backups/"
+      ;;backup-directory-alist '(("." . "~/Emacs/Backups/"))
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
       version-control t)
 
 ;; -----------------------------------------------------------------------------
-;;; Local versions of the functions in files.el
+;;; Store backup files in directory tree in backup-directory
+;;  Could not get this to work using `make-backup-file-name-function' so edited
+;;  local versions of the functions in files.el:
 
 (defun make-backup-file-name (file)
   "Return the path of the backup file for the given FILE
@@ -77,10 +81,11 @@ This replaces the version in `files.el'."
 
 (defun file-newest-backup (filename)
   "Return most recent backup file for FILENAME or nil if no backups exist.
-This is adapted from `file-newest-backup' in `files.el' with the argument to
-`backup-file-name-p' being the full path of the file to allow this to be checked to
-see if it contains the `backup-directory' in which case it is a backup.
-This replaces the version in `files.el'."
+This is adapted from `file-newest-backup' in `files.el' with the
+argument to `backup-file-name-p' being the full path of the file
+to allow this to be checked to see if it contains the
+`backup-directory' in which case it is a backup.  This replaces
+the version in `files.el'."
   ;; `make-backup-file-name' will get us the right directory for
   ;; ordinary or numeric backups.  It might create a directory for
   ;; backups as a side-effect, according to `backup-directory-alist'.

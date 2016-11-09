@@ -114,11 +114,13 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
   ;; Show the argument list of the function you are in
   (autoload 'turn-on-eldoc-mode "eldoc" nil t)
   (turn-on-eldoc-mode)
+  (diminish 'eldoc-mode)
 
   (font-lock-mode 1)
 
   ;; Show trailing whitespace, tabs and lines > 80
   (whitespace-mode 1)
+  (diminish 'whitespace-mode)
 
   (show-matching-paren)
   (highlight-parentheses-mode t)
@@ -143,6 +145,7 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
 
   ;; Turn on outline minor mode by default
   (outline-minor-mode +1)
+  (diminish 'outline-minor-mode)
   )
 
 ;; -----------------------------------------------------------------------------

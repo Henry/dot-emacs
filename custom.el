@@ -7,7 +7,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(bm-highlight-style (quote bm-highlight-only-line))
- '(bookmark-default-file "~/.Emacs/Bookmarks")
+ '(bookmark-default-file "~/Emacs/Bookmarks")
  '(disk-find-file-function (quote icicle-file))
  '(fill-column 80)
  '(ibuffer-formats

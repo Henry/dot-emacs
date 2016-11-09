@@ -3,6 +3,7 @@
 (use-package e2wm
   :ensure t
   :ensure window-layout
+  :diminish e2wm:pst-minor-mode
   :init
   (setq tree-widget-image-enable t)
   (require 'e2wm-code2)

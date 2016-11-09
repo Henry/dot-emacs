@@ -4,12 +4,12 @@
 
 (use-package file-journal
   :init
-  (setq fj-journal-file (expand-file-name "~/.Emacs/file-journal"))
+  (setq fj-journal-file (expand-file-name "~/Emacs/file-journal"))
   :config
   (defadvice switch-to-buffer-other-frame (after fj-switch-to-buffer activate)
     (fj-record-file)))
 
-;; For automatic saving settings see init-save-all-hist.el
+;; For automatic saving settings see init-history-saving.el
 
 ;; -----------------------------------------------------------------------------
 ;;; init-file-journal.el ends here

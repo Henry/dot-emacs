@@ -69,6 +69,7 @@ rather than vertically.")
   (window-number-define-keys window-number-mode-map "M-t ")
   (window-number-mode 1))
 
+;; -----------------------------------------------------------------------------
 ;;; Speed-up rendering on Emacs-24
 (setq-default bidi-display-reordering nil)
 

@@ -13,10 +13,10 @@
       password-cache-expiry 1000
       tramp-remote-path (split-string (getenv "PATH") ":")
       tramp-process-echos nil
-      tramp-auto-save-directory (expand-file-name "~/.Emacs/Tramp/autosave")
+      tramp-auto-save-directory (expand-file-name "~/Emacs/Tramp/autosave")
       tramp-bkup-backup-directory-info
       '(
-        (t (expand-file-name "~/.Emacs/Tramp/autosave") ok-create full-path)
+        (t (expand-file-name "~/Emacs/Tramp/autosave") ok-create full-path)
         ))
 
 ;; -----------------------------------------------------------------------------

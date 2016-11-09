@@ -4,6 +4,7 @@
 (use-package projectile
   :ensure t
   :ensure counsel-projectile
+  :diminish projectile-mode
   :init
   (setq projectile-completion-system 'ivy)
   :config
