@@ -67,8 +67,11 @@
   ;; Autoload Wanderlust on command "wl"
   (autoload 'wl "wl" "Wanderlust" t)
 
-  (setq elmo-msgdb-directory "~/Emacs/Wanderlust/Elmo"
-        elmo-split-log-file "~/Emacs/Wanderlust/Elmo/split-log"
+  (setq elmo-msgdb-directory
+        (concat user-emacs-directory "Wanderlust/Elmo")
+
+        elmo-split-log-file
+        (concat user-emacs-directory "Wanderlust/Elmo/split-log")
 
         ;; Offline and synchronization
         wl-plugged t
@@ -194,7 +197,8 @@
 
         wl-draft-reply-without-argument-list
         '(("Followup-To" .
-           (("Mail-Followup-To" "Mail-Reply-To" "Reply-To") nil ("Followup-To")))
+           (("Mail-Followup-To" "Mail-Reply-To" "Reply-To") nil
+            ("Followup-To")))
           ("Mail-Followup-To" .
            (("Mail-Followup-To") nil nil))
           ("Newsgroups" .
@@ -209,7 +213,9 @@
 
   ;; ---------------------------------------------------------------------------
   ;; Message
-  (setq mime-view-mailcap-files '("~/Emacs/Wanderlust/mailcap")
+  (setq mime-view-mailcap-files
+        (list (concat user-emacs-directory "Wanderlust/mailcap"))
+
         wl-message-ignored-field-list '("^.*:")
         wl-message-visible-field-list
         '("^\\(To\\|Cc\\):"

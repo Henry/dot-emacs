@@ -46,7 +46,7 @@
     :ensure t)
 
   :init
-  (setq eshell-directory-name (expand-file-name "~/Emacs/Eshell/")
+  (setq eshell-directory-name (expand-file-name "Eshell/" user-emacs-directory)
         eshell-aliases-file (concat eshell-directory-name "alias")
         eshell-history-file-name (concat eshell-directory-name "history")
         eshell-save-history-on-exit t

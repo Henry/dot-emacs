@@ -2,8 +2,8 @@
 ;; -----------------------------------------------------------------------------
 
 (setq
- diary-file "~/Emacs/Diaries/diary"
- my-diary-file-list '("~/Emacs/Diaries/anniversaries")
+ diary-file (concat user-emacs-directory "Diaries/diary")
+ my-diary-file-list (list (concat user-emacs-directory "Diaries/anniversaries"))
  diary-number-of-entries 7)
 
 (add-hook 'diary-list-entries-hook 'diary-include-other-diary-files)

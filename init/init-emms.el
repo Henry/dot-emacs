@@ -2,33 +2,33 @@
 ;; -----------------------------------------------------------------------------
 (use-package emms
   :ensure t
+
   :init
-  (progn
-    (setq emms-directory "~/Emacs/Emms"
-          emms-source-file-default-directory "~/Music/"
-          emms-info-asynchronously t
-          later-do-interval 0.0001
-          emms-info-functions '(emms-info-libtag)
-          emms-mode-line-format " %s "
-          emms-show-format "Playing: %s"
-          emms-stream-bookmarks-file (concat emms-directory "/emms-streams")
-          emms-stream-default-action "play")
-    ;;  Show the current track each time EMMS starts to play it
-    (add-hook 'emms-player-started-hook 'emms-show)
-    ;;  Highlight current line in browser
-    (add-hook 'emms-browser-show-display-hook '(lambda () (hl-line-mode 1))))
+  (setq emms-directory (concat user-emacs-directory "Emms")
+        emms-source-file-default-directory "~/Music/"
+        emms-info-asynchronously t
+        later-do-interval 0.0001
+        emms-info-functions '(emms-info-libtag)
+        emms-mode-line-format " %s "
+        emms-show-format "Playing: %s"
+        emms-stream-bookmarks-file (concat emms-directory "/emms-streams")
+        emms-stream-default-action "play")
+  ;;  Show the current track each time EMMS starts to play it
+  (add-hook 'emms-player-started-hook 'emms-show)
+  ;;  Highlight current line in browser
+  (add-hook 'emms-browser-show-display-hook '(lambda () (hl-line-mode 1)))
+
   :config
-  (progn
-    (require 'emms-volume)
-    (require 'emms-info-libtag)
-    (require 'emms-streams)
-    (require 'emms-stream-info)
-    (emms-all)
-    (emms-default-players)
-    (emms-add-directory-tree emms-source-file-default-directory)
-    ;;  Recenter the play-list on the current track
-    (add-hook 'emms-playlist-selection-changed-hook 'my-emms-focus-on-track)
-    ))
+  (require 'emms-volume)
+  (require 'emms-info-libtag)
+  (require 'emms-streams)
+  (require 'emms-stream-info)
+  (emms-all)
+  (emms-default-players)
+  (emms-add-directory-tree emms-source-file-default-directory)
+  ;;  Recenter the play-list on the current track
+
+  (add-hook 'emms-playlist-selection-changed-hook 'my-emms-focus-on-track))
 
 ;; -----------------------------------------------------------------------------
 ;;; Emms buffer key-bindings

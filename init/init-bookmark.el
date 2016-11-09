@@ -16,7 +16,7 @@
    ;; Make sure the repository is loaded as early as possible
    bm-restore-repository-on-load t
    ;; Set the location of the repository file
-   bm-repository-file (expand-file-name "~/Emacs/BM-repository"))
+   bm-repository-file (expand-file-name "BM-repository" user-emacs-directory))
 
   ;; Make bookmarks persistent as default
   (setq-default bm-buffer-persistence t)

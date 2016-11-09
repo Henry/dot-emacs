@@ -3,20 +3,20 @@
 ;; Reworked version of the standard backup mechanism which stores backup files
 ;; with version numbers but without `~'s in a mirror of the original file's
 ;; directory hierarchy
+;;
+;; This should be possible work using `make-backup-file-name-function' but so
+;; far I have not found a way to get a function attached to this variable to be
+;; called so instead here are the edited local versions of the relevant
+;; functions in files.el:
 
 (setq make-backup-files t
       backup-by-copying t
-      backup-directory "~/Emacs/Backups/"
-      ;;backup-directory-alist '(("." . "~/Emacs/Backups/"))
+      backup-directory (concat user-emacs-directory "Backups/")
+      ;;backup-directory-alist '(("." . backup-directory))
       delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
       version-control t)
-
-;; -----------------------------------------------------------------------------
-;;; Store backup files in directory tree in backup-directory
-;;  Could not get this to work using `make-backup-file-name-function' so edited
-;;  local versions of the functions in files.el:
 
 (defun make-backup-file-name (file)
   "Return the path of the backup file for the given FILE

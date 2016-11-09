@@ -2,7 +2,6 @@
 ;; -----------------------------------------------------------------------------
 (setq browse-url-new-window-flag t
       browse-url-generic-program "conkeror"
-      url-configuration-directory "~/Emacs/url"
       mime-view-text/html-previewer 'shr
 
       ;; Set browse-url to use wget for ftp and conkeror for everything else

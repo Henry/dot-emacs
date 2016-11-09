@@ -13,10 +13,12 @@
       password-cache-expiry 1000
       tramp-remote-path (split-string (getenv "PATH") ":")
       tramp-process-echos nil
-      tramp-auto-save-directory (expand-file-name "~/Emacs/Tramp/autosave")
+      tramp-auto-save-directory
+      (expand-file-name "Tramp/autosave" user-emacs-directory)
       tramp-bkup-backup-directory-info
       '(
-        (t (expand-file-name "~/Emacs/Tramp/autosave") ok-create full-path)
+        (t (expand-file-name "Tramp/autosave" user-emacs-directory)
+           ok-create full-path)
         ))
 
 ;; -----------------------------------------------------------------------------
@@ -77,7 +79,7 @@
 (add-hook 'find-file-root-hook 'find-file-root-header-warning)
 
 ;; Replace ^x^r find-file-read-only binding with find-file-root
-(global-set-key [(control x) (control r)] 'find-file-root)
+;; (global-set-key [(control x) (control r)] 'find-file-root)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-tramp.el ends here

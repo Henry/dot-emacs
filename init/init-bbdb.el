@@ -4,7 +4,6 @@
   :ensure t
   :init
   (setq bbdb-file-coding-system 'utf-8
-        bbdb-file "~/Emacs/bbdb"
         bbdb-phone-style nil
         bbdb-default-country "UK"
         bbdb-layout 'multi-line

@@ -37,19 +37,18 @@
   :ensure smex
   :init (setq counsel-find-file-at-point t)
   :bind (("C-x C-f" . counsel-find-file)
+         ("C-x C-r" . counsel-recentf)
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
          ("M-y" . counsel-yank-pop)
          ;;("C-s" . swiper)
          ("C-c C-r" . ivy-resume)
          ("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
          ;;([f2 ?i] . counsel-info-lookup-symbol)
          ;;("<f2> u" . counsel-unicode-char)
          ("C-c g" . counsel-git)
          ("C-c j" . counsel-git-grep)
-         ;;("C-c k" . counsel-ag)
-         ;;("C-x l" . counsel-locate)
+
          :map read-expression-map
          ("C-r" . counsel-expression-history)))
 

@@ -5,7 +5,7 @@
   :config
   (progn
     (yas/initialize)
-    (yas/load-directory "~/Emacs/YASnippets")
+    (yas/load-directory (concat user-emacs-directory "YASnippets"))
     ;;   Switch-off by default
     (yas/minor-mode -1)))
 

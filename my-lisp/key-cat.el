@@ -83,7 +83,8 @@
      )
     ("Files, Buffers and Windows"
      (commands
-      find-file
+      counsel-find-file
+      counsel-recentf
       save-buffer
       write-file
       split-window-vertically

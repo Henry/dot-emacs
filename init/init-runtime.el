@@ -136,7 +136,7 @@
 ;; -----------------------------------------------------------------------------
 ;;; Read saved minibuffer command, search-string and kill-ring histories
 
-(setq savehist-file (expand-file-name "~/Emacs/history")
+(setq savehist-file (expand-file-name "history" user-emacs-directory)
       savehist-additional-variables '(search-ring regexp-search-ring kill-ring)
       savehist-autosave-interval nil)
 (savehist-mode 1)
@@ -146,7 +146,7 @@
 ;;; Read saved places in files
 
 (setq-default save-place t)
-(setq save-place-file (expand-file-name "~/Emacs/places")
+(setq save-place-file (expand-file-name "places" user-emacs-directory)
       save-place-limit 100)
 (require 'saveplace)
 (setq-default save-place nil)
@@ -155,8 +155,8 @@
 ;;; Read the  file-journal
 ;; Note: (require 'file-journal) is in init-personalisation.el
 
-(if (file-readable-p fj-journal-file)
-    (load (expand-file-name fj-journal-file) nil t t))
+;; (if (file-readable-p fj-journal-file)
+;;    (load (expand-file-name fj-journal-file) nil t t))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-runtime.el ends here

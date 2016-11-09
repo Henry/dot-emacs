@@ -61,7 +61,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
-(setq org-directory "~/Emacs/Org"
+(setq org-directory (concat user-emacs-directory "Org")
       org-return-follows-link t
       org-tab-follows-link nil
       org-hide-leading-stars t
@@ -193,7 +193,7 @@ i.e. the headings under the single top-level heading."
 ;;; File annotation
 (use-package org-pua
   :init
-  (setq org-pua-annotations-dir "~/Emacs/Annotations/")
+  (setq org-pua-annotations-dir (concat user-emacs-directory "Annotations/"))
   :bind (([(control c) f1] . org-pua-annotate)
          ([(control c) (control f1)] . org-pua-toggle-buttons)))
 

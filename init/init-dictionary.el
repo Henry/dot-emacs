@@ -5,8 +5,10 @@
 (use-package synonyms
   :ensure t
   :init
-  (setq synonyms-file (expand-file-name "~/Emacs/Thesaurus/mthesaur.txt")
-        synonyms-cache-file (expand-file-name "~/Emacs/Thesaurus/cache.txt"))
+  (setq synonyms-file (expand-file-name "Thesaurus/mthesaur.txt"
+                                        user-emacs-directory)
+        synonyms-cache-file (expand-file-name "/Thesaurus/cache.txt"
+                                              user-emacs-directory))
   ;;:bind (("C-c t" . synonyms))
   )
 
@@ -23,7 +25,8 @@
 (use-package rw-acronyms
   :init
   (setq rw-acronyms-files-data
-        '(("~/Emacs/Acronyms/vera.txt" iso-8859-1 "=" nil))))
+        (list (list (concat user-emacs-directory "Acronyms/vera.txt")
+                    'iso-8859-1 "=" nil))))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-dictionary.el ends here

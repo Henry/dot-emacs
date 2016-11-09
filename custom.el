@@ -60,7 +60,20 @@
  '(remember-mailbox "~/Maildir/remember")
  '(safe-local-variable-values
    (quote
-    ((header-auto-update-enabled)
+    ((eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            "wmake -q" projectile-compilation-cmd-map))
+     (eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            "makeEemacs" projectile-compilation-cmd-map))
+     (projectile-project-compilation-cmd . "wmake -q")
+     (header-auto-update-enabled)
      (projectile-project-compilation-cmd . "makeEemacs"))))
  '(semantic-idle-scheduler-idle-time 5)
  '(server-host "10.0.0.37")
