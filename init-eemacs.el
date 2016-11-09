@@ -15,7 +15,6 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/haskell-mode-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/eshell-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
   (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/esh-help-[0-9.]*"))))
   (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/multi-eshell-[0-9.]*"))))
