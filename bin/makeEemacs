@@ -1,9 +1,10 @@
 #!/bin/bash
 set -x -e
 
-EMACS=`which emacs`
-TEMACS=/usr/local/src/emacs-25.1/src/temacs
-EMACSDOC=/usr/local/share/emacs/25.1/etc/
+EMACS=/usr/local/bin/emacs
+EMACS_VERSION=$($EMACS --version |  grep "GNU Emacs [0-9][0-9.]*" | sed s/"GNU Emacs \([1-9][0-9]\.[0-9]\)\.[0-9]/\1/")
+TEMACS=/usr/local/src/emacs-$EMACS_VERSION/src/temacs
+EMACSDOC=/usr/local/share/emacs/$EMACS_VERSION/etc/
 
 if which setarch >& /dev/null
 then
@@ -16,8 +17,6 @@ case `uname -m` in
     ;;
 esac
 fi
-
-rm -rf ~/bin/linux/eemacs
 
 echo "Compiling elpa packages"
 $EMACS --eval "(byte-recompile-directory (expand-file-name \"~/Emacs/elpa\") 0)" --batch
@@ -41,9 +40,17 @@ $TEMACS -q --batch \
     --eval "(setq delete-old-versions t)" \
     --load load-eemacs.el \
     --eval "(setq command-line-processed nil)" \
-    --eval "(dump-emacs \"~/bin/linux/eemacs\" \"$TEMACS\")"
+    --eval "(dump-emacs \"~/bin/linux/eemacs.new\" \"$TEMACS\")"
 
 # Remove the temporary link to the documentation
 rm ../etc
 
-bin/makeTAGS
+# If the build was successful update eemacs
+if [ -f ~/bin/linux/eemacs.new ]
+then
+    mv ~/bin/linux/eemacs ~/bin/linux/eemacs.old
+    mv ~/bin/linux/eemacs.new ~/bin/linux/eemacs
+
+    # and build the tags files
+    bin/makeTAGS
+fi
