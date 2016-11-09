@@ -1,7 +1,6 @@
 ;;; init-eshell.el --- Initialize eshell
 ;; -----------------------------------------------------------------------------
 (use-package eshell
-  :ensure t
   :commands (eshell eshell-command)
   :preface
   (defvar eshell-isearch-map
@@ -29,9 +28,6 @@
   (require 'em-term)
   (require 'em-unix)
   (require 'esh-opt)
-
-  ;; Provides the plan9 style scrolling
-  (require 'em-smart)
 
   ;; Extra alias functions
   (require 'em-xtra)
@@ -103,12 +99,26 @@
   (defalias 'eldoc-get-fnsym-args-string 'elisp-get-fnsym-args-string)
 
   (add-hook 'eshell-mode-hook 'my-eshell-mode-hook)
-  (setup-esh-help-eldoc))
+  (setup-esh-help-eldoc)
+
+  :bind (:map eshell-mode-map
+              ("C-a" . eshell-bol)
+              ([end] . eshell-show-maximum-output)
+              ([home] . eshell-previous-prompt)
+              ([up] . previous-line)
+              ([down] . next-line)
+              ([f1] . tooltip-help-mode-show)
+              ([S-f1] . describe-variable-or-function)
+              ([(meta ?.)] . eshell-insert-previous-argument))
+  )
 
 ;; -----------------------------------------------------------------------------
 ;;; Set eshell-mode hook
 (defun my-eshell-mode-hook ()
-  "Hook to apply my setting to the lisp and elisp modes"
+  "Hook to apply my setting to the eshell"
+
+  ;; Update the eshell path from the current PATH
+  (setq eshell-path-env (getenv "PATH"))
 
   (font-lock-mode)
 
@@ -133,14 +143,17 @@
 
   (turn-on-eldoc-mode)
 
-  (local-set-key (kbd "C-a") 'eshell-bol)
-  (local-set-key [end] 'eshell-show-maximum-output)
-  (local-set-key [home] 'eshell-previous-prompt)
-  (local-set-key [up] 'previous-line)
-  (local-set-key [down] 'next-line)
-  (local-set-key [f1] 'th-show-help)
-  (local-set-key [S-f1] 'describe-variable-or-function)
-  (local-set-key [(meta ?.)] 'eshell-insert-previous-argument)
+  ;; Company needs a pcomplete backend for eshell
+  ;;(company-mode 1)
+  ;;(local-set-key (kbd "<tab>") 'company-complete)
+  ;;(local-set-key (kbd "M-<tab>") 'company-complete)
+
+  ;; This uses the standard completion-UI which is
+  ;; ivy in-region completion when activated
+  ;; This is good enough until there is a pcomplete backend for company
+  (company-mode -1) ;; Switch-off company to ensure ivy is used
+  (local-set-key (kbd "<tab>")
+                 (lambda () (interactive) (pcomplete-std-complete)))
 
   ;; (define-key completion-overlay-map [(control ?c)]
   ;;   (lambda ()
@@ -150,7 +163,6 @@
   ;;     (completion-reject)
   ;;     (if (eq major-mode 'eshell-mode)
   ;;         (eshell-interrupt-process))))
-
   )
 
 (use-package multi-eshell
@@ -278,28 +290,6 @@ Completion is available."))
             (error "Bookmark %s points to %s which is not a directory"
                    bookmark filename))
         (error "%s is not a bookmark" bookmark))))))
-
-;; (defun my-eshell-execute-current-line ()
-;;   "Insert text of current line in eshell and execute."
-;;   (interactive)
-;;   (require 'eshell)
-;;   (let ((command
-;;          (buffer-substring
-;;           (save-excursion (beginning-of-line) (point))
-;;           (save-excursion (end-of-line)(point)))))
-;;     (let ((buf (current-buffer)))
-;;       (unless (get-buffer eshell-buffer-name)
-;;         (eshell))
-;;       (display-buffer eshell-buffer-name t)
-;;       (switch-to-buffer-other-window eshell-buffer-name)
-;;       (goto-char (point-max))
-;;       (eshell-kill-input)
-;;       (insert command)
-;;       (eshell-send-input)
-;;       (goto-char (point-max))
-;;       (switch-to-buffer-other-window buf))))
-
-;;(global-set-key [f2] 'my-eshell-execute-current-line)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-eshell.el ends here
