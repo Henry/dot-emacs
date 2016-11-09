@@ -20,11 +20,7 @@
         etags-table-alist
         `((".*\\.el$"
            ,(expand-file-name "TAGS" user-emacs-directory)
-           ,(expand-file-name "systemTAGS" user-emacs-directory))
-
-          (,(concat OPENFOAM_DIR "/.*\\.[CH]$")
-           ,(concat OPENFOAM_TAGS_DIR "/etags"))
-          )))
+           ,(expand-file-name "systemTAGS" user-emacs-directory)))))
 
 ;; -----------------------------------------------------------------------------
 ;;; Gtags

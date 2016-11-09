@@ -236,6 +236,11 @@
 (defun OpenFOAM-mode-hook ()
 
   (setq OPENFOAM_DIR (getenv "WM_PROJECT_DIR"))
+  (setq OPENFOAM_TAGS_DIR (concat OPENFOAM_DIR "/.tags"))
+
+  (add-to-list 'etags-table-alist
+               `(,(concat OPENFOAM_DIR "/.*\\.[CH]$")
+                 ,(concat OPENFOAM_TAGS_DIR "/etags")))
 
   (c-add-style "OpenFOAM" OpenFOAM-style t)
 
