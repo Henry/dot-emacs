@@ -8,7 +8,6 @@
  ;; If there is more than one, they won't work right.
  '(bm-highlight-style (quote bm-highlight-only-line))
  '(bookmark-default-file "~/Emacs/Bookmarks")
- '(disk-find-file-function (quote icicle-file))
  '(fill-column 80)
  '(ibuffer-formats
    (quote
@@ -26,7 +25,6 @@
      (mark " "
            (name 16 -1)
            " " filename))))
- '(icicle-command-abbrev-alist (quote ((zone-mode z 3) (find-file ff 1))))
  '(initial-major-mode (quote emacs-lisp-mode))
  '(mairix-saved-searches (quote (("test1" "c:simon f:moni" nil nil))))
  '(org-emphasis-alist
@@ -132,8 +130,6 @@
  '(grep-edit-face ((t (:background "palegoldenrod" :weight bold))))
  '(grep-edit-file-face ((t (:background "palegoldenrod" :weight bold))))
  '(highlight ((((class color) (min-colors 88) (background light)) (:background "#bbbbff"))))
- '(icicle-multi-command-completion ((t (:background "cyan" :foreground "Red"))))
- '(icicle-mustmatch-completion ((((type x w32 mac graphic) (class color)) (:weight bold))))
  '(italic ((t (:underline nil :slant italic :weight normal :height 103 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
  '(org-agenda-date-today ((t (:foreground "red2" :slant normal :weight bold))) t)
  '(org-agenda-structure ((((class color) (min-colors 88) (background light)) (:foreground "Blue1" :weight bold))))
@@ -152,7 +148,7 @@
  '(region ((t (:background "grey90" :foreground "black"))))
  '(saint/iswitchb-highlight-3-face ((t (:foreground "Black" :weight bold))))
  '(secondary-selection ((t (:background "LightBlue"))))
- '(tooltip ((((class color)) (:inherit variable-pitch :background "honeydew" :foreground "black"))))
+ '(tooltip ((((class color)) (:inherit variable-pitch :background "cornsilk" :foreground "black"))))
  '(wl-highlight-folder-path-face ((t (:foreground "red" :underline nil :weight bold))))
  '(wl-highlight-summary-displaying-face ((t (:foreground "red" :underline nil :weight bold))))
  '(wl-highlight-summary-normal-face ((((class color) (background light)) (:foreground "blue3"))))

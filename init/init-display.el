@@ -4,6 +4,10 @@
 (minibuffer-depth-indicate-mode 99)
 
 ;; -----------------------------------------------------------------------------
+;;;  Switch off GTK tooltips
+(setq  x-gtk-use-system-tooltips nil)
+
+;; -----------------------------------------------------------------------------
 ;;; toggle-selective-display: display lines starting at given column
 
 (defun my-toggle-selective-display (column)
