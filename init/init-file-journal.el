@@ -4,7 +4,7 @@
 
 (use-package file-journal
   :init
-  (setq fj-journal-file (expand-file-name "~/Emacs/file-journal"))
+  (setq fj-journal-file (expand-file-name "file-journal" user-emacs-directory))
   :config
   (defadvice switch-to-buffer-other-frame (after fj-switch-to-buffer activate)
     (fj-record-file)))

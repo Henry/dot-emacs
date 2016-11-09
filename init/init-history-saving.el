@@ -10,8 +10,12 @@
   ;; Save places in files
   (setq-default save-place t)
 
-  (add-hook 'after-save-hook 'fj-save-journal)
-  (add-hook 'kill-emacs-hook 'fj-save-journal)
+  ;;(add-hook 'after-save-hook 'fj-save-journal)
+  ;;(add-hook 'kill-emacs-hook 'fj-save-journal)
+
+  (require 'recentf)
+  (recentf-mode 1)
+  ;;(add-hook 'after-save-hook 'recentf-save-list)
 
   (require 'bm)
 
