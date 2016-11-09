@@ -151,6 +151,8 @@ This is the contents of my /.emacs.d/ directory.
     + rw-acronyms
 
 * Packages to try
+*** Fuzzy matching with company
+    https://github.com/PythonNut/company-flx
 *** Pretty modeline
     https://melpa.org/#/powerline
     https://melpa.org/#/smart-mode-line
