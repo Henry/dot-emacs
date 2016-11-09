@@ -2,13 +2,11 @@
 *.elc
 
 # Ignore personal and temporary files
-network-security.data
-init/personal
+/init/personal
 /save
-lisp/save
-lisp/new
-my-lisp/save
-tramp
-/elpa
+/lisp/save
+/lisp/new
+/my-lisp/save
+/.dir-locals.el
 
 # end-of-file
