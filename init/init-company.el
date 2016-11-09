@@ -35,6 +35,7 @@
      company-dabbrev
      )
    company-show-numbers t
+
    ;;company-dabbrev-ignore-case nil
    ;;case-replace nil
    ;;company-dabbrev-downcase nil
@@ -60,7 +61,14 @@
          ("C->" . company-ispell)
          :map company-active-map
          ("M-h" . company-quickhelp-manual-begin))
+
   :config
+  ;; Tab-completion
+  ;; (define-key company-mode-map [remap indent-for-tab-command]
+  ;;   'company-indent-for-tab-command)
+  ;; (setq tab-always-indent 'complete)
+
+  ;; Popup tooltip help for completion candidates
   (company-quickhelp-mode))
 
 (defun company-bbdb-word (command &optional arg &rest ignore)
@@ -74,6 +82,23 @@ Looks-up the Email addresses corresponding to the the word at the point
     (candidates (company-bbdb--candidates arg))
     (sorted t)
     (no-cache t)))
+
+
+;; -----------------------------------------------------------------------------
+;; Add support for tab-completion
+;; https://github.com/company-mode/company-mode/issues/94#issuecomment-40884387
+
+(defvar completion-at-point-functions-saved nil)
+
+(defun company-indent-for-tab-command (&optional arg)
+  (interactive "P")
+  (let ((completion-at-point-functions-saved completion-at-point-functions)
+        (completion-at-point-functions '(company-complete-common-wrapper)))
+    (indent-for-tab-command arg)))
+
+(defun company-complete-common-wrapper ()
+  (let ((completion-at-point-functions completion-at-point-functions-saved))
+    (company-complete-common)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-company.el ends here
