@@ -38,9 +38,10 @@ make
 rm -f ../etc
 ln -s $EMACSDOC ../etc
 
-$TEMACS -q --batch \
-        --eval "(setq delete-old-versions t)" \
-        -L ~/.emacs.d/init \
+$TEMACS \
+    -q --batch \
+    --eval "(setq delete-old-versions t)" \
+    -L ~/.emacs.d/init \
     --load load-eemacs.el \
     --eval "(setq command-line-processed nil)" \
     --eval "(dump-emacs \"~/bin/linux/eemacs.new\" \"$TEMACS\")"
