@@ -23,11 +23,18 @@
 (load "init-package")
 
 ;; -----------------------------------------------------------------------------
+;;; Application generated customisations
+(setq inhibit-default-init t)
+(setq custom-file (expand-file-name "~/.emacs.d/custom.el"))
+(load custom-file)
+
+;; -----------------------------------------------------------------------------
 ;;; Common initialisation settings
 (load "init-frames")
 (load "init-display")
 (load "init-movement")
 (load "init-common")
+(load "init-which-key")
 (load "init-rectangles")
 (load "init-speedbar")
 (load "init-editing")
@@ -41,6 +48,10 @@
 ;; -----------------------------------------------------------------------------
 ;;; Personal key-map
 (load "init-my-map")
+
+;; -----------------------------------------------------------------------------
+;;; Enhanced in-buffer completion packages
+(load "init-company")
 
 ;; -----------------------------------------------------------------------------
 ;;; Mouse configuration
@@ -121,22 +132,16 @@
 ;;(load "init-file-journal")
 
 ;; -----------------------------------------------------------------------------
-;;; Run-time Initialisations
-;; Initialisations which must be done at run-time, not built into eemacs:
-;;     Windowing system properties which must be read at run-time
-;;     Functions involving histories which must be read at run-time
-
-;; -----------------------------------------------------------------------------
 ;;; Ediff settings
 (load "init-ediff")
 
 ;; -----------------------------------------------------------------------------
-;;; Shell-mode settings
-(load "init-shell")
-
-;; -----------------------------------------------------------------------------
 ;;; Eshell-mode settings
 (load "init-eshell")
+
+;; -----------------------------------------------------------------------------
+;;; Shell-mode settings
+(load "init-shell")
 
 ;; -----------------------------------------------------------------------------
 ;;; Magit: Emacs front-end for GIT repositories
@@ -204,10 +209,6 @@
 (load "init-doremi")
 
 ;; -----------------------------------------------------------------------------
-;;; Enhanced in-buffer completion packages
-(load "init-company")
-
-;; -----------------------------------------------------------------------------
 ;;; Buffer selection menu
 (load "init-ibuffer")
 
@@ -240,9 +241,10 @@
 (load "init-history-saving")
 
 ;; -----------------------------------------------------------------------------
-;;; Application generated customisations
-(setq custom-file (expand-file-name "~/.emacs.d/custom.el"))
-(load custom-file)
+;;; Run-time Initialisations
+;; Initialisations which must be done at run-time, not built into eemacs:
+;;     Windowing system properties which must be read at run-time
+;;     Functions involving histories which must be read at run-time
 
 ;; -----------------------------------------------------------------------------
 ;;; init.el ends here

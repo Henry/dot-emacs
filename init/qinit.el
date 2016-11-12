@@ -3,19 +3,29 @@
 ;;; Fix annoyances
 
 ;;;  Disable start-up splash screen
-(setq inhibit-startup-message t)  ;; Include in init-eemacs
+(setq inhibit-startup-screen t)  ;; Include in init-eemacs
+
+;;; Set the *scratch* buffer to emacs-lisp-mode
+;;  rather than the default lisp-interaction-mode
+(setq initial-major-mode 'emacs-lisp-mode)  ;; Include in init-eemacs
 
 ;;;  Switch-off the pop-up dialog box
 (setq use-file-dialog nil)  ;; Include in init-eemacs
 
 ;;;  Switch off the tool-bar
-(tool-bar-mode -1)  ;; Include in init-eemacs
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))  ;; Include in init-eemacs
+
+;;;  Switch off the tool-bar
+(setq tool-bar-mode nil)  ;; Include in init-eemacs
 
 ;;;  Switch off the scroll-bar
-(scroll-bar-mode -1)  ;; Include in init-eemacs
+(setq scroll-bar-mode nil)  ;; Include in init-eemacs
 
 ;;;  Use "y or n" answers rather than "yes or no"
-(fset 'yes-or-no-p 'y-or-n-p)
+(fset 'yes-or-no-p 'y-or-n-p)  ;; Include in init-eemacs
+
+;;;  Remove startup message in the echo area
+(fset 'display-startup-echo-area-message 'ignore)  ;; Include in init-eemacs
 
 ;;;  Ask for confirmation before killing emacs
 (setq confirm-kill-emacs 'y-or-n-p)
@@ -33,6 +43,9 @@
                    exit-minibuffer
                    keyboard-quit))
           (ding))))
+
+;;;  Never use dialogs for minibuffer input
+(setq use-dialog-box nil)
 
 ;;;  Point keeps its screen position if the scroll
 ;;   command moved it vertically out of the window, e.g. when scrolling
@@ -56,11 +69,10 @@
   (expand-file-name "Autosaves/" user-emacs-directory))
 (make-directory user-temporary-file-directory t)
 (setq auto-save-list-file-prefix
-      (concat user-temporary-file-directory ".auto-saves-"))
-(setq auto-save-file-name-transforms
-      `((".*" ,user-temporary-file-directory t)))
-
-(setq auto-save-interval 200)
+      (concat user-temporary-file-directory ".auto-saves-")
+      auto-save-file-name-transforms
+      `((".*" ,user-temporary-file-directory t))
+      auto-save-interval 200)
 
 ;; -----------------------------------------------------------------------------
 ;;; Kill current buffer without confirmation

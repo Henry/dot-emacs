@@ -25,8 +25,8 @@
      (mark " "
            (name 16 -1)
            " " filename))))
- '(initial-major-mode (quote emacs-lisp-mode))
  '(mairix-saved-searches (quote (("test1" "c:simon f:moni" nil nil))))
+ '(menu-bar-mode nil)
  '(org-emphasis-alist
    (quote
     (("*" bold "<b>" "</b>")
@@ -73,13 +73,14 @@
      (projectile-project-compilation-cmd . "wmake -q")
      (header-auto-update-enabled)
      (projectile-project-compilation-cmd . "makeEemacs"))))
+ '(scroll-bar-mode nil)
  '(semantic-idle-scheduler-idle-time 5)
  '(server-host "10.0.0.37")
  '(server-kill-new-buffers t)
+ '(tool-bar-mode nil)
  '(whitespace-style
    (quote
     (face tabs space-before-tab space-after-tab trailing empty lines-tail)))
- '(whole-line-or-region-mode t)
  '(word-wrap t))
 
 (custom-set-faces

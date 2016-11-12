@@ -22,6 +22,8 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/e2wm-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/window-layout-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/which-key-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/company-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/company-quickhelp-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/isearch+-[0-9.]*"))))
@@ -120,8 +122,6 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/mairix-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/which-key-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/rect-mark-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/rust-mode-[0-9.]*"))))
@@ -141,10 +141,8 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/shell-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/readline-complete-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
-  (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/company-[0-9.]*"))))
-  (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
+    (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/readline-complete-[0-9.]*"))))
+    (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/sh-script-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/sr-speedbar-[0-9.]*"))))
@@ -165,6 +163,8 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/whole-line-or-region-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/undo-tree-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/auto-indent-mode-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/gnuplot-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
@@ -200,8 +200,12 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/yasnippet-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/e2wm-[0-9.]*"))))
-(setq inhibit-startup-message t)  ;; Include in init-eemacs
+(setq inhibit-startup-screen t)  ;; Include in init-eemacs
+(setq initial-major-mode 'emacs-lisp-mode)  ;; Include in init-eemacs
 (setq use-file-dialog nil)  ;; Include in init-eemacs
-(tool-bar-mode -1)  ;; Include in init-eemacs
-(scroll-bar-mode -1)  ;; Include in init-eemacs
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))  ;; Include in init-eemacs
+(setq tool-bar-mode nil)  ;; Include in init-eemacs
+(setq scroll-bar-mode nil)  ;; Include in init-eemacs
+(fset 'yes-or-no-p 'y-or-n-p)  ;; Include in init-eemacs
+(fset 'display-startup-echo-area-message 'ignore)  ;; Include in init-eemacs
 (load "init-runtime" nil t) ;; Include in init-eemacs
