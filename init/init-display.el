@@ -41,22 +41,16 @@
 (add-hook 'postscript-mode-hook 'turn-off-font-lock)
 
 ;; -----------------------------------------------------------------------------
-;;; Display key-bindings in key-map in minibuffer
-
-(use-package which-key
-  :ensure t
-  :diminish which-key-mode
-  :config
-  (which-key-setup-minibuffer)
-  (which-key-mode))
-
-;; -----------------------------------------------------------------------------
 ;;; Battery status
 ;; If not on AC power line, then display battery status on the mode line
 (and (require 'battery nil t)
      (functionp 'battery-status-function)
      (or (equal (cdr (assoc ?L (funcall battery-status-function))) "on-line")
          (display-battery-mode)))
+
+;; -----------------------------------------------------------------------------
+;;; Buffer displayed on startup
+; (setq initial-buffer-choice)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-display.el ends here
