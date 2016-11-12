@@ -61,6 +61,16 @@
     (comint-fix-window-size)
     (add-hook 'window-configuration-change-hook 'comint-fix-window-size nil t)
 
+    (use-package readline-complete
+      :ensure t
+      :init
+      (setq explicit-shell-file-name "bash"
+            explicit-bash-args '("-c" "export EMACS=; stty echo; bash")
+            comint-process-echoes t)
+      (push 'company-readline company-backends)
+      (add-hook 'rlc-no-readline-hook (lambda () (company-mode -1)))
+      :bind (:map shell-mode-map ("<tab>" . company-complete)))
+
     (company-mode 1))
 
   (add-hook 'shell-mode-hook 'my-shell-mode-hook))
@@ -87,18 +97,6 @@
     (shell buffer)))
 
 ;;(global-set-key [f4] 'shell-dwim)
-
-(use-package readline-complete
-  :ensure t
-  :init
-  (use-package company
-    :ensure t)
-  (setq explicit-shell-file-name "bash"
-        explicit-bash-args '("-c" "export EMACS=; stty echo; bash")
-        comint-process-echoes t)
-  (push 'company-readline company-backends)
-  (add-hook 'rlc-no-readline-hook (lambda () (company-mode -1)))
-  :bind (:map shell-mode-map ("<tab>" . company-complete)))
 
 (defun jump-to-compilation-error-in-shell()
   "From a shell buffer, copy the output of the last

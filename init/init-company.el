@@ -41,19 +41,9 @@
    ;;company-dabbrev-downcase nil
    )
 
-  ;; Add the Elisp backend in elisp-mode
-  (add-hook
-   'emacs-lisp-mode-hook
-   (lambda ()
-     (set (make-local-variable 'company-backends)
-          (cons 'company-elisp company-backends))))
-
   ;; Enable company-bbdb in wl-draft-mode
   (add-to-list 'company-bbdb-modes 'wl-draft-mode)
   (add-hook 'wl-draft-mode-hook '(lambda () (company-mode)))
-
-  ;; Enable company-mode in all major model
-  (global-company-mode t)
 
   :bind (("<M-tab>" . company-complete)
          :map flyspell-mode-map
@@ -63,6 +53,10 @@
          ("M-h" . company-quickhelp-manual-begin))
 
   :config
+
+  ;; Enable company-mode in all major model
+  (global-company-mode t)
+
   ;; Tab-completion
   ;; (define-key company-mode-map [remap indent-for-tab-command]
   ;;   'company-indent-for-tab-command)
@@ -82,7 +76,6 @@ Looks-up the Email addresses corresponding to the the word at the point
     (candidates (company-bbdb--candidates arg))
     (sorted t)
     (no-cache t)))
-
 
 ;; -----------------------------------------------------------------------------
 ;; Add support for tab-completion

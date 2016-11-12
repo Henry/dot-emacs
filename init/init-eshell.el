@@ -101,12 +101,11 @@
   (add-hook 'eshell-mode-hook 'my-eshell-mode-hook)
   (setup-esh-help-eldoc)
 
+  :config
   :bind (:map eshell-mode-map
               ("C-a" . eshell-bol)
               ([end] . eshell-show-maximum-output)
               ([home] . eshell-previous-prompt)
-              ([up] . previous-line)
-              ([down] . next-line)
               ([f1] . tooltip-help-mode-show)
               ([S-f1] . describe-variable-or-function)
               ([(meta ?.)] . eshell-insert-previous-argument))
@@ -143,18 +142,23 @@
 
   (turn-on-eldoc-mode)
 
+  (local-set-key [up] 'previous-line)
+  (local-set-key [down] 'next-line)
+
   ;; Company needs a pcomplete backend for eshell
-  ;;(company-mode 1)
-  ;;(local-set-key (kbd "<tab>") 'company-complete)
-  ;;(local-set-key (kbd "M-<tab>") 'company-complete)
+  (company-mode 1)
+  (local-set-key (kbd "<tab>") 'company-complete)
+  (local-set-key (kbd "M-<tab>") 'company-complete)
+  (set (make-local-variable 'company-backends) '(company-capf))
 
   ;; This uses the standard completion-UI which is
   ;; ivy in-region completion when activated
   ;; This is good enough until there is a pcomplete backend for company
-  (company-mode -1) ;; Switch-off company to ensure ivy is used
-  (local-set-key (kbd "<tab>")
-                 (lambda () (interactive) (pcomplete-std-complete)))
+  ;; (company-mode -1) ;; Switch-off company to ensure ivy is used
+  ;; (local-set-key (kbd "<tab>")
+  ;;                (lambda () (interactive) (pcomplete-std-complete)))
 
+  ;; Completion-UI
   ;; (define-key completion-overlay-map [(control ?c)]
   ;;   (lambda ()
   ;;     "For eshell-mode call the `eshell-interrupt-process' command

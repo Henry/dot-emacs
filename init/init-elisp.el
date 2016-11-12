@@ -134,6 +134,10 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
         '("symbol" "string" "sexp" "list" "defun"
           "word" "line" "sentence" "paragraph" "page"))
 
+  ;; Add the company Elisp backend
+  (set (make-local-variable 'company-backends)
+       (cons 'company-elisp company-backends))
+
   ;; Set the regexp used by outline-mode to find the headings
   (set (make-local-variable 'outline-regexp) ";;;[ ]+\\|(......")
 
