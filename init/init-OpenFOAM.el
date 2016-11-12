@@ -403,6 +403,11 @@
 (add-hook 'compilation-mode-hook 'my-compilation-mode-hook)
 
 ;; -----------------------------------------------------------------------------
+;;; Set default makefile type to gmake
+(add-to-list 'auto-mode-alist
+             '("\\(/\\|\\`\\)[Mm]akefile" . makefile-gmake-mode))
+
+;; -----------------------------------------------------------------------------
 ;;; Enable font-lock for makefiles
 (add-hook 'makefile-mode-hook 'font-lock-mode)
 
