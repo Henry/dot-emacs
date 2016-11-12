@@ -158,5 +158,10 @@
 ;; (if (file-readable-p fj-journal-file)
 ;;    (load (expand-file-name fj-journal-file) nil t t))
 
+;;; Set the *scratch* buffer to emacs-lisp-mode
+;;  rather than the default lisp-interaction-mode
+(with-current-buffer (get-buffer "*scratch*")
+  (funcall initial-major-mode))
+
 ;; -----------------------------------------------------------------------------
 ;;; init-runtime.el ends here

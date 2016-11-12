@@ -18,9 +18,6 @@ rather than vertically.")
 
 (add-hook 'temp-buffer-setup-hook 'split-window-horizontally-or-vertically)
 
-;;;  Set the scroll-bar to be on the right
-(set-scroll-bar-mode 'right)
-
 ;;;  Put column number into modeline
 (column-number-mode 1)
 
