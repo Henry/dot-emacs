@@ -1,6 +1,10 @@
 ;;; init-packge.el --- Initialize package
 ;; -----------------------------------------------------------------------------
 ;;; Package initialization
+
+;; Don't load outdated byte code
+(setq load-prefer-newer t)
+
 (require 'package)
 
 (setq package-user-dir "~/Emacs/elpa/"
@@ -24,9 +28,9 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
 (setq use-package-verbose t)
 (require 'use-package)
-(setq load-prefer-newer t)
 
 ;;; General packages
 (use-package dash
