@@ -23,7 +23,7 @@
         ivy-display-function nil ;; in minibuffer
         ;; ivy-display-function 'ivy-display-function-overlay ;; in overlay
 
-        ivy-do-completion-in-region t
+        ivy-do-completion-in-region nil
 
         magit-completing-read-function 'ivy-completing-read
         )
