@@ -39,14 +39,9 @@
   (interactive)
   (indent-region (point-min) (point-max)))
 
-;;;  Quick access and yank text from the kill ring.
-(global-set-key "\C-cy" '(lambda ()
-                           (interactive)
-                           (popup-menu 'yank-menu)))
-
 ;;;  Kill the whole line
-;;  including its terminating newline by typing C-a C-k
-;; when used at the beginning of a line
+;;  including its terminating newline when used at the beginning of a line
+;;  e.g. by typing C-a C-k
 (setq kill-whole-line t)
 
 ;; -----------------------------------------------------------------------------
@@ -80,7 +75,8 @@
 ;; -----------------------------------------------------------------------------
 ;;; browse-kill-ring+ --- Browse kill-ring using M-y
 (use-package browse-kill-ring+
-  :ensure t)
+  :ensure t
+  :bind (("C-M-y" . browse-kill-ring)))
 
 ;; -----------------------------------------------------------------------------
 ;;; Whole-line-or-region
@@ -124,25 +120,16 @@ end of the line."
 
 ;; -----------------------------------------------------------------------------
 ;;; Automatically indent pasted regions in all modes except c++
-;; http://www.emacswiki.org/cgi-bin/wiki?action=browse;diff=1;id=AutoIndentation
 
-(defadvice yank (after indent-region activate)
-  (if (member major-mode
-              '(emacs-lisp-mode
-                scheme-mode lisp-mode
-                c-mode objc-mode
-                latex-mode plain-tex-mode ruby-mode nxml-mode nxhtml-mode))
-      (let ((mark-even-if-inactive t))
-        (indent-region (region-beginning) (region-end) nil))))
-
-(defadvice yank-pop (after indent-region activate)
-  (if (member major-mode
-              '(emacs-lisp-mode
-                scheme-mode lisp-mode
-                c-mode objc-mode
-                latex-mode plain-tex-mode ruby-mode nxml-mode nxhtml-mode))
-      (let ((mark-even-if-inactive t))
-        (indent-region (region-beginning) (region-end) nil))))
+(use-package auto-indent-mode
+  :ensure t
+  :disabled t
+  :diminish auto-indent-mode
+  :init
+  (setq auto-indent-indent-style 'aggressive)
+  :config
+  (add-to-list 'auto-indent-disabled-modes-list 'c++-mode)
+  (auto-indent-global-mode))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-editing.el ends here
