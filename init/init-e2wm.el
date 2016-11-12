@@ -7,10 +7,10 @@
   :init
   (setq tree-widget-image-enable t)
   (require 'e2wm-code2)
-  (global-set-key (kbd "M-+")
-                '(lambda ()
-                   (interactive)
-                   (e2wm:start-management '(code2)))))
+  (defun e2wm-code2 ()
+    (interactive)
+    (e2wm:start-management '(code2)))
+  :bind ("M-+" . e2wm-code2))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-e2wm.el ends here
