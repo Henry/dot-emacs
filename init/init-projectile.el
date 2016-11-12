@@ -5,8 +5,10 @@
   :ensure t
   :ensure counsel-projectile
   :diminish projectile-mode
+
   :init
   (setq projectile-completion-system 'ivy)
+
   :config
   (projectile-global-mode)
   (counsel-projectile-on)
@@ -32,8 +34,7 @@ With a prefix ARG invalidates the cache first."
                          (string-match file project-file))
                        project-files)
                     nil)))
-      files)
-    ))
+      files)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-projectile.el ends here
