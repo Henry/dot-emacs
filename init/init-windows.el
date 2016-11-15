@@ -62,6 +62,7 @@ rather than vertically.")
 
 (use-package window-number
   :ensure t
+  :disabled t
   :init
   (setq window-number-active-background "grey75"
         window-number-inactive-background "grey75"
@@ -73,9 +74,28 @@ rather than vertically.")
   (window-number-define-keys window-number-mode-map "M-t ")
   (window-number-mode 1))
 
+(use-package wn-mode
+  :ensure t
+  :init
+  (setq wn-keybinding-format "M-t %s")
+  :config
+  (wn-mode))
+
 ;; -----------------------------------------------------------------------------
 ;;; Speed-up rendering on Emacs-24
 (setq-default bidi-display-reordering nil)
+
+;; -----------------------------------------------------------------------------
+;;; Switch-off cursor in other windows
+(setq-default cursor-in-non-selected-windows nil)
+
+;; -----------------------------------------------------------------------------
+;;; Dim other buffers
+(use-package auto-dim-other-buffers
+  :ensure t
+  :diminish auto-dim-other-buffers-mode
+  :config
+  (auto-dim-other-buffers-mode t))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-windows.el ends here
