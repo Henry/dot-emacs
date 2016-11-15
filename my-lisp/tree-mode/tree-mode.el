@@ -5,7 +5,7 @@
 ;; Package-Version: 1.1.1.1
 ;; Version: $Id: tree-mode.el,v 1.1.1.1 2007-03-13 13:16:10 ywb Exp $
 ;; Keywords: help, convenience, widget
-;; 
+;;
 ;; This file is part of PDE (Perl Development Environment).
 ;; But it is useful for generic programming.
 
@@ -50,6 +50,10 @@
     (define-key map "n" 'tree-mode-next-node)
     (define-key map "j" 'tree-mode-next-sib)
     (define-key map "k" 'tree-mode-previous-sib)
+    (define-key map [up] 'tree-mode-previous-node)
+    (define-key map [down] 'tree-mode-next-node)
+    (define-key map [C-down]'tree-mode-next-sib)
+    (define-key map [C-up] 'tree-mode-previous-sib)
     (define-key map "u" 'tree-mode-goto-parent)
     (define-key map "r" 'tree-mode-goto-root)
     (define-key map "g" 'tree-mode-reflesh)
@@ -58,8 +62,6 @@
     (define-key map "s" 'tree-mode-sort-by-tag)
     (define-key map "/" 'tree-mode-keep-match)
     (define-key map "!" 'tree-mode-collapse-other-except)
-    ;; (define-key map "\C-s" 'tree-mode-isearch-forward)
-    ;; (define-key map "\C-r" 'tree-mode-isearch-backward)
     (dotimes (i 10)
       (define-key map `[,(+ ?0 i)] 'digit-argument))
     map))
@@ -117,7 +119,7 @@ passed the new tree created")
         (setq widget (tree-mode-nearest-widget)))
       (setq tree-mode-list (nreverse tree-mode-list)))))
 
-;;;###autoload 
+;;;###autoload
 (define-minor-mode tree-minor-mode
   "More keybindings for tree-widget.
 
@@ -340,14 +342,14 @@ Otherwise use :old-args which saved by `tree-mode-backup-args'."
 (defun tree-mode-find-node (tree path)
   "Find node by path.
 Return a cons cell (NODE . REST). Check the rest to find if the node
-is node of the full path. 
+is node of the full path.
 PATH is a list of node tag to search from root.
 Note if the tree is not opened, It will open some node when need.
 `set-buffer' to tree buffer before call this function."
   (when (and (tree-widget-p tree) path)
     (let ((children (cdr (widget-get tree :children))) ; car is root node
           ;; if last node, both push-button and tree-widget will check
-          (predicate (if (= (length path) 1) 
+          (predicate (if (= (length path) 1)
                          'widget-type 'tree-widget-p))
           node found)
       (while (and (not found) children)
