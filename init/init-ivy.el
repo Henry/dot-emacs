@@ -37,7 +37,22 @@
   :ensure t
   :ensure swiper
   :ensure smex
-  :init (setq counsel-find-file-at-point t)
+  :init (setq counsel-find-file-at-point t
+              enable-recursive-minibuffers t)
+
+  :config
+  ;; Add support for completing and expanding environment variables
+  ;; See https://github.com/abo-abo/swiper/issues/776#issuecomment-260682059
+  (setq counsel-env
+        (mapcar (lambda (s) (split-string s "=" t))
+                (split-string (shell-command-to-string "env") "\n" t)))
+  (defun counsel-expand-env ()
+    (interactive)
+    (if (equal ivy-text "")
+        (ivy-read "var: " counsel-env
+                  :action (lambda (x) (insert (cadr x))))
+      (insert "$")))
+
   :bind (("C-x C-f" . counsel-find-file)
          ("C-x C-r" . counsel-recentf)
          ("C-h f" . counsel-describe-function)
@@ -52,7 +67,9 @@
          ("C-c j" . counsel-git-grep)
 
          :map read-expression-map
-         ("C-r" . counsel-expression-history)))
+         ("C-r" . counsel-expression-history)
+         :map counsel-find-file-map
+         ("$" . counsel-expand-env)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-ivy.el ends here
