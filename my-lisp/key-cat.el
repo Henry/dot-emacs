@@ -158,8 +158,8 @@
       goto-home
       font-lock-mode
       support
-      emms-browser
-      emms-streams
+      ;;emms-browser
+      ;;emms-streams
       ))
     )
   "List with common commands to display by `key-cat-help'.
@@ -234,7 +234,7 @@ See also `key-cat-cmd-list'."
               (setq cmds (reverse cmds))
               (dolist (cmd cmds)
                 (setq cmdstr
-                      (let ((s "Where to find it:" ))
+                      (let ((s "Bound to:" ))
                         (put-text-property 0 (length s)
                                            'face '(:slant italic
                                                           :background "RGB:dd/dd/ff"
@@ -243,36 +243,33 @@ See also `key-cat-cmd-list'."
                     (cond
                      ((eq 'key-cat-tab cmd)
                       (let ((s "Indent line"))
-                        (put-text-property 0 (length s) 'face '(:foreground "blue") s)
+                        (put-text-property 0 (length s)
+                                           'face '(:foreground "blue") s)
                         (push s result))
                       (push ":\n" result)
                       (push (concat
                              "    "
                              "Indent current line (done by specific major mode function).\n")
                             result)
-                      (push (format "    %17s  %s\n" cmdstr (key-description [tab])) result)
+                      (push (format "    %17s  %s\n"
+                                    cmdstr (key-description [tab])) result)
                       )
                      ((eq 'key-cat-complete cmd)
                       (let ((s "Completion"))
-                        (put-text-property 0 (length s) 'face '(:foreground "blue") s)
+                        (put-text-property 0 (length s)
+                                           'face '(:foreground "blue") s)
                         (push s result))
                       (push ":\n" result)
-                      ;; (if tabkey2-mode
-                      ;;     (progn
-                      ;;       (push (concat
-                      ;;              "    "
-                      ;;              "Perform completion at point (`tabkey2-mode' chooses function).\n")
-                      ;;             result)
-                      ;;       (push (format "    %17s  %s\n" cmdstr (key-description [tab])) result))
-                      ;;   (push (concat
-                      ;;          "    "
-                      ;;          "Perform completion at point (specific major mode function if any).\n")
-                      ;;         result)
-                      ;;   (push (format "    %17s  %s\n" cmdstr (key-description [meta tab])) result))
+                      (push (concat
+                             "    "
+                             "Perform completion at point (specific major mode function if any).\n")
+                            result)
+                      (push (format "    %17s  %s\n" cmdstr (key-description [meta tab])) result)
                       )
                      (t
                       (let ((s (format "`%s':  (not a function)\n" cmd)))
-                        (put-text-property 0 (length s) 'face '(:foreground "red") s)
+                        (put-text-property 0 (length s)
+                                           'face '(:foreground "red") s)
                         (push s result))))
                   (let ((keys (key-cat-where-is cmd)))
                     (push (format "`%s':\n" cmd) result)
@@ -289,7 +286,8 @@ See also `key-cat-cmd-list'."
                         (if (interactive-form cmd)
                             (push (format "    %17s  M-x %s\n" cmdstr cmd) result)
                           (let ((s "(not an interactive command)"))
-                            (put-text-property 0 (length s) 'face '(:foreground "red") s)
+                            (put-text-property 0 (length s)
+                                               'face '(:foreground "red") s)
                             (push (format "    %17s  %s\n" cmdstr s) result)))
                       (dolist (key keys)
                         (push (format "    %17s  " cmdstr) result)
@@ -327,19 +325,19 @@ Argument is a command definition, usually a symbol with a function definition."
         (all-keys))
     ;; In DEFS, find all symbols that are aliases for DEFINITION.
     (mapatoms (lambda (symbol)
-		(and (fboundp symbol)
-		     (not (eq symbol definition))
-		     (eq func (condition-case ()
-				  (indirect-function symbol)
-				(error symbol)))
-		     (push symbol defs))))
+        (and (fboundp symbol)
+             (not (eq symbol definition))
+             (eq func (condition-case ()
+                  (indirect-function symbol)
+                (error symbol)))
+             (push symbol defs))))
     ;; Look at all the symbols--first DEFINITION,
     ;; then its aliases.
     (dolist (symbol (cons definition defs))
       (let* ((remapped (command-remapping symbol))
-	     (keys (where-is-internal
-		    ;;symbol overriding-local-map nil nil remapped)))
-		    symbol nil nil nil remapped)))
+         (keys (where-is-internal
+            ;;symbol overriding-local-map nil nil remapped)))
+            symbol nil nil nil remapped)))
         (when keys
           (dolist (key keys)
             (setq all-keys (cons key all-keys))))))
