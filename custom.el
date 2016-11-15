@@ -22,9 +22,7 @@
            (puthash
             (projectile-project-root)
             "makeEemacs" projectile-compilation-cmd-map))
-     (projectile-project-compilation-cmd . "wmake -q")
-     (header-auto-update-enabled)
-     (projectile-project-compilation-cmd . "makeEemacs")))))
+     (header-auto-update-enabled)))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

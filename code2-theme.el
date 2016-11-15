@@ -100,6 +100,9 @@
  '(diff-removed ((t (:foreground "red2" :weight bold))))
  '(show-paren-match ((t (:foreground "black" :weight extra-bold))))
  '(show-paren-mismatch ((t (:foreground "red" :weight extra-bold))))
+ '(elisp-buffer ((t (:background "azure1"))))
+ '(auto-dim-other-buffers-face ((t (:background "cornsilk"))))
+ '(wn-modeline-face ((t (:foreground "blue"))))
  )
 
 (provide-theme 'code2)
