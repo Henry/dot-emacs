@@ -14,34 +14,7 @@
   (require 'dired-x)
 
   (use-package dired+
-    :ensure t
-    :config
-    (progn
-        ;; Privilege indicator faces
-        (defun my-dired-update-privilege-faces ()
-          (set-face-attribute 'diredp-dir-priv nil
-                              :foreground "#7474FFFFFFFF"
-                              :background (face-background 'default))
-          (set-face-attribute 'diredp-exec-priv nil
-                              :foreground "dodger blue"
-                              :background (face-background 'default))
-          (set-face-attribute 'diredp-other-priv nil
-                              :background (face-background 'default))
-          (set-face-attribute 'diredp-write-priv nil
-                              :foreground "#25258F8F2929"
-                              :background (face-background 'default))
-          (set-face-attribute 'diredp-read-priv nil
-                              :foreground "#999932325555"
-                              :background (face-background 'default))
-          (set-face-attribute 'diredp-no-priv nil
-                              :foreground "#2C2C2C2C2C2C"
-                              :background (face-background 'default))
-          (set-face-attribute 'diredp-rare-priv nil
-                              :foreground "Green"
-                              :background (face-background 'default))
-          (set-face-attribute 'diredp-link-priv nil
-                              :foreground "#00007373FFFF"))
-        (add-hook 'dired-mode-hook 'my-dired-update-privilege-faces)))
+    :ensure t)
 
   ;; tar and untar (gz) from dired (bound to 'T')
   (require 'dired-tar)

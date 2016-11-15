@@ -37,18 +37,6 @@ so that they scroll together"
         (diff-find-source-location nil nil)
       (ediff-buffers buf-A buf-B))))
 
-;; Set `diff-mode' faces
-(custom-set-faces
- '(diff-header ((t (:foreground "black" :background "yellow"))) 'now)
- '(diff-file-header ((t (:foreground "blue" :background "yellow" :weight bold))) 'now)
- '(diff-hunk-header ((t (:foreground "white" :background "blue"))) 'now)
- '(diff-added ((t (:foreground "purple2" :weight bold))) 'now)
- '(diff-removed ((t (:foreground "red2" :weight bold))) 'now)
- '(diff-changed ((t (:foreground "magenta4" :weight bold))) 'now)
- '(diff-context ((t (:foreground "black"))) 'now)
- '(diff-index ((t (:foreground "green4"))) 'now)
- '(diff-nonexistent ((t (:foreground "LightBlue"))) 'now))
-
 (define-key diff-mode-map [f11] 'diff-hunk-next)
 (define-key diff-mode-map [f12] 'diff-2-ediff)
 

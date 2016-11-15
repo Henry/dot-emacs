@@ -149,8 +149,7 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
 
   ;; Turn on outline minor mode by default
   (outline-minor-mode +1)
-  (diminish 'outline-minor-mode)
-  )
+  (diminish 'outline-minor-mode))
 
 ;; -----------------------------------------------------------------------------
 ;;; Add hook
@@ -171,6 +170,17 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
 ;; #!<path>/sbcl
 ;; on the first line
 (add-to-list 'interpreter-mode-alist '("sbcl-shell"  . lisp-mode))
+
+;; -----------------------------------------------------------------------------
+;;; Set elisp mode background colour
+
+(defface elisp-buffer '((t (:background "azure1")))
+  "*Face used for elisp buffers"
+  :group 'lisp)
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (face-remap-add-relative 'default 'elisp-buffer)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-elisp.el ends here

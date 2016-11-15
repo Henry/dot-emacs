@@ -29,12 +29,7 @@
   (setq show-paren-delay 0)
   (setq show-paren-style 'parenthesis)
   (make-variable-buffer-local 'show-paren-mode)
-  (show-paren-mode 1)
-  (set-face-background 'show-paren-match-face (face-background 'default))
-  (set-face-foreground 'show-paren-match-face "black")
-  (set-face-attribute 'show-paren-match-face nil :weight 'extra-bold)
-  (set-face-foreground 'show-paren-mismatch-face "red")
-  (set-face-attribute 'show-paren-mismatch-face nil :weight 'extra-bold))
+  (show-paren-mode 1))
 
 ;; -----------------------------------------------------------------------------
 ;;; Turn-off font-lock for Postscript files
@@ -47,10 +42,6 @@
      (functionp 'battery-status-function)
      (or (equal (cdr (assoc ?L (funcall battery-status-function))) "on-line")
          (display-battery-mode)))
-
-;; -----------------------------------------------------------------------------
-;;; Buffer displayed on startup
-; (setq initial-buffer-choice)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-display.el ends here

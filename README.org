@@ -33,7 +33,6 @@ This is the contents of my /.emacs.d/ directory.
   + wn-org
 
 * Other Packages without permanent home (in /my-lisp/ directory)
-  + file-journal (This is already on GitHub)
   + git-grep (Replaced by counsel-git-grep?)
 
 * Third-party Packages (in the /elpa/ and /lisp/ directories)
@@ -160,8 +159,6 @@ This is the contents of my /.emacs.d/ directory.
     https://melpa.org/#/iedit
 *** Jump to link like conkeror
     https://melpa.org/#/ace-link
-*** Key-maps with prompts
-    https://melpa.org/#/hydra
 *** Lookup word definition
     https://melpa.org/#/define-word
 *** Rtags

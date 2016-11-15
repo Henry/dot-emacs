@@ -87,6 +87,32 @@
          )
         )
       org-columns-skip-arrchived-trees t
+
+      org-emphasis-alist
+      (quote
+       (("*" bold "<b>" "</b>")
+        ("/" italic "<i>" "</i>")
+        ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
+        ("=" org-code "<code>" "</code>" verbatim)
+        ("~" org-verbatim "<code>" "</code>" verbatim)
+        ("+"
+         (:strike-through t)
+         "<del>" "</del>")
+        ("@" org-warning "<b>" "</b>")))
+
+      org-export-latex-emphasis-alist
+      (quote
+       (("*" "\\textbf{%s}" nil)
+        ("/" "\\emph{%s}" nil)
+        ("_" "\\underline{%s}" nil)
+        ("+" "\\st{%s}" nil)
+        ("=" "\\protectedtexttt" t)
+        ("~" "\\verb" t)
+        ("@" "\\alert{%s}" nil)))
+
+      org-latex-to-pdf-process
+      (quote
+       ("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
       )
 
 ;; -----------------------------------------------------------------------------

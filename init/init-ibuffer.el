@@ -8,6 +8,23 @@
       ibuffer-default-sorting-mode 'alphabetic
       ibuffer-use-header-line t)
 
+(setq ibuffer-formats
+      (quote
+       ((mark " "
+              (name 30 -1 :left :elide)
+              " "
+              (filename -1 47 :left))
+        (mark modified read-only " "
+              (name 18 18 :left :elide)
+              " "
+              (size 9 -1 :right)
+              " "
+              (mode 16 16 :left :elide)
+              " " filename-and-process)
+        (mark " "
+              (name 16 -1)
+              " " filename))))
+
 (setq ibuffer-saved-filter-groups
       (quote (("default"
                ("Dired"

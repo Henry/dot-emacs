@@ -152,16 +152,14 @@
 (setq-default save-place nil)
 
 ;; -----------------------------------------------------------------------------
-;;; Read the  file-journal
-;; Note: (require 'file-journal) is in init-personalisation.el
-
-;; (if (file-readable-p fj-journal-file)
-;;    (load (expand-file-name fj-journal-file) nil t t))
-
 ;;; Set the *scratch* buffer to emacs-lisp-mode
 ;;  rather than the default lisp-interaction-mode
 (with-current-buffer (get-buffer "*scratch*")
   (funcall initial-major-mode))
+
+;; -----------------------------------------------------------------------------
+;;; Buffer displayed on startup
+;; (setq initial-buffer-choice 'key-cat-help)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-runtime.el ends here

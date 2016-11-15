@@ -99,17 +99,7 @@
   (defalias 'eldoc-get-fnsym-args-string 'elisp-get-fnsym-args-string)
 
   (add-hook 'eshell-mode-hook 'my-eshell-mode-hook)
-  (setup-esh-help-eldoc)
-
-  :config
-  :bind (:map eshell-mode-map
-              ("C-a" . eshell-bol)
-              ([end] . eshell-show-maximum-output)
-              ([home] . eshell-previous-prompt)
-              ([f1] . tooltip-help-mode-show)
-              ([S-f1] . describe-variable-or-function)
-              ([(meta ?.)] . eshell-insert-previous-argument))
-  )
+  (setup-esh-help-eldoc))
 
 ;; -----------------------------------------------------------------------------
 ;;; Set eshell-mode hook
@@ -141,6 +131,14 @@
             (setq ad-return-value (or esym sym))))))
 
   (turn-on-eldoc-mode)
+
+  ;; For some reason use-package :bind :map does not work for eshell
+  (local-set-key (kbd "C-a") 'eshell-bol)
+  (local-set-key [end] 'eshell-show-maximum-output)
+  (local-set-key [home] 'eshell-previous-prompt)
+  (local-set-key [f1] 'tooltip-help-mode-show)
+  (local-set-key [S-f1] 'describe-variable-or-function)
+  (local-set-key [(meta ?.)] 'eshell-insert-previous-argument)
 
   (local-set-key [up] 'previous-line)
   (local-set-key [down] 'next-line)

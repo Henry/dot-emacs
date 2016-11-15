@@ -15,8 +15,11 @@
   (setq
    ;; Make sure the repository is loaded as early as possible
    bm-restore-repository-on-load t
+
    ;; Set the location of the repository file
-   bm-repository-file (expand-file-name "BM-repository" user-emacs-directory))
+   bm-repository-file (expand-file-name "BM-repository" user-emacs-directory)
+
+   bm-highlight-style 'bm-highlight-only-line)
 
   ;; Make bookmarks persistent as default
   (setq-default bm-buffer-persistence t)
@@ -25,6 +28,7 @@
          ("S-<f2>" . bm-previous)
          ("M-<f2>" . bm-show-all)
          :map bm-show-mode-map ("d" . bm-show-remove-bookmark))
+
   :config
   ;; Loading the repository from file when on start up.
   (add-hook' after-init-hook 'bm-repository-load)

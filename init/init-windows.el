@@ -21,6 +21,10 @@ rather than vertically.")
 ;;;  Put column number into modeline
 (column-number-mode 1)
 
+;;;  Fill to column 80
+(setq fill-column 80
+      word-wrap t)
+
 ;;; Switch buffers between windows
 
 (defun my-rotate-windows ()
@@ -59,7 +63,10 @@ rather than vertically.")
 (use-package window-number
   :ensure t
   :init
-  (setq window-number-inactive-background "dark slate blue")
+  (setq window-number-active-background "grey75"
+        window-number-inactive-background "grey75"
+        window-number-active-foreground "black"
+        window-number-inactive-foreground "black")
   :config
   ;; Define \M-t 1 to switch to win 1, etc (\M-t 0 = win 10)
   ;; Note: space after M-t is important
