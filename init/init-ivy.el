@@ -43,13 +43,14 @@
   :config
   ;; Add support for completing and expanding environment variables
   ;; See https://github.com/abo-abo/swiper/issues/776#issuecomment-260682059
-  (setq counsel-env
-        (mapcar (lambda (s) (split-string s "=" t))
-                (split-string (shell-command-to-string "env") "\n" t)))
+  (defun counsel-env ()
+    (mapcar (lambda (s) (split-string s "=" t))
+            process-environment))
+
   (defun counsel-expand-env ()
     (interactive)
     (if (equal ivy-text "")
-        (ivy-read "var: " counsel-env
+        (ivy-read "var: " (counsel-env)
                   :action (lambda (x) (insert (cadr x))))
       (insert "$")))
 
