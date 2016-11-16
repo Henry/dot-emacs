@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x -e
+set -e
 
 EMACSLISP=/usr/local/share/emacs/25.1/lisp
 
@@ -8,6 +8,8 @@ then
 
 #tag=etags -
 tag="ctags-exuberant -e -L -"
+
+echo "Making tags"
 
 find $EMACSLISP -name "*.el" | $tag -f ~/Emacs/systemTAGS
 find . -name save -prune -o -name pending -prune -o \( -name "*.el" -print \) | $tag -f ~/Emacs/TAGS

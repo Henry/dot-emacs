@@ -2,6 +2,8 @@
 ;; -----------------------------------------------------------------------------
 ;;; Package initialization
 
+(setq user-emacs-directory "~/Emacs/")
+
 ;; Don't load outdated byte code
 (setq load-prefer-newer t)
 

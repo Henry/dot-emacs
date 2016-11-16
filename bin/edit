@@ -2,7 +2,7 @@
 
 # Use the extended emacs as the server (load MUCH faster)
 # Use makeEemacs to rebuild eemacs if required
-eeserver="eemacs -q -l ~/.emacs.d/init-eemacs.el -f enable-history-saving -server server"
+eeserver="eemacs -q -l ~/.emacs.d/init-eemacs -f enable-history-saving -server server"
 
 expandpath()
 {
@@ -23,8 +23,8 @@ expandpath()
 if [ $# -eq 0 ]
 then
     # If a file-name is not provided open an empty frame
-    (emacsclient -n --eval "(new-frame)" 2>/dev/null || $eeserver 2>/dev/null) &
+    (emacsclient -n -s "server" --eval "(new-frame)" 2>/dev/null || $eeserver 2>/dev/null) &
 else
     expandpath $1
-    (emacsclient -n --eval "(find-file-other-frame \"$exPath\")" 2>/dev/null || $eeserver $1 2>/dev/null) &
+    (emacsclient -n -s "server" --eval "(find-file-other-frame \"$exPath\")" 2>/dev/null || $eeserver $1 2>/dev/null) &
 fi

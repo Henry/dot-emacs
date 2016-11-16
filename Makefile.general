@@ -1,0 +1,27 @@
+EMACS = emacs
+
+# list of core elisp files
+el_files := $(shell ls *.el)
+elc_files := $(el_files:.el=.elc)
+
+all: $(elc_files)
+
+# implicit rule for byte-compiling elisp files
+%.elc: %.el Makefile
+	$(EMACS) \
+	-batch \
+	-L . \
+	-L $(DOTEMACS)/init \
+	-L $(DOTEMACS)/init/personal \
+	-L $(DOTEMACS)/lisp \
+	-L $(DOTEMACS)/my-lisp \
+	-L $(DOTEMACS)/my-lisp/tree-mode \
+	-l init-package \
+	-f batch-byte-compile $(el_files)
+
+.PHONY: cleanelc
+cleanelc:
+	@rm -f *.elc
+
+.PHONY: clean
+clean: cleanelc

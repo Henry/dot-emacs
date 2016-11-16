@@ -1,6 +1,7 @@
 #!/bin/bash
-set -x -e
+set -e
 
+# Set required HOME environment variable removed by 'env -i'
 export HOME=~
 
 EMACS=/usr/local/bin/emacs

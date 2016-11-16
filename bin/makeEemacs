@@ -1,2 +1,2 @@
 #!/bin/bash
-env -i ~/.emacs.d/bin/makeEemacs_
+cd ~/.emacs.d && env -i bin/makeEemacs_
