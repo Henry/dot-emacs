@@ -243,7 +243,7 @@
   ;; Biff: Check for new mail
   (setq wl-biff-check-interval 180
         wl-biff-check-delay 10
-        wl-biff-use-idle-timer nil)
+        wl-biff-use-idle-timer t)
 
   :config
   (require 'wl-summary)

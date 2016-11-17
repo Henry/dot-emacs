@@ -13,12 +13,11 @@ This is the contents of my /.emacs.d/ directory.
   I use such an extensive set of packages and configurations that loading them
   at run-time in the normal manner is prohibitively slow.  To avoid this problem
   I build and dump an image of =emacs= containing nearly all of the packages and
-  configuration files as =eemacs=.  The script to perform this task is
-  =bin/makeEemacs= based on various sources of information on the =emacs dump=
-  function, in particular [[http://www.emacswiki.org/cgi-bin/wiki/DumpingEmacs][dumping emacs]].  Note that =emacs= no longer supports
-  dumping new images and =temacs= must be used which is obtained by compiling
-  =emacs= from sources.  I hope that eventually the option to dump =emacs=
-  images directly from =emacs= will be reinstated.
+  configuration files as =eemacs=; the script thats perform this task is
+  [[https://github.com/Henry/dot-emacs/blob/master/bin/makeEemacs][bin/makeEemacs]].  Note that =emacs= no longer supports dumping new images and
+  =temacs= must be used which is obtained by compiling =emacs= from sources.  I
+  hope that eventually the option to dump =emacs= images directly from =emacs=
+  will be reinstated.
 
 * My Packages (in /my-lisp/ directory)
   + e2wm-code2
@@ -31,9 +30,6 @@ This is the contents of my /.emacs.d/ directory.
   + thingatpt-ext
   + tooltip-help (taken over from Tamas Patrovics)
   + wn-org
-
-* Other Packages without permanent home (in /my-lisp/ directory)
-  + git-grep (Replaced by counsel-git-grep?)
 
 * Third-party Packages (in the /elpa/ and /lisp/ directories)
   A =Makefile= is provided in the /lisp/ directory to compile the minor
@@ -90,7 +86,6 @@ This is the contents of my /.emacs.d/ directory.
     + highlightparentheses
     + hlsexp
     + htmlize
-    + icicles
     + icomplete+
     + iedit
     + igrep
@@ -150,8 +145,6 @@ This is the contents of my /.emacs.d/ directory.
     + rw-acronyms
 
 * Packages to try
-*** Fuzzy matching with company
-    https://github.com/PythonNut/company-flx
 *** Pretty modeline
     https://melpa.org/#/powerline
     https://melpa.org/#/smart-mode-line

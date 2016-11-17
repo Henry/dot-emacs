@@ -22,6 +22,11 @@
 (load "init-package")
 
 ;; -----------------------------------------------------------------------------
+;;; A modern list library
+(use-package dash
+  :ensure t)
+
+;; -----------------------------------------------------------------------------
 ;;; Application generated customisations
 (setq inhibit-default-init t)
 (setq custom-file (expand-file-name "~/.emacs.d/custom.el"))
