@@ -1,15 +1,13 @@
 ;;; init-packge.el --- Package initialization
 ;; -----------------------------------------------------------------------------
 
-(setq user-emacs-directory "~/Emacs/")
-
-;; Don't load outdated byte code
-(setq load-prefer-newer t)
+(setq user-emacs-directory "~/Emacs/"
+      package-user-dir (concat user-emacs-directory "elpa/")
+      package-enable-at-startup nil
+      load-prefer-newer t ; Don't load outdated byte code
+      )
 
 (require 'package)
-
-(setq package-user-dir "~/Emacs/elpa/"
-      package-enable-at-startup nil)
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)

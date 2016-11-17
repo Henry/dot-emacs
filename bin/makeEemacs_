@@ -47,6 +47,8 @@ rm -f init-eemacs.elc
 
 echoRed "Updating and compiling elpa packages"
 $EMACS --batch \
+       -L init \
+       -l init-package.el \
        -l init-eemacs.el \
        --eval "(progn (package-refresh-contents) (byte-recompile-directory (expand-file-name \"~/Emacs/elpa\") 0))"
 
