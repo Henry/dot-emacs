@@ -4,13 +4,13 @@
 ;; Maintainer: Henry G. Weller
 ;;
 ;; Created: Thu Jul 17 09:49:48 2008 (+0100)
-;; Version: 0.1
-;; Last-updated: Sun Apr 12 15:41:18 2009 (+0100)
+;; Version: 0.2
+;; Last-updated: Fri Nov 18 08:16:50 2016 (+0000)
 ;;           By: Henry G. Weller
-;;     Update #: 3
-;; URL: http://www.emacswiki.org/emacs/hgw-init-wl.el
+;;     Update #: 4
+;; URL: https://github.com/Henry/dot-emacs/blob/master/init/init-wl.el
 ;; Keywords: convenience
-;; Compatibility: GNU Emacs 23.x (may work with earlier versions)
+;; Compatibility: GNU Emacs 25.x (may work with earlier versions)
 ;;
 ;; This file is NOT part of Emacs.
 ;;
@@ -32,6 +32,11 @@
 ;;
 ;; Version 0.1
 ;; * Initial release
+;;
+;; Version 0.2
+;; * Updated using ELPA packages
+;; * Configured using `use-package'
+;; * bbdb upgraded to v3
 ;;
 ;; -----------------------------------------------------------------------------
 ;;
@@ -73,6 +78,9 @@
         elmo-split-log-file
         (concat user-emacs-directory "Wanderlust/Elmo/split-log")
 
+        mime-situation-examples-file
+        (concat user-emacs-directory "Wanderlust/mime-example")
+
         ;; Offline and synchronization
         wl-plugged t
         elmo-imap4-default-authenticate-type 'clear
@@ -91,11 +99,11 @@
         wl-fcc ".Sent"
         wl-fcc-force-as-read t
         wl-from (concat user-full-name " <" user-mail-address ">")
-        wl-organization "***HGW"
+        wl-organization "***"
 
         ;; Automatic signature insertion
         mime-setup-use-signature t
-        signature-file-name "***HGW"
+        signature-file-name "***"
         signature-insert-at-eof t
         signature-delete-blank-lines-at-eof t
 
@@ -127,8 +135,8 @@
         wl-folder-window-width 30
         wl-folder-desktop-name "Email"
         wl-default-folder "%inbox"
-        my-wl-default-filing-folder ".***HGW"
-        wl-default-spec ".***HGW/***HGW"
+        my-wl-default-filing-folder ".***"
+        wl-default-spec ".***/***"
         wl-draft-folder ".Drafts"
         wl-trash-folder ".Trash"
         wl-interactive-save-folders nil
@@ -153,6 +161,7 @@
         wl-folder-many-unsync-threshold  100
         wl-highlight-folder-by-numbers 1
         )
+
   ;; ---------------------------------------------------------------------------
   ;; Local mail directory path
   (setq my-maildir-path "~/Maildir"
@@ -186,15 +195,7 @@
 
   ;; ---------------------------------------------------------------------------
   ;; Draft
-  (setq wl-draft-config-alist
-        '(
-          ((string-match ".*@imap\\.gmail\\.com.*" wl-draft-parent-folder)
-           ("From" . "Henry G. Weller <hweller0@gmail.com>")
-           ("Organization" . nil)
-           ("X-Attribution" . "HGW")
-           (signature . "~/Maildir/Signatures/homeAddress"))
-          )
-
+  (setq ;; wl-draft-config-alist ***
         wl-draft-reply-without-argument-list
         '(("Followup-To" .
            (("Mail-Followup-To" "Mail-Reply-To" "Reply-To") nil
@@ -235,21 +236,23 @@
           "^Cc"))
 
   ;; ---------------------------------------------------------------------------
-  ;; Sending
-  ;; Don't split large messages
+  ;; Sending: don't split large messages
   (setq mime-edit-split-message nil)
 
   ;; ---------------------------------------------------------------------------
   ;; Biff: Check for new mail
   (setq wl-biff-check-interval 180
         wl-biff-check-delay 10
-        wl-biff-use-idle-timer t)
+        wl-biff-use-idle-timer nil)
 
   :config
+  (require 'elmo)
   (require 'wl-summary)
   (require 'wl-folder)
+
   ;;  Initialise bbdb with wanderlust and supercite support
   (bbdb-initialize 'wl 'sc)
+
   ;;(bbdb-insinuate-wl)
   (bbdb-mua-auto-update-init 'wl 'message)
 
@@ -276,8 +279,7 @@
   (define-key wl-summary-mode-map "\C-b" 'bbdb-mua-display-sender)
   (define-key wl-summary-mode-map "\C-f" 'bbdb-mua-edit-field-sender)
 
-  (define-key wl-folder-mode-map [mouse-2] 'wl-folder-jump-to-current-entity)
-  )
+  (define-key wl-folder-mode-map [mouse-2] 'wl-folder-jump-to-current-entity))
 
 ;; -----------------------------------------------------------------------------
 ;;;  Re-fill messages that arrive poorly formatted
@@ -315,7 +317,7 @@
     (message "No message to re-fill")))
 
 ;; -----------------------------------------------------------------------------
-;;; Refiling:
+;;;  Refiling:
 ;; See also `bbdb-wl-refile-alist' and `wl-init-hook'
 
 (defcustom wl-general-refile-rule-alist nil
@@ -337,7 +339,7 @@ e.g.
 (setq wl-refile-rule-alist wl-general-refile-rule-alist)
 
 ;; -----------------------------------------------------------------------------
-;;; Add hooks
+;;;  Add hooks
 
 (add-hook
  'wl-init-hook
@@ -468,7 +470,7 @@ Set the `j' key to run `mime-preview-quit'."
      ))
 
 ;; -----------------------------------------------------------------------------
-;;; Configure supercite to manage citations
+;;;  Configure supercite to manage citations
 
 (use-package supercite
   :ensure t
@@ -492,7 +494,7 @@ Set the `j' key to run `mime-preview-quit'."
   (add-hook 'mail-citation-hook 'sc-cite-original))
 
 ;; -----------------------------------------------------------------------------
-;;; Extension Functions
+;;;  Extension Functions
 
 (defun wl-draft-config-sub-signature (content)
   "Insert the signature at the end of the MIME message."
@@ -526,7 +528,7 @@ Set the `j' key to run `mime-preview-quit'."
     ))
 
 ;; -----------------------------------------------------------------------------
-;;; User Functions
+;;;  User Functions
 
 (defun my-wl-draft-kill-force ()
   (interactive)
@@ -688,8 +690,6 @@ so that the appropriate emacs mode is selected according to the file extension."
         (my-mime-save-content-find-file entity)))
   )
 
-(require 'elmo)
-
 (defun my-bbdb-insert-folder ()
   "Interactively select the destination folder and store in BBDB."
   (interactive)
@@ -720,13 +720,13 @@ so that the appropriate emacs mode is selected according to the file extension."
       )))
 
 ;; -----------------------------------------------------------------------------
-;;; Key-bindings
+;;;  Key-bindings
 
 (global-set-key "\C-xm" 'my-wl-check-mail-primary)
 (define-key bbdb-mode-map "\C-f" 'my-bbdb-insert-folder)
 
 ;; -----------------------------------------------------------------------------
-;;; General mairix interface
+;;;  General mairix interface
 
 (use-package mairix
   :ensure t
@@ -784,7 +784,7 @@ so that the appropriate emacs mode is selected according to the file extension."
 (define-key my-mairix-map "e" 'mairix-edit-saved-searches)
 
 ;; -----------------------------------------------------------------------------
-;;; Simple mairix interface
+;;;  Simple mairix interface
 
 (setq my-mairix "mairix")
 (setq my-mairix-search-folder ".Search")
@@ -810,7 +810,7 @@ so that the appropriate emacs mode is selected according to the file extension."
       (error msg))))
 
 ;; -----------------------------------------------------------------------------
-;;; Load personal information
+;;;  Load personal information
 
 (load "personal/init-wl")
 
