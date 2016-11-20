@@ -50,6 +50,7 @@
         eshell-prefer-lisp-functions t
         eshell-scroll-to-bottom-on-input t
         eshell-buffer-shorthand t
+        eshell-no-grep-available nil
 
         eshell-show-lisp-completions nil
         eshell-cmpl-expand-before-complete t
@@ -292,6 +293,15 @@ Completion is available."))
             (error "Bookmark %s points to %s which is not a directory"
                    bookmark filename))
         (error "%s is not a bookmark" bookmark))))))
+
+;; -----------------------------------------------------------------------------
+;;; Git, git-grep etc.
+
+(defun eshell/git (&rest args)
+  (apply 'eshell-exec-visual (cons "git" args)))
+
+(defun eshell/git-grep (rex)
+  (vc-git-grep rex "*" "."))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-eshell.el ends here
