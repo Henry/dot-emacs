@@ -86,10 +86,6 @@ rather than vertically.")
 (setq-default bidi-display-reordering nil)
 
 ;; -----------------------------------------------------------------------------
-;;; Switch-off cursor in other windows
-(setq-default cursor-in-non-selected-windows nil)
-
-;; -----------------------------------------------------------------------------
 ;;; Dim other buffers
 (use-package auto-dim-other-buffers
   :ensure t
