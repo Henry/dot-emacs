@@ -6,9 +6,8 @@
   "Holds the `DISPLAY' environment variable which is set to the correct
 value by the `-server' option for eemacs")
 
-;;;  emacsclient core-dumps whet TCP is used
-;;(setq server-use-tcp t
-;;      server-host "10.0.0.37")
+;;;  Server: emacsclient core-dumps when TCP is used
+;;(setq server-use-tcp t)
 
 (defun command-line-server (switch)
   ;; Get the name of the server
