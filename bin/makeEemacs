@@ -2,4 +2,4 @@
 
 # Run makeEemacs_ in an empty environment to avoid contaminating
 # the eemacs image by the current environment
-cd ~/.emacs.d && env -i bin/makeEemacs_
+cd ~/.emacs.d && env -i HOME=$HOME PATH=$PATH bin/makeEemacs_

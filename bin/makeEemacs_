@@ -1,15 +1,12 @@
 #!/bin/bash
 set -e
 
-# Set required HOME environment variable removed by 'env -i'
-export HOME=~
-
 # Assume emacs has been compiled and installed in /usr/local
 # Note: compilation of emacs from sources is necessary to get access to temacs
 EMACS=/usr/local/bin/emacs
 
 # Get the current emacs version
-EMACS_VERSION=$($EMACS --version |  grep "GNU Emacs [0-9][0-9.]*" | sed s/"GNU Emacs \([1-9][0-9]\.[0-9]\)\.[0-9]/\1/")
+EMACS_VERSION=$($EMACS --version |  grep "GNU Emacs [0-9][0-9.]*" | sed s/"GNU Emacs \([1-9][0-9]\.[0-9]\)[0-9\.]*/\1/")
 
 # Infer the location of the temacs executable and documentation
 TEMACS=/usr/local/src/emacs-$EMACS_VERSION/src/temacs
