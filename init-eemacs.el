@@ -20,7 +20,7 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/phi-grep-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/color-moccur-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/greed-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/iedit-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/info-[0-9.]*"))))

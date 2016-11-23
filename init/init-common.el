@@ -51,14 +51,36 @@
 ;;;  in all buffers that refer to files.
 
 (use-package color-moccur
-  :ensure t
   :commands (moccur moccur-grep moccur-grep-find)
   :init
   (require 'moccur-edit)
-  (setq isearch-lazy-highlight t)
-  :bind (:map moccur-mode-map
-              ("<down>" . next-line)
-              ("<up>" . previous-line)))
+
+  (defun moccur-show ()
+    "Show the current candidate in the buffer in the other window"
+    (interactive)
+    (setq moccur-mocur-buffer (current-buffer))
+    (beginning-of-line)
+    (moccur-get-info)
+    (if (and moccur-view-other-window
+             moccur-view-other-window-nobuf
+             moccur-following-mode-toggle)
+        (moccur-view-file)))
+
+  (defun my-moccur-mode-hook ()
+    (local-set-key (kbd "<down>") 'next-line)
+    (local-set-key (kbd "<up>") 'previous-line)
+    (local-set-key (kbd "<tab>") 'moccur-show))
+
+  (add-hook 'moccur-mode-hook 'my-moccur-mode-hook))
+
+;; -----------------------------------------------------------------------------
+;;; greed --- An improved interface to occur and moccur
+;;;  greed <regexp> shows all occurrences of <regexp>
+;;;  in all buffers that refer to files.
+
+(use-package greed
+  :commands (greed greed-occur greed-grep greed-dir greed-dired greed-grep-find
+                   greed-buffer-menu greed-ibuffer greed-isearch))
 
 ;; -----------------------------------------------------------------------------
 ;;; iedit --- Edit multiple regions with the same content simultaneously

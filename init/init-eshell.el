@@ -303,5 +303,23 @@ Completion is available."))
 (defun eshell/git-grep (rex)
   (vc-git-grep rex "*" "."))
 
+(defun eshell/greed (regex)
+  "Alias \"greed\" to call Emacs `greed' function."
+  (let ((ret (apply 'greed (list regex nil))))))
+
+(put 'eshell/greed 'eshell-no-numeric-conversions t)
+
+(defun eshell/mgrep (dir regex &optional files)
+  "Alias \"mgrep\" to call Emacs `greed-grep' function."
+  (let ((ret (apply 'greed-grep (list dir (list regex files)))))))
+
+(put 'eshell/mgrep 'eshell-no-numeric-conversions t)
+
+(defun eshell/mgrepf (dir regex &optional files)
+  "Alias \"mgrepf\" to call Emacs `greed-grep-find' function."
+  (let ((ret (apply 'greed-grep-find (list dir (list regex files)))))))
+
+(put 'eshell/mgrepf 'eshell-no-numeric-conversions t)
+
 ;; -----------------------------------------------------------------------------
 ;;; init-eshell.el ends here

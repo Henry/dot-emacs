@@ -173,7 +173,7 @@
 (defvar e2wm:c-code2-show-left-regexp nil)
 
 (defvar e2wm:c-code2-show-right-regexp
-   "\\*\\(Help\\|eshell\\|grep\\|Moccur\\|Compilation\\|Backtrace\\|magit\\|imenu-tree\\|Man\\|WoMan\\|info\\)")
+   "\\*\\(Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|magit\\|imenu-tree\\|Man\\|WoMan\\|info\\)")
 
 (defvar e2wm:c-code2-max-sub-size 1000)
 
