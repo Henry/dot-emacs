@@ -173,7 +173,7 @@
 (defvar e2wm:c-code2-show-left-regexp "\\*\\(magit\\)")
 
 (defvar e2wm:c-code2-show-right-regexp
-   "\\*\\(Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|COMMIT_EDITMSG\\|imenu-tree\\|Man\\|WoMan\\|info\\)")
+   "\\(\\*\\(Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|imenu-tree\\|Man\\|WoMan\\|info\\)\\)\\|COMMIT_EDITMSG")
 
 (defvar e2wm:c-code2-max-sub-size 1000)
 
