@@ -600,6 +600,8 @@ for this is to reveal context in an outline-mode when the occurrence is hidden."
 (defvar greed-special-word nil)
 (defvar greed-fontlock-buffer nil)
 (make-variable-buffer-local 'greed-fontlock-buffer)
+(defvar greed-dir-default-word nil)
+(defvar greed-searched-list nil)
 
 ;;;  greed-dir
 (defvar greed-dir-mask-internal nil)
@@ -622,6 +624,9 @@ for this is to reveal context in an outline-mode when the occurrence is hidden."
 (defvar greed-edit-change-face-flg nil)
 (defvar greed-edit-old-content)
 (make-local-variable 'greed-edit-old-content)
+(defvar greed-edit-buf "")
+(defvar greed-edit-line "")
+(defvar greed-edit-text "")
 
 ;;; greed-isearch
 (defun greed-isearch ()
@@ -1001,10 +1006,7 @@ Optional arguments are not used."
   (if (re-search-forward greed-regexp-color (line-end-position) t)
       ()
     (greed-goto-line (string-to-number greed-line)))
-
-  ;; color
   (greed-color-current-line)
-
   (setq greed-before-buffer-name greed-buffer-name)
   (switch-to-buffer-other-window greed-buffer))
 
@@ -1035,15 +1037,11 @@ Argument ARG If non-nil, `end-of-buffer'."
           (goto-char (point-max))
         (goto-char (point-min)))
     (error nil))
-
-  ;; color
   (greed-color-current-line)
-
   (setq greed-before-buffer-name greed-buffer-name)
   (switch-to-buffer-other-window greed-buffer))
 
 ;;;  Minibuffer
-(defvar greed-dir-default-word nil)
 (defun greed-set-default-word ()
   "Set default word to regexp."
   (cond
@@ -1134,16 +1132,10 @@ If NAME exists, `greed-search-buffer' works as grep."
   (let ((match-str nil) fname)
     (set-buffer currbuf)
     (setq greed-buffer-position (point))
-
-    ;;(make-local-hook 'after-change-functions)
-    ;;(remove-hook 'after-change-functions 'greed-remove-overlays)
     (add-hook 'after-change-functions
               'greed-remove-overlays-on-all-buffers nil t)
-
     (goto-char (point-min))
-
     (greed-special-word-call-initialize-function)
-
     (while (greed-search-line regexp)
       (when (greed-special-word-call-check-function)
         (setq greed-matches (+ greed-matches 1))
@@ -1196,11 +1188,9 @@ If NAME exists, `greed-search-buffer' works as grep."
         (insert "\n\n")
         t))))
 
-(defvar greed-searched-list nil)
 (defun greed-search (regexp arg buffers)
   "Search REGEXP in BUFFERS (list).
 If ARG is non-nil, also search buffer that doesn't have file name"
-
   (when (or
          (not regexp)
          (equal regexp ""))
@@ -1216,7 +1206,6 @@ If ARG is non-nil, also search buffer that doesn't have file name"
              (list
               regexp arg buffers)
              greed-searched-list))))
-
   (setq greed-special-word nil)
   (greed-set-regexp regexp)
   (greed-set-regexp-for-color)
@@ -1230,7 +1219,6 @@ If ARG is non-nil, also search buffer that doesn't have file name"
       ()
     (setq regexp-history
           (cons greed-regexp-input regexp-history)))
-
   (save-excursion
     (setq greed-buffer (generate-new-buffer "*greed*"))
     (set-buffer greed-buffer)
@@ -1333,23 +1321,15 @@ Example:
  greed [a-z ]+ search -> '(\"greed\" \"[a-z ]+\" \"search\")"
 
   ;; strip whitespace from end of string
-  (setq string
-        (substring
-         string
-         0
-         (string-match "[ ]+$" string)))
+  (setq string (substring string 0 (string-match "[ ]+$" string)))
   (while (string-match "^[ ]+" string)
-    (setq string
-          (substring
-           string
-           1)))
+    (setq string (substring string 1)))
   (let* ((rexp (or separators "[ ]+"))
          (lst (split-string string rexp))
          (new-lst nil)
          (current-regexp nil)
          (regexp-p nil)
          (regexp nil))
-
     (when (and
            greed-split-word
            (assoc (car lst) greed-special-word-list)
@@ -1357,20 +1337,14 @@ Example:
       (setq greed-regexp-list (cdr greed-regexp-list))
       (setq greed-special-word (car lst))
       (setq lst (cdr lst)))
-
     (while lst
-      (setq current-regexp (concat
-                            regexp
-                            (if regexp
-                                " ")
-                            (car lst)))
+      (setq current-regexp (concat regexp (if regexp " ") (car lst)))
       (setq regexp nil)
       (setq lst (cdr lst))
       (setq regexp-p t)
       (condition-case nil
           (string-match current-regexp "test")
         (error (setq regexp-p nil)))
-
       (cond
        ((and greed-use-keyword
              regexp-p
@@ -1384,7 +1358,6 @@ Example:
        (t
         (setq regexp (concat current-regexp
                              (if regexp " ") regexp)))))
-
     (if regexp
         (setq new-lst
               (append new-lst
@@ -1399,9 +1372,7 @@ Example:
          (not new-lst)
          (not regexp))
         (error "Invalid regexp"))
-
     (setq new-lst (reverse new-lst))
-
     new-lst))
 
 (defun greed-word-split (regexp &optional norestrict)
@@ -1747,8 +1718,7 @@ It serves as a menu to find any of the occurrences in this buffer.
          (t
           (push elt list))))
       (setq files (reverse list)))
-    (greed-search-files regexps files)
-    ))
+    (greed-search-files regexps files)))
 
 (defun greed-grep-find-subdir (dir mask)
   (let ((files (cdr (cdr (directory-files dir t)))) (list) (plist))
@@ -1808,8 +1778,7 @@ It serves as a menu to find any of the occurrences in this buffer.
      (t
       (setq files (reverse (greed-grep-find-subdir dir mask)))))
     (message "Listing files done!")
-    (greed-search-files regexps files)
-    ))
+    (greed-search-files regexps files)))
 
 ;;; greed-dir
 ;;  utility
@@ -2080,7 +2049,6 @@ It serves as a menu to find any of the occurrences in this buffer.
                      (greed-regexp-read-from-minibuf)
                      current-prefix-arg))
   (greed-setup)
-
   (setq greed-last-command 'greed-dir)
   (let* ((list-name (if (car greed-dir-project-name)
                         (car greed-dir-project-name) "greed-dir"))
@@ -2200,7 +2168,6 @@ It serves as a menu to find any of the occurrences in this buffer.
 
 (defun greed-quit ()
   (interactive)
-
   ;; Kill buffers opened by greed-dired
   (let ((buffers greed-match-buffers)
         (buff nil)
@@ -2227,9 +2194,7 @@ It serves as a menu to find any of the occurrences in this buffer.
             (delq buff buffers)
           (kill-buffer buff)))
       (setq buffers (cdr buffers))))
-
   (greed-kill-buffer nil)
-
   (when (buffer-live-p greed-current-buffer)
     (switch-to-buffer greed-current-buffer)
     (when greed-windows-conf
@@ -2274,58 +2239,6 @@ It serves as a menu to find any of the occurrences in this buffer.
      #'(lambda (buf _mark) (push buf marked-buffers)))
     (ibuffer-unmark-all ?\>)
     (greed-search regexp arg marked-buffers)))
-
-;;; greed mode keymap
-(defvar greed-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "e" 'greed-toggle-buffer)
-    (define-key map "\C-c\C-f" 'greed-follow-mode)
-    (define-key map "\C-c\C-c" 'greed-mode-goto-occurrence)
-    (define-key map "\C-m" 'greed-mode-goto-occurrence)
-    (define-key map "d" 'greed-kill-line)
-    (define-key map "\C-k" 'greed-kill-line)
-    (define-key map "\M-d" 'greed-mode-kill-file)
-    (define-key map "/" 'greed-mode-undo)
-    (define-key map "q" 'greed-quit)
-    (define-key map "n" 'greed-next)
-    (define-key map "p" 'greed-prev)
-    (define-key map "j" 'greed-next)
-    (define-key map "k" 'greed-prev)
-    (define-key map "\M-k" 'greed-next)
-    (define-key map "\M-i" 'greed-prev)
-    (define-key map "\M-l" 'greed-next)
-    (define-key map "\M-j" 'greed-prev)
-    (define-key map '[wheel-down] 'greed-next)
-    (define-key map '[wheel-up] 'greed-prev)
-    (define-key map "s" 'greed-narrow-down)
-    (define-key map "u" 'greed-search-undo)
-    (define-key map "g" 'greed-search-update)
-    (define-key map '[down] 'greed-next)
-    (define-key map '[up] 'greed-prev)
-    (define-key map '[tab] 'greed-show)
-    (define-key map "t" 'greed-toggle-view)
-    (define-key map "b" 'greed-file-scroll-down)
-    (define-key map " " 'greed-file-scroll-up)
-    (define-key map "\M-v" 'greed-scroll-down)
-    (define-key map "\C-v" 'greed-scroll-up)
-    (define-key map "h" 'greed-next-file)
-    (define-key map "l" 'greed-prev-file)
-    (define-key map "\M-n" 'greed-next-file)
-    (define-key map "\M-p" 'greed-prev-file)
-    (define-key map '[M-wheel-down] 'greed-next-file)
-    (define-key map '[M-wheel-up] 'greed-prev-file)
-
-    (define-key map '[down-mouse-1] 'greed-mouse-select1)
-
-    (define-key map "<" 'greed-file-beginning-of-buffer)
-    (define-key map ">" 'greed-file-end-of-buffer)
-
-    (define-key map "r" 'greed-edit-mode-in)
-    (define-key map "\C-x\C-q" 'greed-edit-mode-in)
-    (define-key map "\C-c\C-i" 'greed-edit-mode-in)
-
-    map)
-  "Keymap for `greed-mode'.")
 
 ;;;  Utility
 (defun greed-outline-level ()
@@ -2422,9 +2335,6 @@ It serves as a menu to find any of the occurrences in this buffer.
               (greed-goto-line lineno)
               (run-hooks 'greed-goto-occurrence-hook)))))))
 
-(defun greed-toggle-buffer ()
-  (interactive))
-
 (defun greed-mouse-select1 (e)
   (interactive "e")
   (mouse-set-point e)
@@ -2456,7 +2366,6 @@ It serves as a menu to find any of the occurrences in this buffer.
       (forward-line arg)
     (forward-line 1))
   (beginning-of-line)
-
   (when (re-search-forward greed-line-number-regexp nil t)
     (save-restriction
       (narrow-to-region (point) (line-end-position))
@@ -2566,7 +2475,6 @@ It serves as a menu to find any of the occurrences in this buffer.
 (defun greed-mode-kill-line-internal ()
   (delete-region (line-beginning-position)
                  (+ (line-end-position) 1))
-
   (greed-get-info)
   (when (= 0 greed-buffer-match-count)
     (greed-mode-kill-file)))
@@ -2773,13 +2681,13 @@ It serves as a menu to find any of the occurrences in this buffer.
   (interactive)
   (setq greed-view-other-window (not greed-view-other-window)))
 
-;;;  Body
+;;; greed-mode
 (defun greed-mode ()
   "Major mode for output from \\[greed].
 Move point to one of the occurrences in this buffer,
 then use \\[greed-mode-goto-occurrence] to move to the buffer and
 line where it was found.
-\\{occur-mode-map}"
+\\{greed-mode-map}"
   (kill-all-local-variables)
   (setq buffer-read-only t)
   (setq major-mode 'greed-mode)
@@ -2794,19 +2702,18 @@ line where it was found.
   (setq outline-level 'greed-outline-level)
   (run-hooks 'greed-mode-hook))
 
+;;; greed-grep-mode
 (defun greed-grep-mode ()
   "Major mode for output from \\[greed-grep].
 Move point to one of the occurrences in this buffer,
 then use \\[greed-grep-goto] to move to the buffer and
 line where it was found.
-\\{occur-mode-map}"
+\\{greed-mode-map}"
   (kill-all-local-variables)
   (setq buffer-read-only t)
   (setq major-mode 'greed-grep-mode)
   (setq mode-name "greed-grep")
   (use-local-map greed-mode-map)
-  ;; Commented out by <WL> (who should we disable greed-toggle-view here?)
-  ;; (local-unset-key "t")
   (local-set-key "\C-m" 'greed-grep-goto)
   (local-set-key "\C-c\C-c" 'greed-grep-goto)
   (make-local-variable 'line-move-ignore-invisible)
@@ -2820,7 +2727,6 @@ line where it was found.
   (make-local-variable 'outline-level)
   (setq outline-level 'greed-outline-level)
   (run-hooks 'greed-mode-hook))
-
 
 ;;; greed-edit
 
@@ -2845,10 +2751,6 @@ line where it was found.
               (overlay-put edit-ov 'priority 0)
               (setq greed-edit-overlays (cons edit-ov greed-edit-overlays))
               ))))))
-
-(defvar greed-edit-buf "")
-(defvar greed-edit-line "")
-(defvar greed-edit-text "")
 
 (defun greed-edit-get-info ()
   (save-excursion
@@ -2912,8 +2814,7 @@ line where it was found.
           (line-end-position)))
     (overlay-put fileov 'face 'greed-edit-file-face)
     (overlay-put fileov 'priority 0)
-    (setq greed-edit-file-overlays (cons fileov greed-edit-file-overlays))
-    ))
+    (setq greed-edit-file-overlays (cons fileov greed-edit-file-overlays))))
 
 (defun greed-edit-put-face (face)
   (let ((ov))
@@ -2960,13 +2861,11 @@ line where it was found.
       (when beg
         (goto-char beg)
         (greed-edit-get-info)
-
         (if (and
              (listp greed-edit-buf)
              (string= (car greed-edit-buf) "grep"))
             (set-buffer (find-file-noselect (cdr greed-edit-buf)))
           (set-buffer greed-edit-buf))
-        ;; <WL: fixed a bug here>
         (if (greed-edit-change-file)
             ;; File is changed. t: success
             (progn
@@ -3071,37 +2970,9 @@ line where it was found.
   (make-local-variable 'line-move-ignore-invisible)
   (setq line-move-ignore-invisible t)
   (add-to-invisibility-spec '(greed . t))
-  (force-mode-line-update)
-  )
+  (force-mode-line-update))
 
-;; greed-mode
-(defvar greed-edit-mode-map ())
-(defun greed-edit-set-key ()
-  (define-key greed-edit-mode-map '[down] 'greed-next)
-  (define-key greed-edit-mode-map '[up] 'greed-prev)
-  (define-key greed-edit-mode-map "\C-c\C-r"
-    'greed-edit-remove-change)
-  (define-key greed-edit-mode-map "\C-c\C-f"
-    'greed-edit-finish-edit)
-  (define-key greed-edit-mode-map "\C-x\C-s"
-    'greed-edit-finish-edit)
-  (define-key greed-edit-mode-map "\C-c\C-c"
-    'greed-edit-finish-edit)
-  (define-key greed-edit-mode-map "\C-c\C-k"
-    'greed-edit-kill-all-change)
-  (define-key greed-edit-mode-map "\C-xk"
-    'greed-edit-kill-all-change)
-  (define-key greed-edit-mode-map "\C-ck"
-    'greed-edit-kill-all-change)
-  (define-key greed-edit-mode-map "\C-c\C-u"
-    'greed-edit-kill-all-change)
-  )
-
-(if greed-edit-mode-map
-    ()
-  (setq greed-edit-mode-map (make-sparse-keymap))
-  (greed-edit-set-key)
-  )
+;;; greed-edit-mode
 
 (defun greed-edit-mode ()
   "Major mode"
@@ -3118,7 +2989,7 @@ line where it was found.
       (setq mode-name "greedg-edit"))
      (t
       (setq mode-name "greed-edit")))
-    (greed-edit-set-key)))
+    (use-local-map greed-edit-mode-map)))
 
 ;; advice for query-replace
 (defun greed-edit-add-skip-in-replace (command)
@@ -3163,7 +3034,75 @@ commands.  This advice only has effect in greed-edit mode."
       ad-return-value)))
 
 (mapc 'greed-edit-replace-advice
-        '(query-replace query-replace-regexp replace-string))
+      '(query-replace query-replace-regexp replace-string))
+
+;;; greed mode keymap
+(defvar greed-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-c\C-f" 'greed-follow-mode)
+    (define-key map "\C-c\C-c" 'greed-mode-goto-occurrence)
+    (define-key map "\C-m" 'greed-mode-goto-occurrence)
+    (define-key map "d" 'greed-kill-line)
+    (define-key map "\C-k" 'greed-kill-line)
+    (define-key map "\M-d" 'greed-mode-kill-file)
+    (define-key map "/" 'greed-mode-undo)
+    (define-key map "q" 'greed-quit)
+    (define-key map "n" 'greed-next)
+    (define-key map "p" 'greed-prev)
+    (define-key map "j" 'greed-next)
+    (define-key map "k" 'greed-prev)
+    (define-key map "\M-k" 'greed-next)
+    (define-key map "\M-i" 'greed-prev)
+    (define-key map "\M-l" 'greed-next)
+    (define-key map "\M-j" 'greed-prev)
+    (define-key map '[wheel-down] 'greed-next)
+    (define-key map '[wheel-up] 'greed-prev)
+    (define-key map "s" 'greed-narrow-down)
+    (define-key map "u" 'greed-search-undo)
+    (define-key map "g" 'greed-search-update)
+    (define-key map '[down] 'greed-next)
+    (define-key map '[up] 'greed-prev)
+    (define-key map '[tab] 'greed-show)
+    (define-key map "t" 'greed-toggle-view)
+    (define-key map "b" 'greed-file-scroll-down)
+    (define-key map " " 'greed-file-scroll-up)
+    (define-key map "\M-v" 'greed-scroll-down)
+    (define-key map "\C-v" 'greed-scroll-up)
+    (define-key map "h" 'greed-next-file)
+    (define-key map "l" 'greed-prev-file)
+    (define-key map "\M-n" 'greed-next-file)
+    (define-key map "\M-p" 'greed-prev-file)
+    (define-key map '[M-wheel-down] 'greed-next-file)
+    (define-key map '[M-wheel-up] 'greed-prev-file)
+
+    (define-key map '[down-mouse-1] 'greed-mouse-select1)
+
+    (define-key map "<" 'greed-file-beginning-of-buffer)
+    (define-key map ">" 'greed-file-end-of-buffer)
+
+    (define-key map "r" 'greed-edit-mode-in)
+    (define-key map "\C-x\C-q" 'greed-edit-mode-in)
+    (define-key map "\C-c\C-i" 'greed-edit-mode-in)
+
+    map)
+  "Keymap for `greed-mode'.")
+
+;;; greed-edit mode keymap
+
+(defvar greed-edit-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key greed-edit-mode-map '[down] 'greed-next)
+    (define-key greed-edit-mode-map '[up] 'greed-prev)
+    (define-key greed-edit-mode-map "\C-c\C-r" 'greed-edit-remove-change)
+    (define-key greed-edit-mode-map "\C-c\C-f" 'greed-edit-finish-edit)
+    (define-key greed-edit-mode-map "\C-x\C-s" 'greed-edit-finish-edit)
+    (define-key greed-edit-mode-map "\C-c\C-c" 'greed-edit-finish-edit)
+    (define-key greed-edit-mode-map "\C-c\C-k" 'greed-edit-kill-all-change)
+    (define-key greed-edit-mode-map "\C-xk" 'greed-edit-kill-all-change)
+    (define-key greed-edit-mode-map "\C-ck" 'greed-edit-kill-all-change)
+    (define-key greed-edit-mode-map "\C-c\C-u" 'greed-edit-kill-all-change)
+    map)
+  "Keymap for `greed-edit-mode'.")
 
 (provide 'greed)
 
