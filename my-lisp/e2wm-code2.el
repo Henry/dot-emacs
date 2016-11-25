@@ -173,7 +173,10 @@
 (defvar e2wm:c-code2-show-left-regexp nil)
 
 (defvar e2wm:c-code2-show-right-regexp
-   "\\(\\*\\(Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|imenu-tree\\|Man\\|WoMan\\|info\\|magit\\)\\)\\|COMMIT_EDITMSG")
+  "\\*\\(Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|imenu-tree\\|Man\\|WoMan\\|info\\|magit\\)")
+
+(add-hook 'with-editor-post-finish-hook 'e2wm:pst-update-windows)
+(add-hook 'with-editor-post-cancel-hook 'e2wm:pst-update-windows)
 
 (defvar e2wm:c-code2-max-sub-size 1000)
 
