@@ -15,7 +15,7 @@
             (quote projectile))
            (puthash
             (projectile-project-root)
-            "wmake -q" projectile-compilation-cmd-map))
+            "wmake -q -s" projectile-compilation-cmd-map))
      (eval progn
            (require
             (quote projectile))
