@@ -1,4 +1,24 @@
 ;;; init-common.el --- Initialize common packages
+
+;; -----------------------------------------------------------------------------
+;;; Tune garbage-collection to avoid collection
+;;  while interacting with the minibuffer
+;;  http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
+
+;; (defun my-minibuffer-setup-hook ()
+;;   (setq gc-cons-threshold most-positive-fixnum))
+
+;; (defun my-minibuffer-exit-hook ()
+;;   (setq gc-cons-threshold 800000))
+
+;; (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+;; (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+
+(setq gc-cons-threshold (* 511 1024 1024)
+      gc-cons-percentage 0.5
+      garbage-collection-messages t)
+(run-with-idle-timer 5 t #'garbage-collect)
+
 ;; -----------------------------------------------------------------------------
 ;;; Goto Last Change
 ;; Goto the point of the most recent edit in the buffer.
