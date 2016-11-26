@@ -130,6 +130,8 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/org-pua-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/outline-magic-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/package-utils-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/projectile-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/counsel-projectile-[0-9.]*"))))

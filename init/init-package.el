@@ -27,5 +27,9 @@
 (setq use-package-verbose t)
 (require 'use-package)
 
+;; Install useful package utilities
+(use-package package-utils
+  :ensure t)
+
 ;; -----------------------------------------------------------------------------
 ;;; init-package.el ends here

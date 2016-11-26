@@ -47,7 +47,7 @@ $EMACS --batch \
        -L init \
        -l init-package.el \
        -l init-eemacs.el \
-       --eval "(progn (package-refresh-contents) (byte-recompile-directory (expand-file-name \"~/Emacs/elpa\") 0))"
+       --eval "(progn (package-refresh-contents) (package-utils-upgrade-all) (byte-recompile-directory (expand-file-name \"~/Emacs/elpa\") 0))"
 
 echoRed "Compiling local packages and init files"
 make
