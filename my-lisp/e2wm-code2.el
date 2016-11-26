@@ -122,6 +122,8 @@
     :button-face    'default
     :notify         'e2wm:dirtree-select)
   (add-hook 'minibuffer-setup-hook 'e2wm:override-setup-completion)
+  (add-hook 'with-editor-post-finish-hook 'e2wm:pst-update-windows)
+  (add-hook 'with-editor-post-cancel-hook 'e2wm:pst-update-windows)
   (let*
       ((code2-wm
         (wlf:no-layout
@@ -152,7 +154,9 @@
     :button-face    'default
     :notify         'dirtree-select)
   (customize-set-variable 'display-buffer-alist nil)
-  (remove-hook 'minibuffer-setup-hook 'e2wm:override-setup-completion))
+  (remove-hook 'minibuffer-setup-hook 'e2wm:override-setup-completion)
+  (remove-hook 'with-editor-post-finish-hook 'e2wm:pst-update-windows)
+  (remove-hook 'with-editor-post-cancel-hook 'e2wm:pst-update-windows))
 
 (defun e2wm:dp-code2-switch (buf)
   "Switch to the buffer BUF staying in the same window if left or right"
@@ -174,9 +178,6 @@
 
 (defvar e2wm:c-code2-show-right-regexp
   "\\*\\(Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|imenu-tree\\|Man\\|WoMan\\|info\\|magit\\)")
-
-(add-hook 'with-editor-post-finish-hook 'e2wm:pst-update-windows)
-(add-hook 'with-editor-post-cancel-hook 'e2wm:pst-update-windows)
 
 (defvar e2wm:c-code2-max-sub-size 1000)
 
