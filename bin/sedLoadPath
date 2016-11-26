@@ -1,5 +1,5 @@
 s/(use-package \(.*\)/(add-to-list  'load-path (car (last (file-expand-wildcards "~\/Emacs\/elpa\/\1-[0-9.]*"))))/
-s/  :ensure \(.*\)/(add-to-list  'load-path (car (last (file-expand-wildcards "~\/Emacs\/elpa\/\1-[0-9.]*"))))/
+s/  :ensure \(...*\)/(add-to-list  'load-path (car (last (file-expand-wildcards "~\/Emacs\/elpa\/\1-[0-9.]*"))))/
 
 /(add-to-list 'load-path.*))$/p
 /(add-to-list 'load-path$/{
