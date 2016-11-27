@@ -12,7 +12,8 @@
         emms-mode-line-format " %s "
         emms-show-format "Playing: %s"
         emms-stream-bookmarks-file (concat emms-directory "/emms-streams")
-        emms-stream-default-action "play")
+        emms-stream-default-action "play"
+        emms-stream-info-backend 'mplayer)
   ;;  Show the current track each time EMMS starts to play it
   (add-hook 'emms-player-started-hook 'emms-show)
   ;;  Highlight current line in browser
