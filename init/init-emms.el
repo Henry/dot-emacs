@@ -45,12 +45,15 @@
 ;;;  Stop play
 (define-key emms-browser-mode-map [end] 'emms-stop)
 (define-key emms-playlist-mode-map [end] 'emms-stop)
+(define-key emms-stream-mode-map [end] 'emms-stop)
 
 (define-key emms-browser-mode-map "p" 'emms-previous)
 (define-key emms-playlist-mode-map "p" 'emms-previous)
+(define-key emms-stream-mode-map "p" 'emms-previous)
 
 (define-key emms-browser-mode-map "n" 'emms-next)
 (define-key emms-playlist-mode-map "n" 'emms-next)
+(define-key emms-stream-mode-map "n" 'emms-next)
 
 (define-key emms-browser-mode-map ">" 'emms-seek-forward)
 (define-key emms-playlist-mode-map ">" 'emms-seek-forward)
@@ -60,9 +63,11 @@
 
 (define-key emms-browser-mode-map "-" 'emms-volume-lower)
 (define-key emms-playlist-mode-map "-" 'emms-volume-lower)
+(define-key emms-stream-mode-map "-" 'emms-volume-lower)
 
 (define-key emms-browser-mode-map "+" 'emms-volume-raise)
 (define-key emms-playlist-mode-map "+" 'emms-volume-raise)
+(define-key emms-stream-mode-map "+" 'emms-volume-raise)
 
 ;;;  Add a new directory-tree to the browser
 (define-key emms-browser-mode-map "*" 'my-emms-add-dir)
@@ -72,9 +77,6 @@
 (define-key emms-browser-mode-map "/" 'my-emms-search)
 (define-key emms-playlist-mode-map "/" 'my-emms-search)
 
-;;; Streaming
-(define-key emms-stream-mode-map (kbd "s") 'emms-stop)
-(define-key emms-stream-mode-map (kbd "p") 'emms-start)
 
 ;; -----------------------------------------------------------------------------
 ;;; Extension functions bound to key-pad keys
