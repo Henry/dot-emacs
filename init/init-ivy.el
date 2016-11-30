@@ -43,15 +43,42 @@
   :config
   ;; Add support for completing and expanding environment variables
   ;; See https://github.com/abo-abo/swiper/issues/776#issuecomment-260682059
+  (defun counsel-env-res (res path)
+    (let ((apath (-file-name path)))
+      (list (car res)
+            (if (file-accessible-directory-p path)
+                (file-name-as-directory apath)
+              apath))))
+
   (defun counsel-env ()
-    (mapcar (lambda (s) (split-string s "=" t))
-            process-environment))
+    (delq nil
+          (mapcar
+           (lambda (s)
+             (let* ((res (split-string s "=" t))
+                    (path (cadr res)))
+               (when (stringp path)
+                 (cond ((file-exists-p path)
+                        (counsel-env-res res path))
+                       ((file-exists-p (expand-file-name path ivy--directory))
+                        (counsel-env-res
+                         res (expand-file-name path ivy--directory)))
+                       (t nil)))))
+           process-environment)))
 
   (defun counsel-expand-env ()
     (interactive)
     (if (equal ivy-text "")
-        (ivy-read "var: " (counsel-env)
-                  :action (lambda (x) (insert (cadr x))))
+        (progn
+          (let ((enable-recursive-minibuffers t)
+                (history (symbol-value (ivy-state-history ivy-last)))
+                (old-last ivy-last)
+                (ivy-recursive-restore nil))
+            (ivy-read "Env: " (counsel-env)
+                      :action (lambda (x)
+                                (ivy--reset-state (setq ivy-last old-last))
+                                (setq ivy--directory "")
+                                (delete-minibuffer-contents)
+                                (insert (cadr x))))))
       (insert "$")))
 
   :bind (("C-x C-f" . counsel-find-file)
