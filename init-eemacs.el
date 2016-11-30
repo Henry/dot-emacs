@@ -68,6 +68,8 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/counsel-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/swiper-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/smex-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/ace-link-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/cdlatex-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/tex-[0-9.]*"))))
