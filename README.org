@@ -20,11 +20,14 @@ This is the contents of my /.emacs.d/ directory.
   will be reinstated.
 
 * My Packages (in /my-lisp/ directory)
+  + alarm
+  + company-flyspell
   + e2wm-code2
   + etags-select
   + eulisp-mode
-  + inf-eulisp
   + goofie
+  + greed
+  + inf-eulisp
   + key-cat
   + org-pua
   + thingatpt-ext
@@ -35,6 +38,7 @@ This is the contents of my /.emacs.d/ directory.
   A =Makefile= is provided in the /lisp/ directory to compile the minor
   packages.
 *** Major packages (in the /elpa/ directory)
+    + ace-link
     + apel
     + async
     + auctex
@@ -46,7 +50,6 @@ This is the contents of my /.emacs.d/ directory.
     + browse-kill-ring
     + calfw
     + cdlatex
-    + color-moccur
     + commenter
     + company
     + company-quickhelp
@@ -128,8 +131,8 @@ This is the contents of my /.emacs.d/ directory.
 
 *** Minor Packages (in the /lisp/ directory)
     + accelerate
-    + bm
     + cldoc
+    + constants
     + dired-tar
     + ediff-trees
     + em-last
@@ -138,7 +141,6 @@ This is the contents of my /.emacs.d/ directory.
     + fsdired
     + iman
     + isearch-all
-    + moccur-edit
     + no-word
     + oprofile-mode
     + ppindent
@@ -150,8 +152,6 @@ This is the contents of my /.emacs.d/ directory.
     https://melpa.org/#/smart-mode-line
 *** Region and rectangle editing
     https://melpa.org/#/iedit
-*** Jump to link like conkeror
-    https://melpa.org/#/ace-link
 *** Lookup word definition
     https://melpa.org/#/define-word
 *** Rtags
