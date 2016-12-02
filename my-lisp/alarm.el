@@ -18,7 +18,7 @@ The time format is that used by `run-at-time', e.g. \"3:10pm\"."
   (interactive)
   (let ((time (read-string "Time: "))
         (message (read-string "Message: ")))
-    (alarm-set-internal time tmessage)))
+    (alarm-set-internal time message)))
 
 (defun alarm-cancel ()
   "Cancel the alarm clock"
