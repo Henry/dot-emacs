@@ -5,12 +5,17 @@
   :ensure t
   :init
   ;; Set the avy-keys to the Dvorak home-row
-  (setq avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n)))
+  (setq avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s))
+
+  ;; :bind to a local map doesn't work
+  ;; See https://github.com/jwiegley/use-package/issues/332#start-of-content
+  (define-key my-nav-map (kbd "l") 'avy-goto-line)
+  (define-key my-nav-map (kbd "c") 'avy-goto-word-1))
 
 (use-package ivy
   :ensure t
-  :diminish ivy-mode
   :ensure avy
+  :diminish ivy-mode
   :init
   (setq ivy-height 10       ;; number of result lines to display
         ivy-wrap t          ;; Wrap at first and last entry
@@ -44,7 +49,7 @@
   ;; Add support for completing and expanding environment variables
   ;; See https://github.com/abo-abo/swiper/issues/776#issuecomment-260682059
   (defun counsel-env-res (res path)
-    (let ((apath (-file-name path)))
+    (let ((apath (abbreviate-file-name path)))
       (list (car res)
             (if (file-accessible-directory-p path)
                 (file-name-as-directory apath)
@@ -103,7 +108,9 @@
 ;;; Jump to links using avy tags
 
 (use-package ace-link
-  :ensure t)
+  :ensure t
+  :init
+  (define-key my-nav-map (kbd "j") 'ace-link))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-ivy.el ends here

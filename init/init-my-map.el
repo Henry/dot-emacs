@@ -1,6 +1,6 @@
-;;; init-my-map.el --- Personal key-map
+;;; init-my-map.el --- Personal key-maps
 ;; -----------------------------------------------------------------------------
-;;; Make the prefix key `C-z' for my personal keymap.
+;;; Make the prefix key `C-z' for personal keymap.
 
 ;; Like `C-x' and `C-c', but the prefix key `C-c' is reserved for mode-specific
 ;; commands (both user-defined and standard Emacs extensions).
@@ -46,6 +46,15 @@
 
 (define-key my-map "1" 'my-single-frame)
 (define-key my-map "2" 'my-double-frame)
+
+;; -----------------------------------------------------------------------------
+;;; Make the prefix key `M-t' for my navigation keymap.
+
+(defvar my-nav-map
+  (let ((map (make-sparse-keymap)))
+    (global-unset-key "\M-t")
+    (define-key global-map "\M-t" map)
+    map))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-my-map.el  ends here.

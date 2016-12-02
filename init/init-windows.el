@@ -39,47 +39,17 @@ rather than vertically.")
        (other-window -1))))
 
 ;; -----------------------------------------------------------------------------
-;;; Bind \M-t<arrow-keys> to navigate between windows
-
-(require 'windmove)
-
-;; Create a keymap for window navigation
-(defvar my-win-nav-map
-  (let ((map (make-sparse-keymap))
-        (M-t (global-key-binding "\M-t")))
-    (global-unset-key "\M-t")
-    (define-key global-map "\M-t" map)
-    (define-key map "\M-t" M-t)
-    map))
-
-(define-key my-win-nav-map [(left)]  'windmove-left)
-(define-key my-win-nav-map [(right)] 'windmove-right)
-(define-key my-win-nav-map [(up)]    'windmove-up)
-(define-key my-win-nav-map [(down)]  'windmove-down)
-
-;; -----------------------------------------------------------------------------
-;;; Number the windows and bind \M-t[1-9] to switch between them
-
-(use-package window-number
+;;; Quickly switch windows
+;;  Jumps to other window if there are two otherwise the windows are numbered
+;;  and selected by number.
+(use-package ace-window
   :ensure t
-  :disabled t
+  :bind (("C-x o" . ace-window))
+  ;; :bind to a local map doesn't work
+  ;; See https://github.com/jwiegley/use-package/issues/332#start-of-content
   :init
-  (setq window-number-active-background "grey75"
-        window-number-inactive-background "grey75"
-        window-number-active-foreground "black"
-        window-number-inactive-foreground "black")
-  :config
-  ;; Define \M-t 1 to switch to win 1, etc (\M-t 0 = win 10)
-  ;; Note: space after M-t is important
-  (window-number-define-keys window-number-mode-map "M-t ")
-  (window-number-mode 1))
-
-(use-package wn-mode
-  :ensure t
-  :init
-  (setq wn-keybinding-format "M-t %s")
-  :config
-  (wn-mode))
+  (define-key my-nav-map (kbd "w") 'ace-window)
+  (define-key my-nav-map (kbd "M-t") 'ace-window))
 
 ;; -----------------------------------------------------------------------------
 ;;; Speed-up rendering on Emacs-24
