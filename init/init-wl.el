@@ -783,6 +783,8 @@ so that the appropriate emacs mode is selected according to the file extension."
 (define-key my-mairix-map "i" 'mairix-use-saved-search)
 (define-key my-mairix-map "e" 'mairix-edit-saved-searches)
 
+(define-key my-map "n" 'wl-biff-check-folders)
+
 ;; -----------------------------------------------------------------------------
 ;;;  Simple mairix interface
 
