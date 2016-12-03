@@ -69,7 +69,6 @@
 ;;; color-moccur --- An improved interface to occur and moccur
 ;;;  moccur <regexp> shows all occurrences of <regexp>
 ;;;  in all buffers that refer to files.
-
 (use-package color-moccur
   :commands (moccur moccur-grep moccur-grep-find)
   :init
@@ -103,7 +102,7 @@
                    greed-buffer-menu greed-ibuffer greed-isearch))
 
 ;; -----------------------------------------------------------------------------
-;;; iedit --- Edit multiple regions with the same content simultaneously
+;;; iedit --- Edit multiple regions with the same content
 (use-package iedit
   :ensure t)
 
