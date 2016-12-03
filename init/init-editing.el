@@ -45,6 +45,31 @@
 (setq kill-whole-line t)
 
 ;; -----------------------------------------------------------------------------
+;;; Join current and next line
+
+(defun my-fixup-whitespace ()
+  "Fixup white space between objects around point.
+Leave one space or none, according to the context."
+  (interactive "*")
+  (save-excursion
+    (delete-horizontal-space)
+    (if (or (looking-at "^\\|\\s)")
+            (save-excursion (forward-char -1)
+                            (looking-at "$\\|.(\\|\\s'")))
+        nil
+      (insert ?\s))))
+
+(defun join-next-line()
+  "Join current and next line by deleting the white space between
+them leaving one space or none according to context"
+  (interactive)
+  (move-end-of-line 1)
+  (kill-line)
+  (my-fixup-whitespace))
+
+(global-set-key (kbd "M-J") 'join-next-line)
+
+;; -----------------------------------------------------------------------------
 ;;; Duplicate start of line or region
 
 (defun duplicate-start-of-line-or-region ()

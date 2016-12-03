@@ -118,6 +118,7 @@
       move-beginning-of-line
       move-end-of-line
       kill-line
+      join-next-line
       linum-mode
       ))
     ("Words"
