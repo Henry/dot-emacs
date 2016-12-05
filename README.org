@@ -95,7 +95,6 @@ This is the contents of my /.emacs.d/ directory.
     + info+
     + isearch+
     + ivy
-    + log
     + magit
     + magitpopup
     + markdownmode
