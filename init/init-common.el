@@ -5,19 +5,28 @@
 ;;  while interacting with the minibuffer
 ;;  http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
 
-;; (defun my-minibuffer-setup-hook ()
-;;   (setq gc-cons-threshold most-positive-fixnum))
+(defun my-minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
 
-;; (defun my-minibuffer-exit-hook ()
-;;   (setq gc-cons-threshold 800000))
+(defun my-minibuffer-exit-hook ()
+  (setq gc-cons-threshold 800000))
 
-;; (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
-;; (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+(add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
 (setq gc-cons-threshold (* 511 1024 1024)
       gc-cons-percentage 0.5
       garbage-collection-messages t)
 (run-with-idle-timer 5 t #'garbage-collect)
+
+;; -----------------------------------------------------------------------------
+;;; Really kill emacs without first running hooks
+;;  Useful when the configuration is a mess and emacs fails to stop
+(defun really-kill-emacs ()
+  "Run `kill-emacs' without first executing the `kill-emacs-hook' hooks."
+  (interactive)
+  (let (kill-emacs-hook)
+    (kill-emacs)))
 
 ;; -----------------------------------------------------------------------------
 ;;; Goto Last Change
