@@ -294,6 +294,25 @@ Completion is available."))
                    bookmark filename))
         (error "%s is not a bookmark" bookmark))))))
 
+(defun update-env-str (str)
+  "Separate STR into individual environment variable settings
+ and apply to the current environment using `setenv'."
+  (setq lst (split-string str "\000"))
+  (while lst
+    (setq cur (car lst))
+    (when (string-match "^\\(.*?\\)=\\(.*\\(\n.*\\)*\\)" cur)
+      (setq var (match-string 1 cur))
+      (setq value (match-string 2 cur))
+      (setenv var value))
+    (setq lst (cdr lst))))
+
+(defun update-env ()
+  "Update the environment and paths from a spawned shell."
+  (interactive)
+  (prog1 (update-env-str (shell-command-to-string "printenv -0"))
+    (setq eshell-path-env (getenv "PATH")
+          exec-path (split-string (getenv "PATH") path-separator))))
+
 ;; -----------------------------------------------------------------------------
 ;;; Git, git-grep etc.
 
