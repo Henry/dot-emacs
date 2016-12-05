@@ -9,6 +9,7 @@
         emms-info-asynchronously t
         later-do-interval 0.0001
         emms-info-functions '(emms-info-libtag)
+        ;;emms-info-functions '(emms-info-eyed3)
         emms-mode-line-format " %s "
         emms-show-format "Playing: %s"
         emms-stream-bookmarks-file (concat emms-directory "/emms-streams")
@@ -24,6 +25,7 @@
   (require 'emms-info-libtag)
   (require 'emms-streams)
   (require 'emms-stream-info)
+  ;;(require 'emms-info-eyed3)
   (emms-all)
   (emms-default-players)
   (emms-add-directory-tree emms-source-file-default-directory)
@@ -39,21 +41,19 @@
 (define-key emms-browser-mode-map [return] 'emms-browser-add-tracks-and-play)
 
 ;;;  Pause play
-(define-key emms-browser-mode-map [home] 'my-emms-toggle-playing)
-(define-key emms-playlist-mode-map [home] 'my-emms-toggle-playing)
+(define-key emms-browser-mode-map "P" 'my-emms-toggle-playing)
+(define-key emms-playlist-mode-map "P" 'my-emms-toggle-playing)
 
 ;;;  Stop play
-(define-key emms-browser-mode-map [end] 'emms-stop)
-(define-key emms-playlist-mode-map [end] 'emms-stop)
-(define-key emms-stream-mode-map [end] 'emms-stop)
+(define-key emms-browser-mode-map "S" 'emms-stop)
+(define-key emms-playlist-mode-map "S" 'emms-stop)
+(define-key emms-stream-mode-map "S" 'emms-stop)
 
 (define-key emms-browser-mode-map "p" 'emms-previous)
 (define-key emms-playlist-mode-map "p" 'emms-previous)
-(define-key emms-stream-mode-map "p" 'emms-previous)
 
 (define-key emms-browser-mode-map "n" 'emms-next)
 (define-key emms-playlist-mode-map "n" 'emms-next)
-(define-key emms-stream-mode-map "n" 'emms-next)
 
 (define-key emms-browser-mode-map ">" 'emms-seek-forward)
 (define-key emms-playlist-mode-map ">" 'emms-seek-forward)
