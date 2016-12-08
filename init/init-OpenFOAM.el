@@ -3,6 +3,18 @@
 (require 'cc-mode)
 (require 'ppindent)
 
+(use-package electric-operator
+  :ensure t
+  :config
+  (electric-operator-add-rules-for-mode
+   'c-mode
+   (cons "*" nil)
+   (cons "/" nil))
+  (electric-operator-add-rules-for-mode
+   'c++-mode
+   (cons "*" nil)
+   (cons "/" nil)))
+
 ;; -----------------------------------------------------------------------------
 ;;;  Set the auto-mode-alist for all C++ related files
 
@@ -269,6 +281,8 @@
   ;; Switch off "electric" indent mode which cc-mode switches on
   ;; This mode automatically indents line when "punctuation" is typed
   (setq-default c-electric-flag nil)
+
+  (electric-operator-mode 1)
 
   ;; Switch on fly-spell mode in comments
   (flyspell-prog-mode)
