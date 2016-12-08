@@ -10,7 +10,11 @@
   ;; :bind to a local map doesn't work
   ;; See https://github.com/jwiegley/use-package/issues/332#start-of-content
   (define-key my-nav-map (kbd "l") 'avy-goto-line)
-  (define-key my-nav-map (kbd "c") 'avy-goto-word-1))
+  (define-key my-nav-map (kbd "c") 'avy-goto-word-1)
+  (add-to-list 'which-key-replacement-alist
+               '((nil .  "avy-goto-line") . (nil . "goto line")))
+  (add-to-list 'which-key-replacement-alist
+               '((nil .  "avy-goto-word-1") . (nil . "goto word"))))
 
 (use-package ivy
   :ensure t
@@ -42,8 +46,8 @@
   :ensure t
   :ensure swiper
   :ensure smex
-  :init (setq counsel-find-file-at-point t
-              enable-recursive-minibuffers t)
+  :init
+  (setq counsel-find-file-at-point t)
 
   :config
   ;; Add support for completing and expanding environment variables

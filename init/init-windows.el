@@ -18,13 +18,6 @@ rather than vertically.")
 
 (add-hook 'temp-buffer-setup-hook 'split-window-horizontally-or-vertically)
 
-;;;  Put column number into modeline
-(column-number-mode 1)
-
-;;;  Fill to column 80
-(setq fill-column 80
-      word-wrap t)
-
 ;;; Switch buffers between windows
 
 (defun my-rotate-windows ()
@@ -44,16 +37,17 @@ rather than vertically.")
 ;;  and selected by number.
 (use-package ace-window
   :ensure t
+  :commands (ace-window aw-flip-window)
   :bind (("C-x o" . ace-window))
   ;; :bind to a local map doesn't work
   ;; See https://github.com/jwiegley/use-package/issues/332#start-of-content
   :init
   (define-key my-nav-map (kbd "w") 'ace-window)
-  (define-key my-nav-map (kbd "M-t") 'ace-window))
-
-;; -----------------------------------------------------------------------------
-;;; Speed-up rendering on Emacs-24
-(setq-default bidi-display-reordering nil)
+  (define-key my-nav-map (kbd "f") 'aw-flip-window)
+  (add-to-list 'which-key-replacement-alist
+               '((nil .  "ace-window") . (nil . "switch 🗔")))
+  (add-to-list 'which-key-replacement-alist
+               '((nil .  "aw-flip-window") . (nil . "flip 🗔"))))
 
 ;; -----------------------------------------------------------------------------
 ;;; Dim other buffers

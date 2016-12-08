@@ -9,24 +9,32 @@
         which-key-idle-delay 0.4
         which-key-sort-order 'which-key-prefix-then-key-order
 
-        which-key-key-replacement-alist
-        '(("<\\([[:alnum:]-]+\\)>" . "\\1")
-          ("up"                    . "↑")
-          ("right"                 . "→")
-          ("down"                  . "↓")
-          ("left"                  . "←")
-          ("DEL"                   . "⌫")
-          ("deletechar"            . "⌦")
-          ("RET"                   . "⏎")
-          ("delete"                . "⌫")
-          ("next"                  . "PgDn")
-          ("prior"                 . "PgUp"))
+        which-key-replacement-alist
+        '((("<left>")                 "←")
+          (("<up>")                   "↑")
+          (("<right>")                "→")
+          (("<down>")                 "↓")
+          (("<left>")                 "←")
+          (("<left>")                 "←")
+          (("up")                     "↑")
+          (("right")                  "→")
+          (("down")                   "↓")
+          (("left")                   "←")
+          (("DEL")                    "⌫")
+          (("deletechar")             "⌦")
+          (("RET")                    "⏎")
+          (("SPC")                    "␣")
+          (("TAB")                    "↹")
+          (("delete")                 "⌫")
+          (("next")                   "PgDn")
+          (("prior")                  "PgUp")
+          (("ESC")                    "⎋")
+          (("<\\([[:alnum:]-]+\\)>")  "\\1")
 
-        which-key-description-replacement-alist
-        '(("Prefix Command" . "prefix")
-          ("\\`\\?\\?\\'"   . "λ")
-          ("\\`projectile-vc" . "magit")
-          ("\\`projectile-" . "")))
+          ((nil . "Prefix Command")   . (nil . "prefix"))
+          ((nil . "\\`\\?\\?\\'")     . (nil . "λ"))
+          ((nil . "\\`projectile-vc") . (nil . "magit"))
+          ((nil . "\\`projectile-")   . (nil . ""))))
 
   ;; Change what string to display for a given *complete* key binding
   ;; Eg: After "C-x", display "8 → +unicode" instead of "8 → +prefix"
