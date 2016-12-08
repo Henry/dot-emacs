@@ -174,13 +174,13 @@ otherwise Display the full documentation of FUNCTION (a symbol)."
 ;; -----------------------------------------------------------------------------
 ;;; Set elisp mode background colour
 
-(defface elisp-buffer '((t (:background "azure1")))
-  "*Face used for elisp buffers"
-  :group 'lisp)
+;; (defface elisp-buffer '((t (:background "azure1")))
+;;   "*Face used for elisp buffers"
+;;   :group 'lisp)
 
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (face-remap-add-relative 'default 'elisp-buffer)))
+;; (add-hook 'emacs-lisp-mode-hook
+;;           (lambda ()
+;;             (face-remap-add-relative 'default 'elisp-buffer)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-elisp.el ends here
