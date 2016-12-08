@@ -34,11 +34,11 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; Common initialisation settings
+(load "init-which-key")
 (load "init-frames")
 (load "init-display")
 (load "init-movement")
 (load "init-common")
-(load "init-which-key")
 (load "init-rectangles")
 (load "init-speedbar")
 (load "init-editing")

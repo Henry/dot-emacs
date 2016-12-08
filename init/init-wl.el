@@ -187,7 +187,7 @@
         wl-summary-weekday-name-lang "en"
         wl-summary-showto-folder-regexp ".Sent.*"
         wl-summary-line-format "%T%P%M/%D(%W)%h:%m %[ %17f %]%[%1@%] %t%C%s"
-
+        wl-message-mode-line-format (propertize "%f" 'face 'powerline-active1)
         ;; Summary threads
         wl-thread-insert-opened t
         wl-thread-open-reading-thread t
@@ -216,6 +216,8 @@
   ;; Message
   (setq mime-view-mailcap-files
         (list (concat user-emacs-directory "Wanderlust/mailcap"))
+
+        wl-message-mode-line-format (propertize "%f/%n %F" 'face 'powerline-active1)
 
         wl-message-ignored-field-list '("^.*:")
         wl-message-visible-field-list
@@ -279,7 +281,55 @@
   (define-key wl-summary-mode-map "\C-b" 'bbdb-mua-display-sender)
   (define-key wl-summary-mode-map "\C-f" 'bbdb-mua-edit-field-sender)
 
-  (define-key wl-folder-mode-map [mouse-2] 'wl-folder-jump-to-current-entity))
+  (define-key wl-folder-mode-map [mouse-2] 'wl-folder-jump-to-current-entity)
+  )
+
+;; -----------------------------------------------------------------------------
+;;;  Update the modeline using powerline colours
+
+(defun my-wl-mode-line-buffer-identification (&optional id)
+  "Hacked version of `wl-mode-line-buffer-identification' to
+remove clutter from mode-line and apply `powerline' colours."
+  (interactive)
+  (let ((priorities '(biff plug title)))
+    (let ((items (reverse wl-mode-line-display-priority-list))
+          item)
+      (while items
+        (setq item (car items)
+              items (cdr items))
+        (unless (memq item '(biff plug))
+          (setq item 'title))
+        (setq priorities (cons item (delq item priorities)))))
+    (let (priority result)
+      (while priorities
+        (setq priority (car priorities)
+              priorities (cdr priorities))
+        (cond
+         ((eq 'biff priority)
+          (when wl-biff-check-folder-list
+            (setq result (append result '((wl-modeline-biff-status
+                                           wl-modeline-biff-state-on
+                                           wl-modeline-biff-state-off))))))
+         ((eq 'plug priority)
+          (when wl-show-plug-status-on-modeline
+            (setq result (append result '((wl-modeline-plug-status
+                                           wl-modeline-plug-state-on
+                                           wl-modeline-plug-state-off))))))
+         (t
+          result
+          ;;Remove clutter
+          ;;(setq result (append result (or id '("Wanderlust: %12b"))))
+          )))
+      (prog1
+          (setq mode-line-buffer-identification (if (stringp (car result))
+                                                    result
+                                                  (cons "" result)))
+        ;; Add the powerline background colour
+        (setq mode-line-buffer-identification
+              `(:propertize (,mode-line-buffer-identification)
+                            face powerline-active1))
+
+        (force-mode-line-update t)))))
 
 ;; -----------------------------------------------------------------------------
 ;;;  Re-fill messages that arrive poorly formatted
@@ -373,6 +423,8 @@ e.g.
     (hl-line-mode t)
     (local-set-key "\M-m" 'mairix-search)
     (local-set-key "\M-t" my-nav-map)
+
+    (my-wl-mode-line-buffer-identification)
     ))
 
 (add-hook
@@ -392,6 +444,8 @@ e.g.
                       (wl-summary-reply-with-citation 1)))
     (local-set-key "\M-m" 'mairix-search)
     (local-set-key "\M-t" my-nav-map)
+
+    (my-wl-mode-line-buffer-identification)
     ))
 
 (add-hook
@@ -415,6 +469,7 @@ e.g.
     ;; Key bindings
     (local-set-key "\C-c\C-k" 'my-wl-draft-kill-force)
     (local-set-key "\M-t" my-nav-map)
+    (my-wl-mode-line-buffer-identification)
     ))
 
 ;; Add lots of goodies to the mail setup
@@ -636,6 +691,7 @@ and clean-up citation for replies."
   (turn-on-auto-fill)
   (flyspell-mode t)
   (wl-draft-config-exec)
+  (my-wl-mode-line-buffer-identification)
   ;; Clean up reply citation
   (save-excursion
     ;; Goto the beginning of the message body

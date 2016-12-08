@@ -57,6 +57,7 @@ This is the contents of my /.emacs.d/ directory.
     + ctable
     + dash
     + deferred
+    + define-word
     + diminish
     + dired+
     + dired-details
@@ -146,11 +147,6 @@ This is the contents of my /.emacs.d/ directory.
     + rw-acronyms
 
 * Packages to try
-*** Pretty modeline
-    https://melpa.org/#/powerline
-    https://melpa.org/#/smart-mode-line
-*** Lookup word definition
-    https://melpa.org/#/define-word
 *** Rtags
     https://github.com/Andersbakken/rtags
 *** Irony
