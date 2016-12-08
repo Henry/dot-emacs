@@ -5,9 +5,9 @@
 ;; Copyright (C) 2009-2010, Henry G. Weller, all rights reserved.
 ;; Created: Thu Jul 17 09:49:48 2008 (+0100)
 ;; Version: 0.1
-;; Last-updated: Sat Apr 11 14:51:51 2009 (+0100)
+;; Last-updated: Tue Dec  6 15:42:27 2016 (+0000)
 ;;           By: Henry G. Weller
-;;     Update #: 2
+;;     Update #: 3
 ;; URL: http://www.emacswiki.org/emacs/wn-org.el
 ;; Keywords: convenience
 ;; Compatibility: GNU Emacs 23.x (may work with earlier versions)
@@ -172,7 +172,8 @@ The word at the point is suggested which can be replaced."
           (backward-char) ;; Back over the '*' to remove following empty entries
           )
 
-        (wn-org-replace-regexp "^Sense \\([1-9]*\\)" "  \\1. ")
+        (wn-org-replace-regexp "^\\([1-9]+\\)" "  \\1")
+        (wn-org-replace-regexp "^Sense \\([1-9]*\\) *\n" "  \\1. ")
         (wn-org-replace-regexp "       [=*]>" "    +")
         (unless (eq major-mode 'wn-org-mode)
           (wn-org-mode))
