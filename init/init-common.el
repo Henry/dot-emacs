@@ -16,7 +16,7 @@
 
 (setq gc-cons-threshold (* 511 1024 1024)
       gc-cons-percentage 0.5
-      garbage-collection-messages t)
+      garbage-collection-messages nil)
 (run-with-idle-timer 5 t #'garbage-collect)
 
 ;; -----------------------------------------------------------------------------
