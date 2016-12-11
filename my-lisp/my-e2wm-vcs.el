@@ -1,8 +1,9 @@
 ;;; my-e2wm-vcs.el --- VCS perspectives
 
 ;; Copyright (C) 2011  SAKURAI Masashi
+;; Copyright (C) 2016  Henry G. Weller
 
-;; Author: SAKURAI Masashi <m.sakurai at kiwanami.net>
+;; Authors: SAKURAI Masashi <m.sakurai at kiwanami.net>, Henry G. Weller
 ;; Keywords: tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -20,21 +21,14 @@
 
 ;;; Commentary:
 
-;; These are e2wm perspectives for magit and dsvn.
-;; One can change the perspective by M-x e2wm:dp-magit or e2wm:dp-svn.
-
-;; Here is a sample code to add switching perspective key bindings:
-;; (e2wm:add-keymap e2wm:pst-minor-mode-keymap '(("prefix v" . e2wm:dp-magit)) e2wm:prefix-key)
-;; (e2wm:add-keymap e2wm:pst-minor-mode-keymap '(("prefix v" . e2wm:dp-svn)) e2wm:prefix-key)
+;; e2wm perspective for magit.
+;; One can change to the magit perspective by M-x e2wm:dp-magit.
 
 ;;; Code:
 
 (require 'e2wm)
 (require 'magit nil t)
-(require 'monky nil t)
-(require 'dsvn nil t)
 
-
 ;;; Utilities
 ;;;--------------------------------------------------
 
@@ -78,7 +72,9 @@
        (wlf:set-buffer wm (wlf:window-name winfo)
                        (funcall na-buffer-func)))))))
 
-(defvar e2wm:c-vcs-select-if-plugin nil "If this variable is non-nil, the plugin window is selected during popping up the plugin buffer.")
+(defvar e2wm:c-vcs-select-if-plugin nil
+  "If this variable is non-nil, the plugin window is selected
+during popping up the plugin buffer.")
 
 (defun e2wm:vcs-select-if-plugin (buf)
   (e2wm:message "#vcs-select-if-plugin")
@@ -91,7 +87,6 @@
                           (e2wm:message "#vcs-select-if-plugin wname: %s" wname)
                           t))))
 
-
 ;;; magit / plugins
 ;;;--------------------------------------------------
 
@@ -120,17 +115,13 @@
 (defun e2wm:def-plugin-magit-status (frame wm winfo)
   (e2wm:def-plugin-vcs-with-window
    'magit-toplevel
-   (lambda (dir topdir)
-     (loop for f in '(magit-status-internal magit-status)
-           if (fboundp f)
-           return (funcall f (file-name-as-directory dir))))
+   (lambda (dir topdir) (magit-status-internal (file-name-as-directory dir)))
    (lambda () (e2wm:history-get-main-buffer))))
 
 (e2wm:plugin-register 'magit-status
                       "Magit Status"
                       'e2wm:def-plugin-magit-status)
 
-
 ;;; magit / magit perspective
 ;;;--------------------------------------------------
 
@@ -138,10 +129,10 @@
   '(| (:left-size-ratio 0.3)
       (- (:upper-size-ratio 0.6)
          status branches)
-      (| (:left-size-ratio 0.2)
+      (| (:left-size-ratio 0.5)
          (- (:upper-size-ratio 0.5)
             logs main)
-         (| (:left-size-ratio 0.35)
+         (- (:upper-size-ratio 0.5)
             diff sub))))
 
 (defvar e2wm:c-magit-winfo
@@ -149,7 +140,7 @@
     (:name branches :plugin magit-branches)
     (:name logs     :plugin magit-logs)
     (:name main)
-    (:name diff     :buffer "*magit-diff*" :default-hide t)
+    (:name diff     :buffer nil :default-hide t)
     (:name sub      :buffer nil :default-hide t)))
 
 (defvar e2wm:c-magit-show-main-regexp
@@ -212,11 +203,14 @@
        (cond
         ((equal buf-file-name "COMMIT_EDITMSG")
          ;; displaying commit objects in the main window
-         (e2wm:pst-buffer-set 'main buf t nil))
-        ((string-match "^\\*magit-diff: .*\\*$" buf-name)
-         ;; displaying diff buffer in the diff window
+         (e2wm:pst-buffer-set 'main buf t t))
+        ((equal buf-name "*magit-commit-popup*")
+         ;; displaying commit objects in the main window
          (e2wm:pst-buffer-set 'diff buf t t))
-        ((string-match "^\\*magit: .*\\*$" buf-name)
+        ((string-match "^\\*magit-diff: .*" buf-name)
+         ;; displaying diff buffer in the diff window
+         (e2wm:pst-buffer-set 'diff buf t nil))
+        ((string-match "^\\*magit: .*" buf-name)
          ;; displaying status object in the status window
          (e2wm:pst-buffer-set 'status buf t t))
         ((e2wm:history-recordable-p buf)
@@ -224,8 +218,7 @@
          (e2wm:pst-buffer-set 'main buf t t))
         (t
          ;; displaying other objects in the sub window
-         (e2wm:pst-buffer-set 'sub buf t not-minibufp))))
-      (e2wm:pst-window-select 'main))))
+         (e2wm:pst-buffer-set 'sub buf t not-minibufp)))))))
 
 ;; Commands / Keybindings
 
@@ -237,293 +230,8 @@
 (defvar e2wm:dp-magit-minor-mode-map
   (e2wm:define-keymap '() e2wm:prefix-key))
 
-;; (e2wm:add-keymap e2wm:pst-minor-mode-keymap '(("prefix v" . e2wm:dp-magit)) e2wm:prefix-key)
-
-
-;;; monky / plugins
-;;;--------------------------------------------------
-
-(defun e2wm:monky-get-root-dir (dir)
-  (monky-get-root-dir))
-
-(defun e2wm:def-plugin-monky-branches (frame wm winfo)
-  (e2wm:def-plugin-vcs-with-window
-   'e2wm:monky-get-root-dir
-   (lambda (dir topdir)
-     (monky-branches))
-   (lambda () (e2wm:def-plugin-vcs-na-buffer "Hg N/A"))))
-
-(e2wm:plugin-register 'monky-branches
-                      "Monky Branches"
-                      'e2wm:def-plugin-monky-branches)
-
-(defun e2wm:def-plugin-monky-logs (frame wm winfo)
-  (e2wm:def-plugin-vcs-with-window
-   'e2wm:monky-get-root-dir
-   (lambda (dir topdir) (monky-log))
-   (lambda () (e2wm:def-plugin-vcs-na-buffer "Hg N/A"))))
-
-(e2wm:plugin-register 'monky-logs
-                      "Monky Logs"
-                      'e2wm:def-plugin-monky-logs)
-
-(defun e2wm:def-plugin-monky-status (frame wm winfo)
-  (e2wm:def-plugin-vcs-with-window
-   'e2wm:monky-get-root-dir
-   (lambda (dir topdir) (monky-status))
-   (lambda () (e2wm:history-get-main-buffer))))
-
-(e2wm:plugin-register 'monky-status
-                      "Monky Status"
-                      'e2wm:def-plugin-monky-status)
-
-
-;;; monky / monky perspective
-;;;--------------------------------------------------
-
-(defvar e2wm:c-monky-recipe
-  '(| (:left-max-size 35)
-      (- (:upper-size-ratio 0.7)
-         files history)
-      (| (:right-max-size 45)
-         (- status (- main sub))
-         (- (:upper-size-ratio 0.4) branches logs))))
-
-(defvar e2wm:c-monky-winfo
-  '((:name main)
-    (:name status   :plugin monky-status)
-    (:name files    :plugin files)
-    (:name history  :plugin history-list)
-    (:name sub      :buffer nil :default-hide t)
-    (:name branches :plugin monky-branches)
-    (:name logs     :plugin monky-logs)))
-
-(defvar e2wm:c-monky-show-main-regexp
-   "\\*\\(vc-diff\\)\\*")
-
-(e2wm:pst-class-register
-  (make-e2wm:$pst-class
-   :name   'monky
-   :extend 'base
-   :title  "Monky"
-   :init   'e2wm:dp-monky-init
-   :main   'main
-   :start  'e2wm:dp-monky-start
-   :update 'e2wm:dp-monky-update
-   :switch 'e2wm:dp-monky-switch
-   :popup  'e2wm:dp-monky-popup
-   :leave  'e2wm:dp-vcs-monky
-   :keymap 'e2wm:dp-monky-minor-mode-map))
-
-(defadvice monky-log-edit-commit (after e2wm:ad-override-monky)
-  (e2wm:pst-update-windows))
-(ad-deactivate-regexp "^e2wm:ad-override-monky$")
-
-(defun e2wm:dp-vcs-monky (wm)
-  (ad-deactivate-regexp "^e2wm:ad-override-monky$")
-  (setq e2wm:prev-selected-buffer nil))
-
-(defun e2wm:dp-monky-start (wm)
-  (ad-activate-regexp "^e2wm:ad-override-monky$"))
-
-(defun e2wm:dp-monky-init ()
-  (let* ((monky-wm
-          (wlf:no-layout e2wm:c-monky-recipe e2wm:c-monky-winfo))
-         (buf (or e2wm:prev-selected-buffer
-                  (e2wm:history-get-main-buffer))))
-    (wlf:set-buffer monky-wm 'main buf)
-    monky-wm))
-
-(defun e2wm:dp-monky-update (wm)
-  (monky-with-refresh
-    (e2wm:$pst-class-super)))
-
-(defun e2wm:dp-monky-switch (buf)
-  (e2wm:message "#DP MONKY switch : %s" buf)
-  (e2wm:vcs-select-if-plugin buf))
-
-(defun e2wm:dp-monky-popup (buf)
-  (let ((cb (current-buffer)))
-    (e2wm:message "#DP MONKY popup : %s (current %s / backup %s)"
-                  buf cb e2wm:override-window-cfg-backup))
-  (unless (e2wm:vcs-select-if-plugin buf)
-    (let ((buf-name (buffer-name buf))
-          (wm (e2wm:pst-get-wm))
-          (not-minibufp (= 0 (minibuffer-depth))))
-      (e2wm:with-advice
-       (cond
-        ((equal buf-name monky-commit-buffer-name)
-         ;; displaying commit objects in the main window
-         (e2wm:pst-buffer-set 'main buf t nil))
-        ((string-match "^\\*monky: .*\\*$" buf-name)
-         ;; displaying status object in the status window
-         (e2wm:pst-buffer-set 'status buf t t))
-        ((equal buf-name monky-queue-buffer-name)
-         ;; displaying queue objects in the status window
-         (e2wm:pst-buffer-set 'status buf t t))
-        ((buffer-file-name buf)
-         ;; displaying file buffer in the main window
-         (e2wm:pst-buffer-set 'main buf t t))
-        (t
-         ;; displaying other objects in the sub window
-         (e2wm:pst-buffer-set 'sub buf t not-minibufp)))))))
-
-;; Commands / Keybindings
-
-;;;###autoload
-(defun e2wm:dp-monky ()
-  (interactive)
-  (e2wm:pst-change 'monky))
-
-(defvar e2wm:dp-monky-minor-mode-map
-  (e2wm:define-keymap '() e2wm:prefix-key))
-
-;; (e2wm:add-keymap e2wm:pst-minor-mode-keymap '(("prefix v" . e2wm:dp-monky)) e2wm:prefix-key)
-
-
-;;; Subversion / plugins
-;;;--------------------------------------------------
-
-(defvar e2wm:def-plugin-svn-log-arg "-l 4 -v")
-
-(defun e2wm:def-plugin-svn-top-dir (dir)
-  (let* ((expanded-dir (expand-file-name dir))
-         (svndir (member ".svn" (directory-files expanded-dir))))
-    (cond
-     (svndir expanded-dir)
-     ((or
-       (string= expanded-dir "/")
-       (string= expanded-dir (expand-file-name "~/"))) nil)
-     (t (let ((updir (e2wm:def-plugin-svn-top-dir
-                      (concat (file-name-as-directory dir) ".."))))
-          (if (null updir) expanded-dir updir))))))
-
-(defvar e2wm:def-plugin-svn-logs-buffer-name " *WM:dsvn-logs*" "[internal]")
-
-(defun e2wm:def-plugin-svn-logs (frame wm winfo)
-    (e2wm:def-plugin-vcs-with-window
-     'e2wm:def-plugin-svn-top-dir
-     (lambda (dir topdir)
-       (let ((default-directory (file-name-as-directory topdir)))
-         (svn-log e2wm:def-plugin-svn-log-arg))
-       (let ((dbuf (get-buffer-create e2wm:def-plugin-svn-logs-buffer-name)))
-         (with-current-buffer dbuf
-           (setq buffer-read-only nil)
-           (buffer-disable-undo dbuf)
-           (erase-buffer)
-           (insert (with-current-buffer (get-buffer "*svn output*")
-                     (buffer-string)))
-           (setq default-directory dir)
-           (setq buffer-read-only t)
-           (goto-char (point-min))
-           (svn-log-mode))
-         (set-window-buffer (selected-window) dbuf)))
-     (lambda () (e2wm:def-plugin-vcs-na-buffer "Subversion N/A"))))
-
-(e2wm:plugin-register 'svn-logs
-                      "Svn Logs"
-                      'e2wm:def-plugin-svn-logs)
-
-(defun e2wm:def-plugin-svn-status (frame wm winfo)
-  (e2wm:def-plugin-vcs-with-window
-   'e2wm:def-plugin-svn-top-dir
-   (lambda (dir topdir)
-     (svn-status (file-name-as-directory topdir)))
-   (lambda () (e2wm:history-get-main-buffer))))
-
-(e2wm:plugin-register 'svn-status
-                      "Svn Status"
-                      'e2wm:def-plugin-svn-status)
-
-
-;;; Subversion status perspective
-;;;--------------------------------------------------
-
-(defvar e2wm:c-svn-recipe
-  '(| (:left-size-ratio 0.3)
-      status
-      (| (:left-size-ratio 0.2)
-         (- (:upper-size-ratio 0.5)
-            logs main)
-         (| (:left-size-ratio 0.1)
-            diff sub))))
-
-(defvar e2wm:c-svn-winfo
-  '((:name status :plugin svn-status)
-    (:name logs   :plugin svn-logs)
-    (:name main)
-    (:name diff   :buffer "*svn output*" :default-hide t)
-    (:name sub    :buffer nil :default-hide t)))
-
-(defvar e2wm:c-svn-focus-buffer-regexp "\\*\\(svn commit\\)\\*")
-
-(e2wm:pst-class-register
-  (make-e2wm:$pst-class
-   :name   'svn
-   :extend 'base
-   :title  "Svn"
-   :init   'e2wm:dp-svn-init
-   :main   'status
-   :switch 'e2wm:dp-svn-switch
-   :popup  'e2wm:dp-svn-popup
-   :leave  'e2wm:dp-svn-leave
-   :keymap 'e2wm:dp-svn-minor-mode-map))
-
-(defun e2wm:dp-svn-leave (wm)
-  (setq e2wm:prev-selected-buffer nil))
-
-(defun e2wm:dp-svn-init ()
-  (let* ((svn-wm
-          (wlf:no-layout e2wm:c-svn-recipe e2wm:c-svn-winfo))
-         (buf (or e2wm:prev-selected-buffer
-                  (e2wm:history-get-main-buffer))))
-    (wlf:set-buffer svn-wm 'main buf)
-    (wlf:select svn-wm 'status)
-    svn-wm))
-
-(defun e2wm:dp-svn-switch (buf)
-  (e2wm:message "#DP SVN switch : %s" buf)
-  (cond ((e2wm:history-recordable-p buf)
-         (e2wm:with-advice
-          (e2wm:pst-buffer-set 'main buf t t)))
-        ((string= (buffer-name buf) "*log-edit-files*")
-         nil)
-        (t
-         (or (e2wm:vcs-select-if-plugin buf)
-             (e2wm:dp-svn-popup-sub buf)))))
-
-(defun e2wm:dp-svn-popup (buf)
-  (let ((cb (current-buffer)))
-    (e2wm:message "#DP SVN popup : %s (current %s / backup %s)"
-                  buf cb e2wm:override-window-cfg-backup))
-  (cond ((e2wm:history-recordable-p buf)
-         (e2wm:with-advice
-          (e2wm:pst-buffer-set 'main buf t t)))
-        ((string= (buffer-name buf) "*svn output*")
-         (e2wm:with-advice
-          (e2wm:pst-buffer-set 'diff buf t t)))
-        (t
-         (e2wm:dp-svn-popup-sub buf))))
-
-(defun e2wm:dp-svn-popup-sub (buf)
-  (let* ((wm (e2wm:pst-get-wm))
-         (bufname (buffer-name buf))
-         (focus-set (and (= 0 (minibuffer-depth))
-                         (string-match e2wm:c-svn-focus-buffer-regexp bufname))))
-    (e2wm:with-advice
-     (e2wm:pst-buffer-set 'sub buf t focus-set))))
-
-;; Commands / Keybindings
-
-;;;###autoload
-(defun e2wm:dp-svn ()
-  (interactive)
-  (e2wm:pst-change 'svn))
-
-(defvar e2wm:dp-svn-minor-mode-map
-  (e2wm:define-keymap '() e2wm:prefix-key))
-
-;; (e2wm:add-keymap e2wm:pst-minor-mode-keymap '(("prefix v" . e2wm:dp-svn)) e2wm:prefix-key)
+(e2wm:add-keymap e2wm:pst-minor-mode-keymap
+                 '(("prefix v" . e2wm:dp-magit)) e2wm:prefix-key)
 
 
 (provide 'my-e2wm-vcs)
