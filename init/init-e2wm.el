@@ -7,6 +7,7 @@
   :init
   (setq tree-widget-image-enable t)
   (require 'e2wm-code2)
+  (require 'my-e2wm-vcs)
   (defun e2wm-code2 ()
     (interactive)
     (e2wm:start-management '(code2)))
