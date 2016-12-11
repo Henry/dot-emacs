@@ -53,7 +53,6 @@
         eshell-no-grep-available nil
 
         eshell-show-lisp-completions nil
-        eshell-cmpl-expand-before-complete t
         eshell-cmpl-cycle-completions t
         eshell-cmpl-cycle-cutoff-length 5
 
@@ -85,7 +84,8 @@
           eshell-unix
           eshell-last
           eshell-xtra
-          ))
+          )
+        )
 
   ;; ---------------------------------------------------------------------------
   ;; Setup tooltip-help for the eshell (for elisp expressions only)
@@ -110,7 +110,7 @@
   ;; Update the eshell path from the current PATH
   (setq eshell-path-env (getenv "PATH"))
 
-  (font-lock-mode)
+  (font-lock-mode 1)
 
   (defadvice eldoc-fnsym-in-current-sexp
       (around eldoc-fnsym-in-current-sexp-or-command activate)
@@ -242,8 +242,6 @@ the buffer for foo."
           (goto-line line))
       (eshell-view-file (pop args)))))
 
-(defalias 'eshell/more 'eshell/less)
-
 (eval-after-load "em-ls"
   '(progn
      (let ((map (make-sparse-keymap)))
@@ -309,9 +307,11 @@ Completion is available."))
 (defun update-env ()
   "Update the environment and paths from a spawned shell."
   (interactive)
-  (prog1 (update-env-str (shell-command-to-string "printenv -0"))
+  (prog1 (update-env-str
+          (shell-command-to-string "$SHELL -i -c 'printenv -0'"))
     (setq eshell-path-env (getenv "PATH")
-          exec-path (split-string (getenv "PATH") path-separator))))
+          exec-path (split-string (getenv "PATH") path-separator))
+    (setq-default process-environment process-environment)))
 
 ;; -----------------------------------------------------------------------------
 ;;; Git, git-grep etc.
@@ -339,6 +339,37 @@ Completion is available."))
   (let ((ret (apply 'greed-grep-find (list dir (list regex files)))))))
 
 (put 'eshell/mgrepf 'eshell-no-numeric-conversions t)
+
+;; -----------------------------------------------------------------------------
+;;; Standard aliases
+(defalias 'e 'find-file)
+(defalias 'edit 'find-file)
+(defalias 'eshell/more 'eshell/less)
+
+;; -----------------------------------------------------------------------------
+;;; Experimental handling of `shell-command'
+;;  using the `<' prefix
+
+(defun my-eshell-send-input (&optional use-region queue-p no-newline)
+  "`eshell-send-input' customized to handle `<' to denote a `shell-command'"
+  (interactive "*P")
+  (let ((line (buffer-substring-no-properties (point-at-bol) (point-at-eol))))
+    (if (string-match (concat eshell-prompt-regexp "<") line)
+        (let* ((cmd (substring line (match-end 0)))
+               (cmd-length (length cmd)))
+          (if (> cmd-length 0)
+              (progn
+                (delete-char (- -1 cmd-length))
+                (insert (concat "(shell-command-to-string \"" cmd "\")"))
+                (eshell-send-input))
+            ))
+      (eshell-send-input use-region queue-p no-newline))))
+
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map
+                [return]
+                'my-eshell-send-input)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-eshell.el ends here
