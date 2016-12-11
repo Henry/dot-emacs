@@ -69,6 +69,7 @@ This is the contents of my /.emacs.d/ directory.
     + doremifrm
     + e2wm
     + ebib
+    + electric-operator
     + emms
     + epc
     + epl
@@ -116,6 +117,7 @@ This is the contents of my /.emacs.d/ directory.
     + rustmode
     + semi
     + sequentialcommand
+    + smart-mode-line
     + srspeedbar
     + synonyms
     + undotree
@@ -153,5 +155,3 @@ This is the contents of my /.emacs.d/ directory.
     https://github.com/Sarcasm/irony-mode
 *** Emacs window manager
     https://github.com/ch11ng/exwm
-*** Electric-spacing
-    https://elpa.gnu.org/packages/electric-spacing.html
