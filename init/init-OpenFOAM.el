@@ -293,9 +293,6 @@
          (not (eq (get-text-property (point) 'face)
                   'font-lock-comment-face))))
 
-  ;; Set the compile window to scroll as the output is generated
-  (setq compilation-scroll-output t)
-
   ;; Map build commands to function keys
   (define-key c++-mode-map [f5] 'wmake)
   (define-key c++-mode-map [f6] 'Allwmake)

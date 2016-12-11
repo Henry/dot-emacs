@@ -61,6 +61,9 @@
 ;;; Set directory where temporary files are stored
 (setq user-emacs-directory "~/Emacs/")
 
+;;; Scroll compilation output to first error
+(setq compilation-scroll-output 'first-error)
+
 ;; -----------------------------------------------------------------------------
 ;;; Autosave
 
