@@ -290,7 +290,6 @@
 (defun my-wl-mode-line-buffer-identification (&optional id)
   "Hacked version of `wl-mode-line-buffer-identification' to
 remove clutter from mode-line and apply `powerline' colours."
-  (interactive)
   (let ((priorities '(biff plug title)))
     (let ((items (reverse wl-mode-line-display-priority-list))
           item)
