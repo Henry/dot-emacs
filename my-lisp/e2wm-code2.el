@@ -177,7 +177,7 @@
 (defvar e2wm:c-code2-show-left-regexp nil)
 
 (defvar e2wm:c-code2-show-right-regexp
-  "\\*\\(Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|imenu-tree\\|Man\\|WoMan\\|info\\|magit\\)")
+  "\\*\\(Ibuffer\\|Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|imenu-tree\\|Man\\|WoMan\\|info\\|magit\\)")
 
 (defvar e2wm:c-code2-max-sub-size 1000)
 
@@ -354,6 +354,9 @@
      ("prefix H" . e2wm:dp-code2-history-toggle-command)
      ("prefix M" . e2wm:dp-code2-main-maximize-toggle-command))
    e2wm:prefix-key))
+
+(e2wm:add-keymap e2wm:pst-minor-mode-keymap
+                 '(("prefix c" . e2wm:dp-code2)) e2wm:prefix-key)
 
 ;; -----------------------------------------------------------------------------
 ;;; history-list2
