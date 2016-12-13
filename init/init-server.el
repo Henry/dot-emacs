@@ -6,9 +6,6 @@
   "Holds the `DISPLAY' environment variable which is set to the correct
 value by the `-server' option for eemacs")
 
-;;;  Server: emacsclient core-dumps when TCP is used
-;;(setq server-use-tcp t)
-
 (defun command-line-server (switch)
   ;; Get the name of the server
   (setq server-name (pop command-line-args-left))
@@ -20,16 +17,11 @@ value by the `-server' option for eemacs")
                 (switch-to-buffer-other-frame server-buf))))
 
   ;; Ensure that all frames are closed when emacs exits
-  ;;(add-hook 'server-done-hook 'delete-frame)
-  ;;(add-hook 'server-done-hook (lambda nil (kill-buffer nil)))
-  (custom-set-variables '(server-kill-new-buffers t))
-  (add-hook 'server-done-hook (lambda () (delete-frame)))
+  ;; This causes magit commit to delete the frame
+  ;;(add-hook 'server-done-hook (lambda () (delete-frame)))
+
   (setq remote-display (getenv "DISPLAY"))
   (server-start))
-
-;;(defun command-line-reset-display (switch)
-;;  (setenv "DISPLAY" (car command-line-args-left))
-;;  (setq command-line-args-left (cdr command-line-args-left)))
 
 (add-to-list 'command-switch-alist '("-server" . command-line-server))
 
