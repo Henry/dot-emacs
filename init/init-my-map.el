@@ -56,9 +56,9 @@
     (define-key global-map "\M-t" map)
     map))
 
-(define-key my-nav-map (kbd "M-t") 'next-multiframe-window)
+(define-key my-nav-map (kbd "M-t") 'other-window)
 (add-to-list 'which-key-replacement-alist
-             '((nil .  "next-multiframe-window") . (nil . "next 🗔")))
+             '((nil .  "other-window") . (nil . "next 🗔")))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-my-map.el  ends here.
