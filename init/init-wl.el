@@ -62,6 +62,10 @@
 ;; -----------------------------------------------------------------------------
 (use-package wanderlust
   :ensure t
+
+  ;;:pin manual
+  ;;:load-path "wanderlust.works/"
+
   :ensure apel
   :ensure flim
   :ensure semi
@@ -69,6 +73,7 @@
   :commands wl
 
   :init
+  (require 'wl)
   ;; Autoload Wanderlust on command "wl"
   (autoload 'wl "wl" "Wanderlust" t)
 
@@ -827,6 +832,8 @@ so that the appropriate emacs mode is selected according to the file extension."
     (define-key my-map "m" map)
     map)
   "Sub-keymap in my keymap for the mairix commands")
+
+(which-key-add-key-based-replacements "C-z m" "mairix")
 
 (define-key my-mairix-map "m" 'mairix-search)
 (define-key my-mairix-map "w" 'mairix-widget-search)
