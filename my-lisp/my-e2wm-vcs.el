@@ -50,7 +50,6 @@
         (insert (e2wm:rt (substring title 0) 'e2wm:face-vcs-na))
         buf))))
 
-
 (defun e2wm:def-plugin-vcs-with-window (topdir-func body-func na-buffer-func)
   (let* ((buf (or e2wm:prev-selected-buffer
                   (wlf:get-buffer (e2wm:pst-get-wm)
@@ -129,35 +128,30 @@ during popping up the plugin buffer.")
   '(| (:left-size-ratio 0.3)
       (- (:upper-size-ratio 0.6)
          status branches)
-      (| (:left-size-ratio 0.5)
-         (- (:upper-size-ratio 0.5)
-            logs main)
-         (- (:upper-size-ratio 0.5)
-            diff sub))))
+      (- (:upper-size-ratio 0.5)
+           logs main)))
 
 (defvar e2wm:c-magit-winfo
   '((:name status   :plugin magit-status)
     (:name branches :plugin magit-branches)
     (:name logs     :plugin magit-logs)
-    (:name main)
-    (:name diff     :buffer nil :default-hide t)
-    (:name sub      :buffer nil :default-hide t)))
+    (:name main)))
 
 (defvar e2wm:c-magit-show-main-regexp
    "\\*\\(vc-diff\\)\\*")
 
 (e2wm:pst-class-register
   (make-e2wm:$pst-class
-   :name   'magit
-   :extend 'base
-   :title  "Magit"
-   :init   'e2wm:dp-magit-init
-   :main   'status
-   :start  'e2wm:dp-magit-start
-   :switch 'e2wm:dp-magit-switch
-   :popup  'e2wm:dp-magit-popup
-   :leave  'e2wm:dp-magit-leave
-   :keymap 'e2wm:dp-magit-minor-mode-map))
+   :name    'magit
+   :extend  'base
+   :title   "Magit"
+   :init    'e2wm:dp-magit-init
+   :main    'status
+   :start   'e2wm:dp-magit-start
+   :switch  'e2wm:dp-magit-switch
+   :popup   'e2wm:dp-magit-popup
+   :leave   'e2wm:dp-magit-leave
+   :keymap  'e2wm:dp-magit-minor-mode-map))
 
 (defadvice magit-log-edit-commit (after e2wm:ad-override-magit)
   (e2wm:pst-update-windows))
@@ -187,7 +181,7 @@ during popping up the plugin buffer.")
          (or (e2wm:vcs-select-if-plugin buf)
              (let ((not-minibufp (= 0 (minibuffer-depth))))
                (e2wm:with-advice
-                (e2wm:pst-buffer-set 'sub buf t not-minibufp)))))))
+                (e2wm:pst-buffer-set 'main buf t not-minibufp)))))))
 
 (defun e2wm:dp-magit-popup (buf)
   (let ((cb (current-buffer)))
@@ -202,23 +196,40 @@ during popping up the plugin buffer.")
       (e2wm:with-advice
        (cond
         ((equal buf-file-name "COMMIT_EDITMSG")
-         ;; displaying commit objects in the main window
-         (e2wm:pst-buffer-set 'main buf t t))
+         ;; displaying commit objects in the logs window
+         (e2wm:pst-buffer-set 'logs buf t t))
+
         ((equal buf-name "*magit-commit-popup*")
-         ;; displaying commit objects in the main window
-         (e2wm:pst-buffer-set 'diff buf t t))
+         ;; displaying commit-popup objects in the main window
+         (e2wm:pst-buffer-set 'main buf t t))
+
         ((string-match "^\\*magit-diff: .*" buf-name)
-         ;; displaying diff buffer in the diff window
-         (e2wm:pst-buffer-set 'diff buf t nil))
+         ;; displaying main buffer in the main window
+         (e2wm:pst-buffer-set 'main buf t nil))
+
+        ((string-match "^\\*magit-revision: .*" buf-name)
+         ;; displaying revision buffer in the main window
+         (e2wm:pst-buffer-set 'main buf t nil))
+
         ((string-match "^\\*magit: .*" buf-name)
          ;; displaying status object in the status window
          (e2wm:pst-buffer-set 'status buf t t))
+
+        ((string-match "^\\*magit-refs: .*" buf-name)
+         ;; displaying branches object in the branches window
+         (e2wm:pst-buffer-set 'branches buf t nil))
+
+        ((string-match "^\\*magit-log: .*" buf-name)
+         ;; displaying log object in the logs window
+         (e2wm:pst-buffer-set 'logs buf t nil))
+
         ((e2wm:history-recordable-p buf)
          ;; displaying recordable buffer in the main window
          (e2wm:pst-buffer-set 'main buf t t))
+
         (t
-         ;; displaying other objects in the sub window
-         (e2wm:pst-buffer-set 'sub buf t not-minibufp)))))))
+         ;; displaying other objects in the main window
+         (e2wm:pst-buffer-set 'main buf t not-minibufp)))))))
 
 ;; Commands / Keybindings
 

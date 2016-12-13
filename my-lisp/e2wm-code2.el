@@ -74,7 +74,9 @@
       (setq buf (get-buffer-create dirtree-buffer))
       (select-window win)
       (dirtree-build buf "." nil))
-    (wlf:set-buffer wm wname buf)))
+    (wlf:set-buffer wm wname buf))
+  ;; Select the `left' window
+  (e2wm:pst-window-select 'left))
 
 (e2wm:plugin-register 'dirtree
                      "dirtree"
@@ -115,15 +117,18 @@
    :leave      'e2wm:dp-code2-leave))
 
 (defun e2wm:dp-code2-init ()
+
+  ;; Hack to try to help get the correct window sizes in the new layout
+  (ad-deactivate 'delete-other-windows)
+  (delete-other-windows)
+  (ad-activate 'delete-other-windows)
+
   ;; Set the dirtree-file-widget to us e2wm:dirtree-select
   (define-widget 'dirtree-file-widget 'push-button
     "File widget."
     :format         "%[%t%]\n"
     :button-face    'default
     :notify         'e2wm:dirtree-select)
-  (add-hook 'minibuffer-setup-hook 'e2wm:override-setup-completion)
-  (add-hook 'with-editor-post-finish-hook 'e2wm:pst-update-windows)
-  (add-hook 'with-editor-post-cancel-hook 'e2wm:pst-update-windows)
   (let*
       ((code2-wm
         (wlf:no-layout
@@ -143,6 +148,7 @@
       (wlf:set-buffer code2-wm 'right (e2wm:history-get-prev buf)))
      (t
       (wlf:set-buffer code2-wm 'right (e2wm:history-get-prev buf))))
+
     code2-wm))
 
 (defun e2wm:dp-code2-leave (wm)
@@ -153,23 +159,39 @@
     :format         "%[%t%]\n"
     :button-face    'default
     :notify         'dirtree-select)
-  (customize-set-variable 'display-buffer-alist nil)
-  (remove-hook 'minibuffer-setup-hook 'e2wm:override-setup-completion)
-  (remove-hook 'with-editor-post-finish-hook 'e2wm:pst-update-windows)
-  (remove-hook 'with-editor-post-cancel-hook 'e2wm:pst-update-windows))
+  (customize-set-variable 'display-buffer-alist nil))
 
 (defun e2wm:dp-code2-switch (buf)
   "Switch to the buffer BUF staying in the same window if left or right"
   (e2wm:message "#DP CODE2 switch : %s" buf)
   (let ((wm (e2wm:pst-get-wm))
-        (curwin (selected-window)))
+        (curwin (selected-window))
+        (buf-name (buffer-name buf)))
     (cond
-     ((eql curwin (wlf:get-window wm 'left)) ; in left window
-      (e2wm:pst-update-windows)
-      (e2wm:pst-buffer-set 'left buf))
-     ((eql curwin (wlf:get-window wm 'right)) ; in right window
-      (e2wm:pst-update-windows)
-      (e2wm:pst-buffer-set 'right buf))
+     ;; Standard popups in right window
+     ((and e2wm:c-code2-show-right-regexp
+          (string-match e2wm:c-code2-show-right-regexp buf-name))
+     (e2wm:pst-buffer-set 'right buf t t)
+     t)
+
+     ;; In left window
+     ((eql curwin (wlf:get-window wm 'left))
+      (cond
+       ((eql (get-buffer buf) (wlf:get-buffer wm 'left))
+        ;; Switching to the same buffer, show it in right window
+        (e2wm:pst-update-windows)
+        (e2wm:pst-buffer-set 'right buf)
+        t)
+       (t
+        ;; Otherwise, do the default
+        nil)))
+
+     ;; In right window
+     ((eql curwin (wlf:get-window wm 'right))
+      (e2wm:pst-buffer-set 'right buf)
+      t)
+
+     ;; Default
      (t nil))))
 
 (setq e2wm:c-document-buffer-p (lambda (buf) nil))
@@ -177,7 +199,7 @@
 (defvar e2wm:c-code2-show-left-regexp nil)
 
 (defvar e2wm:c-code2-show-right-regexp
-  "\\*\\(Ibuffer\\|Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|imenu-tree\\|Man\\|WoMan\\|info\\|magit\\)")
+  "\\*\\(Help\\|eshell\\|grep\\|Occur\\|Greed\\|Compilation\\|Backtrace\\|imenu-tree\\|Man\\|WoMan\\|info\\|eww\\|magit\\)")
 
 (defvar e2wm:c-code2-max-sub-size 1000)
 
@@ -189,6 +211,7 @@
    otherwise display the buffer in pop-up sub."
   (e2wm:message "#DP CODE2 popup : %s" buf)
   (let ((buf-name (buffer-name buf)))
+    (message "popup %s" buf-name)
     (cond
     ((e2wm:document-buffer-p buf)
      (e2wm:pst-buffer-set 'right buf)
@@ -266,9 +289,11 @@
 
 (defun e2wm:dp-code2-after-bury (buried-buffer window)
   "Close sub window if it is the current window."
+  (e2wm:message "#DP CODE AFTER BURY %s %s" buried-buffer window)
   (e2wm:$pst-class-super)
   (let ((wm (e2wm:pst-get-wm)))
-    (when (eq (wlf:get-window-name wm window) 'sub)
+    (when (or (e2wm:buffer-completion-p buried-buffer)
+              (eq (wlf:get-window-name wm window) 'sub))
       (wlf:hide wm 'sub)
       (wlf:select wm (e2wm:$pst-main (e2wm:pst-get-instance))))))
 

@@ -46,8 +46,6 @@
   (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)  ;; Incrementally adjust frame properties-[0-9.]*"))))
   (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/doremi-cmd-[0-9.]*"))))
   (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/t)  ;; Other Do Re Mi commands-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/e2wm-[0-9.]*"))))
-(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/window-layout-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/browse-kill-ring+-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/whole-line-or-region-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/undo-tree-[0-9.]*"))))
@@ -151,6 +149,8 @@
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/bbdb-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/supercite-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/mairix-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/e2wm-[0-9.]*"))))
+(add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/window-layout-[0-9.]*"))))
 (add-to-list  'load-path (car (last (file-expand-wildcards "~/Emacs/elpa/e2wm-[0-9.]*"))))
 (setq inhibit-startup-screen t)  ;; Include in init-eemacs
 (setq initial-major-mode 'emacs-lisp-mode)  ;; Include in init-eemacs
