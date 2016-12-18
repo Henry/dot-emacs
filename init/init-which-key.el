@@ -8,13 +8,12 @@
   (setq which-key-popup-type 'minibuffer
         which-key-idle-delay 0.4
         which-key-sort-order 'which-key-prefix-then-key-order
+        which-key-allow-multiple-replacements t
 
         which-key-replacement-alist
-        '((("<left>")                 "←")
-          (("<up>")                   "↑")
+        '((("<up>")                   "↑")
           (("<right>")                "→")
           (("<down>")                 "↓")
-          (("<left>")                 "←")
           (("<left>")                 "←")
           (("up")                     "↑")
           (("right")                  "→")
