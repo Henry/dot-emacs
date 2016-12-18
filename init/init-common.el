@@ -146,6 +146,10 @@
 (require 'key-cat)
 
 ;; -----------------------------------------------------------------------------
+;;; alarm.el --- Simple audible and visible alarm
+(require 'alarm)
+
+;; -----------------------------------------------------------------------------
 ;;; Dimish minor modes
 (diminish 'auto-fill-function)
 
