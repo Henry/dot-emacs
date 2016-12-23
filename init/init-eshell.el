@@ -100,7 +100,9 @@
   (defalias 'eldoc-get-fnsym-args-string 'elisp-get-fnsym-args-string)
 
   (add-hook 'eshell-mode-hook 'my-eshell-mode-hook)
-  (setup-esh-help-eldoc))
+  (setup-esh-help-eldoc)
+
+  (require 'company-pcomplete))
 
 ;; -----------------------------------------------------------------------------
 ;;; Set eshell-mode hook
@@ -148,11 +150,10 @@
   (company-mode 1)
   (local-set-key (kbd "<tab>") 'company-complete)
   (local-set-key (kbd "M-<tab>") 'company-complete)
-  (set (make-local-variable 'company-backends) '(company-capf))
+  (set (make-local-variable 'company-backends) '(company-pcomplete))
 
   ;; This uses the standard completion-UI which is
   ;; ivy in-region completion when activated
-  ;; This is good enough until there is a pcomplete backend for company
   ;; (company-mode -1) ;; Switch-off company to ensure ivy is used
   ;; (local-set-key (kbd "<tab>")
   ;;                (lambda () (interactive) (pcomplete-std-complete)))
