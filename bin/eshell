@@ -2,8 +2,8 @@
 
 # Use the extended emacs as the server (load MUCH faster)
 # Use makeEemacs to rebuild eemacs if required
-eeserver="eemacs -q -l ~/.emacs.d/init-eemacs -server server"
+eeserver="eemacs -q -l ~/.emacs.d/init-eemacs --name Edit -server server"
 
 (emacsclient -n -e \
     "(progn (select-frame (make-frame)) (multi-eshell 1))" 2>/dev/null || \
- $eeserver -f multi-eshell 2>/dev/null) &
+ $eeserver -f multi-eshell 2>/dev/null)

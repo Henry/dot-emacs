@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ `ps -u $USER -f | grep -v grep | grep -c 'emms-browser'` == "0" ]; then
-    eemacs -q -l ~/.emacs.d/init-eemacs -f emms-browser -server emms &
+    eemacs -q -l ~/.emacs.d/init-eemacs --name Emms -f emms-browser -server emms
 else
     echo "eemacs -f emms-browser already running." >&2
 fi

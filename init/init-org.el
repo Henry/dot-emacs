@@ -352,7 +352,7 @@ in a full-height window"
   (other-window 1)
   )
 
-(add-to-list 'command-switch-alist '("agenda" . my-agenda))
+;;(add-to-list 'command-switch-alist '("agenda" . my-agenda))
 
 ;; -----------------------------------------------------------------------------
 ;;; Use "minted" LaTeX package for listings

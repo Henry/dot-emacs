@@ -127,7 +127,7 @@
         wl-message-window-size '(1 . 4)
 
         ;; Create draft in a new frame
-        wl-draft-use-frame t
+        wl-draft-use-frame nil
 
         ;; Do not delete temporary files to allow HTML Emails
         ;; to be viewed in Conkeror
@@ -471,7 +471,7 @@ e.g.
  'wl-draft-mode-hook
  '(lambda ()
     ;; Key bindings
-    (local-set-key "\C-c\C-k" 'my-wl-draft-kill-force)
+    (local-set-key "\C-x\C-k" 'my-wl-draft-kill-force)
     (local-set-key "\M-t" my-nav-map)
     (my-wl-mode-line-buffer-identification)
     ))
