@@ -23,6 +23,7 @@
 ;;; Commentary:
 ;;
 ;; Based on `ac-pcomplete', see https://www.emacswiki.org/emacs/EshellCompletion
+;; and `pcomplete`, see pcomplete.el.
 
 ;;; Code:
 
@@ -36,49 +37,35 @@
 
 (defvar company-pcomplete-available 'unknown)
 
+(defun company-pcomplete--prefix ()
+  (let* ((pcomplete-stub)
+         pcomplete-seen
+         pcomplete-norm-func
+         pcomplete-args
+         pcomplete-last pcomplete-index
+         (pcomplete-autolist pcomplete-autolist)
+         (pcomplete-suffix-list pcomplete-suffix-list)
+         (candidates (pcomplete-completions))
+         (beg (pcomplete-begin))
+         (prefix (buffer-substring beg (point))))
+    prefix))
+
 (defun company-pcomplete--candidates ()
-  ;; eshell uses `insert-and-inherit' to insert a \t if no completion
-  ;; can be found, but this must not happen for a company backend
-  (cl-letf (((symbol-function 'insert-and-inherit) (lambda) (&rest args)))
-    ;; From `pcomplete' in pcomplete.el
-    (let* ((pcomplete-stub)
-           (pcomplete-show-list t) ;; inhibit patterns like * being deleted
-           pcomplete-seen pcomplete-norm-func
-           pcomplete-args pcomplete-last pcomplete-index
-           (pcomplete-autolist pcomplete-autolist)
-           (pcomplete-suffix-list pcomplete-suffix-list)
-           (candidates (pcomplete-completions))
-           (beg (pcomplete-begin))
-           ;; Note: buffer text and completion argument may be
-           ;; different because the buffer text may bet transformed
-           ;; before being completed (e.g. by the may be
-           ;; expanded)
-           (buftext (buffer-substring beg (point)))
-           (arg (nth pcomplete-index pcomplete-args)))
-      ;; Complete only if the stub  matches the end of the buffer text
-      (when (or (string= pcomplete-stub
-                           (substring buftext
-                                      (max 0
-                                           (- (length buftext)
-                                              (length pcomplete-stub)))))
-                  (string= pcomplete-stub
-                           (substring arg
-                                      (max 0
-                                           (- (length arg)
-                                              (length pcomplete-stub))))))
-        ;; Collect all possible completions for the stub. Note that
-        ;; `candidates` may be a function, that's why we use
-        ;; `all-completions`.
-        (let* ((cnds (all-completions pcomplete-stub candidates))
-               (bnds (completion-boundaries pcomplete-stub
-                                            candidates
-                                            nil
-                                            ""))
-               (skip (- (length pcomplete-stub) (car bnds))))
-          ;; We replace the stub at the beginning of each candidate by
-          ;; the real buffer content.
-          (mapcar #'(lambda (cand) (concat buftext (substring cand skip)))
-                    cnds))))))
+  (let* ((pcomplete-stub)
+         (pcomplete-show-list t)
+         pcomplete-seen pcomplete-norm-func
+         pcomplete-args pcomplete-last pcomplete-index
+         (pcomplete-autolist pcomplete-autolist)
+         (pcomplete-suffix-list pcomplete-suffix-list)
+         (candidates (pcomplete-completions))
+         (beg (pcomplete-begin))
+         (prefix (buffer-substring beg (point))))
+    ;; Collect all possible completions for the current stub
+    (let* ((cnds (all-completions pcomplete-stub candidates))
+           (bnds (completion-boundaries pcomplete-stub candidates nil ""))
+           (skip (- (length pcomplete-stub) (car bnds))))
+      ;; Replace the stub at the beginning of each candidate by the prefix
+      (mapcar #'(lambda (cand) (concat prefix (substring cand skip))) cnds))))
 
 (defun company-pcomplete-available ()
   (when (eq company-pcomplete-available 'unknown)
@@ -98,7 +85,7 @@
   (cl-case command
     (interactive (company-begin-backend 'company-pcomplete))
     (prefix (when (company-pcomplete-available)
-              (company-grab-symbol)))
+              (company-pcomplete--prefix)))
     (candidates (company-pcomplete--candidates))
     (sorted t)))
 
