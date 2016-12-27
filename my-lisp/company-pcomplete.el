@@ -1,4 +1,4 @@
-;;; company-pcomplete.el --- company-mode completion backend using pcomplete
+;;; company-pcomplete.el --- company-mode pcomplete backend -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2016 Free Software Foundation, Inc.
 
@@ -44,11 +44,9 @@
          pcomplete-args
          pcomplete-last pcomplete-index
          (pcomplete-autolist pcomplete-autolist)
-         (pcomplete-suffix-list pcomplete-suffix-list)
-         (candidates (pcomplete-completions))
-         (beg (pcomplete-begin))
-         (prefix (buffer-substring beg (point))))
-    prefix))
+         (pcomplete-suffix-list pcomplete-suffix-list))
+    (pcomplete-completions)
+    (buffer-substring (pcomplete-begin) (point))))
 
 (defun company-pcomplete--candidates ()
   (let* ((pcomplete-stub)
@@ -58,18 +56,17 @@
          (pcomplete-autolist pcomplete-autolist)
          (pcomplete-suffix-list pcomplete-suffix-list)
          (candidates (pcomplete-completions))
-         (beg (pcomplete-begin))
-         (prefix (buffer-substring beg (point))))
-    ;; Collect all possible completions for the current stub
-    (let* ((cnds (all-completions pcomplete-stub candidates))
-           (bnds (completion-boundaries pcomplete-stub candidates nil ""))
-           (skip (- (length pcomplete-stub) (car bnds))))
-      ;; Replace the stub at the beginning of each candidate by the prefix
-      (mapcar #'(lambda (cand) (concat prefix (substring cand skip))) cnds))))
+         (prefix (buffer-substring (pcomplete-begin) (point)))
+         ;; Collect all possible completions for the current stub
+         (cnds (all-completions pcomplete-stub candidates))
+         (bnds (completion-boundaries pcomplete-stub candidates nil ""))
+         (skip (- (length pcomplete-stub) (car bnds))))
+    ;; Replace the stub at the beginning of each candidate by the prefix
+    (mapcar #'(lambda (cand) (concat prefix (substring cand skip))) cnds)))
 
 (defun company-pcomplete-available ()
   (when (eq company-pcomplete-available 'unknown)
-    (condition-case err
+    (condition-case _err
         (progn
           (company-pcomplete--candidates)
           (setq company-pcomplete-available t))
@@ -79,7 +76,7 @@
   company-pcomplete-available)
 
 ;;;###autoload
-(defun company-pcomplete (command &optional arg &rest ignored)
+(defun company-pcomplete (command &optional _arg &rest ignored)
   "`company-mode' completion backend using `pcomplete'."
   (interactive (list 'interactive))
   (cl-case command
