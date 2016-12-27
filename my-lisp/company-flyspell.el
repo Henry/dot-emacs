@@ -1,4 +1,4 @@
-;;; company-flyspell.el --- company-mode completion backend using flyspell
+;;; company-flyspell.el --- company-mode flyspell backend -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2016 Free Software Foundation, Inc.
 
@@ -70,7 +70,7 @@ Based on `flyspell-correct-word-before-point'."
 
 (defun company-flyspell-available ()
   (when (eq company-flyspell-available 'unknown)
-    (condition-case err
+    (condition-case _err
         (progn
           (company-flyspell--lookup-words "WHATEVER")
           (setq company-flyspell-available t))
