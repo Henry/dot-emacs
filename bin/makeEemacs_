@@ -15,14 +15,14 @@ EMACSDOC=/usr/local/share/emacs/$EMACS_VERSION/etc/
 # Set the architecture
 if which setarch >& /dev/null
 then
-case `uname -m` in
-    i686)
-    EMACS="setarch i386 -R `which emacs`"
-    ;;
-    x86_64)
-    EMACS="setarch x86_64 -R `which emacs`"
-    ;;
-esac
+    case `uname -m` in
+        i686)
+            DEMACS="setarch i386 -R $TEMACS"
+            ;;
+        x86_64)
+            DEMACS="setarch x86_64 -R $TEMACS"
+            ;;
+    esac
 fi
 
 # Echo commands in red
@@ -58,7 +58,7 @@ rm -f ../etc
 ln -s $EMACSDOC ../etc
 
 echoRed "Dump eemacs"
-$TEMACS \
+$DEMACS \
     -q --batch \
     --eval "(setq delete-old-versions t)" \
     -L ~/.emacs.d/init \
