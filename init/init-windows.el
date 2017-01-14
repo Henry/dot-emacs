@@ -54,13 +54,13 @@ rather than vertically.")
 (use-package auto-dim-other-buffers
   :ensure t
   :diminish auto-dim-other-buffers-mode
-  :init
-  (defun auto-dim-on-window-configuration-change ()
-    "Highlight selected window with a different background color."
-    (adob--focus-out-hook)
-    (adob--focus-in-hook))
-  (add-hook 'window-configuration-change-hook
-            'auto-dim-on-window-configuration-change)
+  ;; :init
+  ;; (defun auto-dim-on-window-configuration-change ()
+  ;;   "Highlight selected window with a different background color."
+  ;;   (adob--focus-out-hook)
+  ;;   (adob--focus-in-hook))
+  ;; (add-hook 'window-configuration-change-hook
+  ;;           'auto-dim-on-window-configuration-change)
   :config
   (auto-dim-other-buffers-mode t))
 
