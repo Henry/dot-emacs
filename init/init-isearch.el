@@ -1,10 +1,9 @@
 ;;; init-isearch.el --- Isearch configuration and extensions
 ;; -----------------------------------------------------------------------------
-;;; isearch+, isearch-all --- Isearch enhancements (not working)
-;; (use-package isearch+
-;;   :ensure t)
-;; (eval-after-load "isearch" '(require 'isearch+))
-
+;;; isearch+, isearch-all --- Isearch enhancements
+(use-package isearch+
+  :ensure t)
+(eval-after-load "isearch" '(require 'isearch+))
 (eval-after-load "isearch" '(require 'isearch-all))
 
 ;; -----------------------------------------------------------------------------
