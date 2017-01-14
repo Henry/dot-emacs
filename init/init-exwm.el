@@ -1,3 +1,23 @@
+(defun next-code-buffer ()
+  (interactive)
+  (let ((bread-crumb (buffer-name)))
+    (next-buffer)
+    (while
+        (and
+         (string-match-p "^\*" (buffer-name))
+         (not (equal bread-crumb (buffer-name))))
+      (next-buffer))))
+
+(defun previous-code-buffer ()
+  (interactive)
+  (let ((bread-crumb (buffer-name)))
+    (previous-buffer)
+    (while
+        (and
+         (string-match-p "^\*" (buffer-name))
+         (not (equal bread-crumb (buffer-name))))
+      (previous-buffer))))
+
 (use-package exwm
   :ensure t
   :ensure xelb)
@@ -110,8 +130,8 @@
   (exwm-input-set-key (kbd "C-t <up>") #'windmove-up)
   (exwm-input-set-key (kbd "C-t <down>") #'windmove-down)
 
-  (exwm-input-set-key (kbd "C-t C-n") #'next-buffer)
-  (exwm-input-set-key (kbd "C-t C-p") #'previous-buffer)
+  (exwm-input-set-key (kbd "C-t C-n") #'next-code-buffer)
+  (exwm-input-set-key (kbd "C-t C-p") #'previous-code-buffer)
 
   ;; + Bind a key to switch workspace interactively
   (exwm-input-set-key (kbd "C-t w") #'exwm-workspace-switch)
