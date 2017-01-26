@@ -75,6 +75,7 @@ This is the contents of my /.emacs.d/ directory.
     + epl
     + etagstable
     + ewwlnum
+    + exwm
     + faces+
     + finder+
     + flim
@@ -153,5 +154,3 @@ This is the contents of my /.emacs.d/ directory.
     https://github.com/Andersbakken/rtags
 *** Irony
     https://github.com/Sarcasm/irony-mode
-*** Emacs window manager
-    https://github.com/ch11ng/exwm
