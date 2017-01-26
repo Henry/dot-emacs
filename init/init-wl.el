@@ -750,6 +750,8 @@ so that the appropriate emacs mode is selected according to the file extension."
         (my-mime-save-content-find-file entity)))
   )
 
+(require 'elmo)
+
 (defun my-bbdb-insert-folder ()
   "Interactively select the destination folder and store in BBDB."
   (interactive)
