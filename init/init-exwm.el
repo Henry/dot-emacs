@@ -1,22 +1,5 @@
-(defun next-code-buffer ()
-  (interactive)
-  (let ((bread-crumb (buffer-name)))
-    (next-buffer)
-    (while
-        (and
-         (string-match-p "^\*" (buffer-name))
-         (not (equal bread-crumb (buffer-name))))
-      (next-buffer))))
-
-(defun previous-code-buffer ()
-  (interactive)
-  (let ((bread-crumb (buffer-name)))
-    (previous-buffer)
-    (while
-        (and
-         (string-match-p "^\*" (buffer-name))
-         (not (equal bread-crumb (buffer-name))))
-      (previous-buffer))))
+;;; init-exwm.el --- Initialize EXWM
+;; -----------------------------------------------------------------------------
 
 (use-package exwm
   :ensure t
@@ -25,11 +8,43 @@
 (defun start-exwm (&optional option)
   "Start EXWM"
 
-  (defvar exwm-nav-map
-    (let ((map (make-sparse-keymap)))
-      (global-unset-key "\C-t")
-      (define-key global-map "\C-t" map)
-      map))
+  ;; Hacked version of `exwm-input--update-mode-line' for `smart-mode-line'
+  ;; Changes the background color of the line/char mode indicator
+  (defun exwm-input--update-mode-line (id)
+    "Update the propertized `mode-line-process' for window ID."
+    (let (help-echo cmd mode)
+      (cl-case exwm--on-KeyPress
+        ((exwm-input--on-KeyPress-line-mode)
+         (setq mode "line"
+               help-echo "mouse-1: Switch to char-mode"
+               cmd `(lambda ()
+                      (interactive)
+                      (exwm-input-release-keyboard ,id))))
+        ((exwm-input--on-KeyPress-char-mode)
+         (setq mode "char"
+               help-echo "mouse-1: Switch to line-mode"
+               cmd `(lambda ()
+                      (interactive)
+                      (exwm-input-grab-keyboard ,id)))))
+      (with-current-buffer (exwm--id->buffer id)
+        (setq mode-line-process
+              `(": "
+                (:propertize
+                 ,mode
+                 help-echo ,help-echo
+                 face powerline-active2 ;; Added for `smart-mode-line'
+                 mouse-face mode-line-highlight
+                 local-map
+                 (keymap
+                  (mode-line
+                   keymap
+                   (down-mouse-1 . ,cmd)))))))))
+
+  (defun exwm-input-set-global-key (key function)
+    "Add KEY to `exwm-input-prefix-keys' and bind FUNCTION to KEY
+     in exwm keymap"
+    (cl-pushnew (elt key 0) exwm-input-prefix-keys)
+    (exwm-input-set-key key function))
 
   ;; Disable menu-bar, tool-bar and scroll-bar to increase the usable space
   (menu-bar-mode -1)
@@ -79,7 +94,7 @@
   ;; it in `exwm-update-class-hook' and `exwm-update-title-hook', which are run
   ;; when a new window class name or title is available. Here's some advice on
   ;; this subject:
-  ;; + Always use `exwm-workspace-rename-buffer` to avoid naming conflict.
+  ;; + Always use `exwm-workspace-rename-buffer' to avoid naming conflict.
   ;; + Only renaming buffer in one hook and avoid it in the other. There's no
   ;;   guarantee on the order in which they are run.
   ;; + For applications with multiple windows (e.g. GIMP), the class names of
@@ -104,92 +119,135 @@
                         (string= "gimp" exwm-instance-name))
                 (exwm-workspace-rename-buffer exwm-title))))
 
-  ;; `exwm-input-set-key' allows you to set a global key binding (available in
-  ;; any case). Following are a few examples.
+  ;; ;; `exwm-input-set-key' allows you to set a global key binding
+  ;; (setq exwm-input-prefix-keys '(?\s-t))
 
-  (setq exwm-input-prefix-keys '(?\C-t)
-        ;;'(?\C-c ?\C-x ?\C-u ?\C-h ?\M-x ?\M-` ?\M-& ?\M-:)
-        )
+  ;; (exwm-input-set-key (kbd "s-t C-c") (lookup-key global-map (kbd "C-c")))
+  ;; (exwm-input-set-key (kbd "s-t C-x") (lookup-key global-map (kbd "C-x")))
+  ;; (exwm-input-set-key (kbd "s-t C-u") (lookup-key global-map (kbd "C-u")))
+  ;; (exwm-input-set-key (kbd "s-t C-h") (lookup-key global-map (kbd "C-h")))
+  ;; (exwm-input-set-key (kbd "s-t M-x") (lookup-key global-map (kbd "M-x")))
+  ;; (exwm-input-set-key (kbd "s-t M-`") (lookup-key global-map (kbd "M-`")))
+  ;; (exwm-input-set-key (kbd "s-t M-&") (lookup-key global-map (kbd "M-&")))
+  ;; (exwm-input-set-key (kbd "s-t M-:") (lookup-key global-map (kbd "M-:")))
 
-  (exwm-input-set-key (kbd "C-t C-c") (lookup-key global-map (kbd "C-c")))
-  (exwm-input-set-key (kbd "C-t C-x") (lookup-key global-map (kbd "C-x")))
-  (exwm-input-set-key (kbd "C-t C-u") (lookup-key global-map (kbd "C-u")))
-  (exwm-input-set-key (kbd "C-t C-h") (lookup-key global-map (kbd "C-h")))
-  (exwm-input-set-key (kbd "C-t M-x") (lookup-key global-map (kbd "M-x")))
-  (exwm-input-set-key (kbd "C-t M-`") (lookup-key global-map (kbd "M-`")))
-  (exwm-input-set-key (kbd "C-t M-&") (lookup-key global-map (kbd "M-&")))
-  (exwm-input-set-key (kbd "C-t M-:") (lookup-key global-map (kbd "M-:")))
+  (setq exwm-input-prefix-keys nil)
 
-  ;; + We always need a way to switch between line-mode from char-mode
-  (exwm-input-set-key (kbd "C-t t") #'exwm-input-toggle-keyboard)
+  (exwm-input-set-global-key (kbd "s-C-c") (lookup-key global-map (kbd "C-c")))
+  (exwm-input-set-global-key (kbd "s-C-x") (lookup-key global-map (kbd "C-x")))
+  (exwm-input-set-global-key (kbd "s-x")   (lookup-key global-map (kbd "C-x")))
+  (exwm-input-set-global-key (kbd "s-C-u") (lookup-key global-map (kbd "C-u")))
+  (exwm-input-set-global-key (kbd "s-C-h") (lookup-key global-map (kbd "C-h")))
+  (exwm-input-set-global-key (kbd "s-M-x") (lookup-key global-map (kbd "M-x")))
+  (exwm-input-set-global-key (kbd "s-M-`") (lookup-key global-map (kbd "M-`")))
+  (exwm-input-set-global-key (kbd "s-M-&") (lookup-key global-map (kbd "M-&")))
+  (exwm-input-set-global-key (kbd "s-M-:") (lookup-key global-map (kbd "M-:")))
 
-  (exwm-input-set-key (kbd "C-t C-t") #'exwm-workspace-next)
-  ;;(exwm-input-set-key (kbd "C-t C-t") #'other-window)
-  (exwm-input-set-key (kbd "C-t <left>") #'windmove-left)
-  (exwm-input-set-key (kbd "C-t <right>") #'windmove-right)
-  (exwm-input-set-key (kbd "C-t <up>") #'windmove-up)
-  (exwm-input-set-key (kbd "C-t <down>") #'windmove-down)
+  ;; 's-r': Reset
+  (exwm-input-set-global-key (kbd "s-R") #'exwm-reset)
 
-  (exwm-input-set-key (kbd "C-t C-n") #'next-code-buffer)
-  (exwm-input-set-key (kbd "C-t C-p") #'previous-code-buffer)
+  ;; We always need a way to switch between line-mode from char-mode
+  (exwm-input-set-global-key (kbd "s-T") #'exwm-input-toggle-keyboard)
 
-  ;; + Bind a key to switch workspace interactively
-  (exwm-input-set-key (kbd "C-t w") #'exwm-workspace-switch)
+  ;; 's-w': Interactively switch workspace
+  (exwm-input-set-global-key (kbd "s-w") #'exwm-workspace-switch)
 
-  ;; + Bind "C-t 0" to "C-t 9" to switch to the corresponding workspace.
+  ;; 's-<Page Down>': Switch to next workspace (cycles)
+  (exwm-input-set-global-key (kbd "s-<next>") #'exwm-workspace-next)
+
+  ;; 's-<Page Up>': Switch to previous workspace (cycles)
+  (exwm-input-set-global-key (kbd "s-<prior>") #'exwm-workspace-prev)
+
+  ;; 's-N': Switch to specified workspace
   (dotimes (i 10)
-    (exwm-input-set-key (kbd (format "C-t %d" i))
-                        `(lambda ()
-                           (interactive)
-                           (exwm-workspace-switch-create ,i)))
-    (exwm-input-set-key (kbd (format "C-t C-%d" i))
-                        `(lambda ()
-                           (interactive)
-                           (exwm-workspace-switch-create ,i))))
-
-  ;; + Application launcher ('C-t c' also works if the output buffer does not
-  ;;   bother you). Note that there is no need for processes to be created by
-  ;;   Emacs.
-  (exwm-input-set-key (kbd "C-t r")
-                      (lambda (command)
-                        (interactive (list (read-shell-command "$ ")))
-                        (start-process-shell-command command nil command)))
+    (exwm-input-set-global-key (kbd (format "s-%d" i))
+                               `(lambda ()
+                                  (interactive)
+                                  (exwm-workspace-switch-create ,i))))
 
   (defun exwm-command (command)
-    (interactive)
+    "Execute the shell COMMAND"
     (start-process-shell-command command nil command))
 
-  (exwm-input-set-key (kbd "C-t c")
-                      (lambda ()
-                        (interactive)
-                        (start-process "eshell" nil "eshell")))
+  (defun exwm-wanderlust ()
+    "Start wanderlust server"
+    (interactive)
+    (exwm-command "wanderlust"))
 
-  (exwm-input-set-key (kbd "C-t C-c")
-                      (lambda ()
-                        (interactive)
-                        (start-process "xterm" nil "xterm")))
+  (defun exwm-emms ()
+    "Start emms server"
+    (interactive)
+    (exwm-command "emms"))
 
-  (exwm-input-set-key (kbd "C-t e")
-                      (lambda ()
-                        (interactive)
-                        (start-process "edit" nil "edit")))
+  ;; 's-r': Interactively select and launch application
+  (exwm-input-set-global-key
+   (kbd "s-r") (lambda (command)
+                 (interactive (list (read-shell-command "$ ")))
+                 (exwm-command command)))
 
-  (exwm-input-set-key (kbd "C-t x")
-                      (lambda ()
-                        (interactive)
-                        (start-process "conkeror" nil "conkeror")))
+  (exwm-input-set-global-key (kbd "s-n") #'next-code-buffer)
+  (exwm-input-set-global-key (kbd "s-p") #'previous-code-buffer)
 
-  (exwm-input-set-key (kbd "C-t l")
-                      (lambda ()
-                        (interactive)
-                        (start-process "" nil "xlock")))
+  (exwm-input-set-global-key (kbd "s-<left>") #'windmove-left)
+  (exwm-input-set-global-key (kbd "s-<right>") #'windmove-right)
+  (exwm-input-set-global-key (kbd "s-<up>") #'windmove-up)
+  (exwm-input-set-global-key (kbd "s-<down>") #'windmove-down)
+
+  (exwm-input-set-global-key
+   (kbd "s-s") (lambda ()
+                 (interactive)
+                 (start-process "eshell" nil "eshell")))
+
+  (exwm-input-set-global-key
+   (kbd "s-t") (lambda ()
+                 (interactive)
+                 (start-process "xterm" nil "xterm")))
+
+  (exwm-input-set-global-key
+   (kbd "s-e") (lambda ()
+                 (interactive)
+                 (start-process "edit" nil "edit")))
+
+  (exwm-input-set-global-key
+   (kbd "s-E") (lambda ()
+                 (interactive)
+                 (start-process "e" nil "e")))
+
+  (exwm-input-set-global-key
+   (kbd "s-c") (lambda ()
+                 (interactive)
+                 (start-process "conkeror" nil "conkeror")))
+
+  (exwm-input-set-global-key
+   (kbd "s-l") (lambda ()
+                 (interactive)
+                 (start-process "" nil "xlock")))
+
+  (cl-pushnew ?\s-m exwm-input-prefix-keys)
+
+  (defvar exwm-emms-bindings
+    '(("n" "emms-next")
+      ("p" "emms-previous")
+      ("S" "emms-stop")
+      ("P" "emms-pause"))
+    "List of emms-server commands and exwm bindings")
+
+  ;; Bind emms-server commands to the keys in the `exwm-emms-bindings' list
+  (mapc (lambda (x)
+          (exwm-input-set-key
+           (kbd (concat "s-m " (car x)))
+           `(lambda ()
+              (interactive)
+              (exwm-command
+               (concat "emacsclient -s emms -e '(" ,(cadr x) ")'")))))
+        exwm-emms-bindings)
 
   ;; The following example demonstrates how to set a key binding only available
   ;; in line mode. It's simply done by first push the prefix key to
   ;; `exwm-input-prefix-keys' and then add the key sequence to `exwm-mode-map'.
   ;; The example shorten 'C-c q' to 'C-q'.
-  ;;(push ?\C-q exwm-input-prefix-keys)
-  ;;(define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+  ;; (push ?\C-q exwm-input-prefix-keys)
+  ;; (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
   ;; The following example demonstrates how to use simulation keys to mimic the
   ;; behavior of Emacs. The argument to `exwm-input-set-simulation-keys' is a
@@ -209,20 +267,26 @@
   ;;    ([?\C-d] . delete)
   ;;    ([?\C-k] . (S-end delete))))
 
-  ;; You can hide the mode-line of floating X windows by uncommenting the
-  ;; following lines
-  ;;(add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
-  ;;(add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+  ;; Write the workspace number in the mode-line instead of the frame number
+  (setq mode-line-frame-identification
+        '(:propertize (:eval (format "%d " exwm-workspace-current-index))
+                      face mode-line-buffer-id))
 
   ;; You can hide the minibuffer and echo area when they're not used, by
   ;; uncommenting the following line
   (setq exwm-workspace-minibuffer-position 'bottom)
   ;;(setq echo-keystrokes 0)
-  ;;(setq exwm-workspace-minibuffer-position nil)
 
+  ;; `which-key-mode' does not work reliably with exwm
   (which-key-mode -1)
-  ;;(setq which-key-popup-type 'side-window)
 
+  ;; `auto-dim-other-buffers-mode' is not useful with exwm as it only changes
+  ;; the color of the underlying buffer which is overlayed by the chosen
+  ;; application
   (auto-dim-other-buffers-mode -1)
 
+  ;; Enable EXWM
   (exwm-enable))
+
+;; -----------------------------------------------------------------------------
+;;; init-exwm.el ends here

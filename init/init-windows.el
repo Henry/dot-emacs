@@ -65,4 +65,29 @@ rather than vertically.")
   (auto-dim-other-buffers-mode t))
 
 ;; -----------------------------------------------------------------------------
+;;; Select next or previous buffer ignoring special `*' buffers
+
+(defun next-code-buffer ()
+  "Select next buffer ignoring special `*' buffers"
+  (interactive)
+  (let ((cur-buf-name (buffer-name)))
+    (next-buffer)
+    (while
+        (and
+         (string-match-p "^\*" (buffer-name))
+         (not (equal cur-buf-name (buffer-name))))
+      (next-buffer))))
+
+(defun previous-code-buffer ()
+  "Select previous buffer ignoring special `*' buffers"
+  (interactive)
+  (let ((cur-buf-name (buffer-name)))
+    (previous-buffer)
+    (while
+        (and
+         (string-match-p "^\*" (buffer-name))
+         (not (equal cur-buf-name (buffer-name))))
+      (previous-buffer))))
+
+;; -----------------------------------------------------------------------------
 ;;; init-windows.el ends here
