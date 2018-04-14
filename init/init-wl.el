@@ -249,7 +249,7 @@
   ;; ---------------------------------------------------------------------------
   ;; Biff: Check for new mail
   (setq wl-biff-check-interval 180
-        wl-biff-check-delay 10
+        wl-biff-check-delay 180
         wl-biff-use-idle-timer nil)
 
   :config
@@ -518,8 +518,8 @@ Set the `j' key to run `mime-preview-quit'."
  '(lambda () (smiley-region (point-min) (point-max))
     ))
 
-(add-hook
- 'wl-message-redisplay-hook 'bbdb-mua-auto-update)
+;; (add-hook
+;;  'wl-message-redisplay-hook 'bbdb-mua-auto-update)
 
 (add-hook
  'wl-draft-cited-hook
