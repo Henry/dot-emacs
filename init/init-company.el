@@ -9,14 +9,11 @@
   ;;(require 'company-nxml)
   ;;(require 'company-css)
   ;;(require 'company-eclim)
-  ;;(require 'company-semantic)
-  ;;(require 'company-clang)
-  ;;(require 'company-xcode)
   ;;(require 'company-cmake)
   (require 'company-capf)
   (require 'company-files)
   (require 'company-dabbrev-code)
-  (require 'company-gtags)
+  ;;(require 'company-gtags)
   (require 'company-etags)
   (require 'company-keywords)
   ;;(require 'company-oddmuse)
@@ -31,9 +28,9 @@
      company-bbdb
      company-capf
      company-files
-     (company-dabbrev-code company-gtags company-etags company-keywords)
-     company-dabbrev
-     )
+     (company-dabbrev-code company-etags company-keywords)
+     company-dabbrev)
+
    company-show-numbers t
 
    ;;company-dabbrev-ignore-case nil

@@ -11,7 +11,7 @@
 
   :config
   (projectile-global-mode)
-  (counsel-projectile-on)
+  ;(counsel-projectile-on)
 
   (defun projectile-select-files (project-files &optional arg)
     "Select a list of files based on filename at point.
