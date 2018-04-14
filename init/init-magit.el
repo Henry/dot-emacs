@@ -1,5 +1,8 @@
 ;;; init-magit.el --- Initialize magit interface to git
 ;; -----------------------------------------------------------------------------
+(use-package ido-completing-read+
+  :ensure t)
+
 (use-package magit
   :ensure t
   :defer t
