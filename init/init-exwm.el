@@ -201,7 +201,8 @@
   (exwm-input-set-global-key
    (kbd "s-t") (lambda ()
                  (interactive)
-                 (start-process "xterm" nil "xterm")))
+                 (start-process "xterm" nil "xterm")
+                 (exwm-input-toggle-keyboard)))
 
   (exwm-input-set-global-key
    (kbd "s-e") (lambda ()
@@ -216,7 +217,7 @@
   (exwm-input-set-global-key
    (kbd "s-c") (lambda ()
                  (interactive)
-                 (start-process "conkeror" nil "conkeror")))
+                 (start-process "firefox" nil "firefox")))
 
   (exwm-input-set-global-key
    (kbd "s-l") (lambda ()
@@ -241,6 +242,20 @@
               (exwm-command
                (concat "emacsclient -s emms -e '(" ,(cadr x) ")'")))))
         exwm-emms-bindings)
+
+  ;; Started named programs in char-mode
+  (defun exwm-start-in-char-mode ()
+    (when (or (string= exwm-instance-name "eshell")
+              (string= exwm-instance-name "xterm")
+              (string= exwm-instance-name "emacs")
+              (string= exwm-instance-name "eemacs")
+              (string= exwm-instance-name "emacsclient")
+              (string= exwm-instance-name "edit")
+              (string= exwm-instance-name "Edit")
+              (string= exwm-instance-name "e"))
+      (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
+  (add-hook 'exwm-manage-finish-hook 'exwm-start-in-char-mode)
+
 
   ;; The following example demonstrates how to set a key binding only available
   ;; in line mode. It's simply done by first push the prefix key to
