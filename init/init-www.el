@@ -1,10 +1,10 @@
 ;;; init-www.el --- Initialize web-browser interface
 ;; -----------------------------------------------------------------------------
 (setq browse-url-new-window-flag t
-      browse-url-generic-program "conkeror"
+      browse-url-generic-program "firefox"
       mime-view-text/html-previewer 'shr
 
-      ;; Set browse-url to use wget for ftp and conkeror for everything else
+      ;; Set browse-url to use wget for ftp and firefox for everything else
       browse-url-browser-function
       '(("^ftp:/.*" . wget)
         ("."    . browse-url-generic)))
@@ -44,7 +44,7 @@
   :bind (:map my-map
               ("C-g" . search-web)
               ("M-g" . search-web-dwim)))
-weller
+
 ;; -----------------------------------------------------------------------------
 ;;; babel --- interface to web translation services
 (use-package babel
