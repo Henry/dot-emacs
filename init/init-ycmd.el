@@ -7,6 +7,9 @@
 (use-package flycheck
   :ensure t)
 
+(use-package pkg-info
+  :ensure t)
+
 (use-package ycmd
   :ensure t
   :init (setq
@@ -31,6 +34,12 @@
        (cons 'company-ycmd company-backends)))
 
 (add-hook 'c++-mode-hook 'my-c++-ycmd-mode-hook)
+
+(defun company-ycmd-semantic-complete ()
+  (interactive)
+  (let ((ycmd-force-semantic-completion t))
+    (company-cancel)
+    (company-complete)))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-ycmd.el ends here

@@ -126,7 +126,7 @@ Return point, or nil if original point was not in a list."
           nil)))))
 
 ;;;  Return the bounds of the list delimited by the delimiter pair provided
-(defun thing-at-point-bounds-of-list-at-point (ldel rdel)
+(defun thing-at-point-ext-bounds-of-list-at-point (ldel rdel)
   "A `thing-at-point-bounds-of' function for lists
 e.g.
    List types                        LDEL       RDEL
@@ -149,7 +149,7 @@ no recognised nested expression at or surrounding the point is found."
 ;;;  Change the list-thing type to allow selection from anywhere inside the list
 ;;  and handle the nesting level.  Assumes the list is "(" ")" delimited
 (put 'list 'bounds-of-thing-at-point
-     (lambda () (thing-at-point-bounds-of-list-at-point "(" ")")))
+     (lambda () (thing-at-point-ext-bounds-of-list-at-point "(" ")")))
 
 ;;;  Reuse the standard `forward-list' which takes the current character as the
 ;;  delimiter type for searching forward N lists
@@ -157,7 +157,7 @@ no recognised nested expression at or surrounding the point is found."
 
 ;;;  Create a thing type for a "{" "}" delimited list -- a block
 (put 'block 'bounds-of-thing-at-point
-     (lambda () (thing-at-point-bounds-of-list-at-point "{" "}")))
+     (lambda () (thing-at-point-ext-bounds-of-list-at-point "{" "}")))
 
 ;;;  Reuse the standard `forward-list' which takes the current character as the
 ;;  delimiter type for searching forward N blocks

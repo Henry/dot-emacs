@@ -18,6 +18,13 @@
 ;;;  Don't print messages about the spell-checking
 (setq flyspell-issue-message-flag nil)
 
+;;;  Add additional faces to flyspell list
+(setq flyspell-prog-text-faces
+      '(font-lock-string-face
+        font-lock-comment-face
+        font-lock-first-comment-face
+        font-lock-doc-face))
+
 ;;;  Enable for text-mode, and disable it for log-edit-mode and change-log-mode.
 (dolist (hook '(text-mode-hook))
   (add-hook hook

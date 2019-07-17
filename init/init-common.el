@@ -37,8 +37,8 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; replace+ --- Replace enhancements
-(use-package replace+
-  :ensure t)
+;; (use-package replace+
+;;   :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; find-recursive --- Find-files recursively

@@ -142,11 +142,12 @@ See also the documentation for `my-diary-mark-included-files'."
   :ensure t
   :ensure howm
   :config
-  (require 'calfw-cal)
-  (require 'calfw-ical)
-  (require 'calfw-org)
   ;; Load personal information
   (load "personal/init-diary"))
+
+(use-package calfw-cal :ensure t)
+(use-package calfw-org :ensure t)
+(use-package calfw-ical :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;;; init-diary.el ends here

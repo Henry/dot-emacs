@@ -24,12 +24,12 @@
 
 ;; -----------------------------------------------------------------------------
 ;;; Gtags
-(use-package ggtags
-  :ensure t
-  :diminish ggtags-mode
-  :disabled t
-  :init
-  (add-hook 'prog-mode-hook 'ggtags-mode))
+;; (use-package ggtags
+;;   :ensure t
+;;   :diminish ggtags-mode
+;;   :disabled t
+;;   :init
+;;   (add-hook 'prog-mode-hook 'ggtags-mode))
 
 ;; -----------------------------------------------------------------------------
 ;;; init-tags.el ends here

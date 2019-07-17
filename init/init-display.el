@@ -120,4 +120,9 @@
   )
 
 ;; -----------------------------------------------------------------------------
+;;; Create a special font for the //- comments
+;;(copy-face 'font-lock-keyword-face 'font-lock-first-comment-face)
+
+
+;; -----------------------------------------------------------------------------
 ;;; init-display.el ends here

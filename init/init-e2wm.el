@@ -11,7 +11,7 @@
   (which-key-add-key-based-replacements e2wm:prefix-key "e2wm")
 
   (require 'e2wm-code2)
-  (require 'my-e2wm-vcs)
+  ;(require 'my-e2wm-vcs)
 
   (defun e2wm-code2 ()
     (interactive)

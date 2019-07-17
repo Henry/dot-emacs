@@ -20,6 +20,9 @@
   (set-face-attribute 'coding-special-annotations nil
                       :foreground "White" :background "Red2")
 
+  ;; Create a special font for the //- comments
+  (copy-face 'font-lock-keyword-face 'font-lock-first-comment-face)
+
   (let ((pattern "\\<\\(FIXME\\|TODO\\|NOTE\\|WARNING\\|BUGS\\|USE\\):"))
     (mapc
      (lambda (mode)
@@ -76,7 +79,7 @@
 
      (font-lock-add-keywords
       mode
-      '(("^ *//- .*" 0 'font-lock-keyword-face t)))
+      '(("^ *//- .*" 0 'font-lock-first-comment-face t)))
      )
    '(
      c-mode

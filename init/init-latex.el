@@ -8,7 +8,7 @@
 (use-package cdlatex
   :ensure t)
 
-(use-package tex
+(use-package tex-mode
   :ensure auctex
   :mode ("\\.tex\\'" . latex-mode)
   :commands (latex-mode LaTeX-mode plain-tex-mode)
@@ -239,8 +239,8 @@
 
 ;; -----------------------------------------------------------------------------
 ;;;  Ebib
-(use-package ebib
-  :ensure t)
+;; (use-package ebib
+;;   :ensure t)
 
 ;;----------------------------------------------------------------------------
 ;;; init-latex.el ends here

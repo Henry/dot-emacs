@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Build emacs with an increased heap size:
+# in src/sheap.h set
+# enum { STATIC_HEAP_SIZE = sizeof (Lisp_Object) << 24 };
+
 # Assume emacs has been compiled and installed in /usr/local
 # Note: compilation of emacs from sources is necessary to get access to temacs
 EMACS=/usr/local/bin/emacs

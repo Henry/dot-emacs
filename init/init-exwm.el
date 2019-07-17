@@ -10,35 +10,43 @@
 
   ;; Hacked version of `exwm-input--update-mode-line' for `smart-mode-line'
   ;; Changes the background color of the line/char mode indicator
-  (defun exwm-input--update-mode-line (id)
-    "Update the propertized `mode-line-process' for window ID."
-    (let (help-echo cmd mode)
-      (cl-case exwm--on-KeyPress
-        ((exwm-input--on-KeyPress-line-mode)
-         (setq mode "line"
-               help-echo "mouse-1: Switch to char-mode"
-               cmd `(lambda ()
-                      (interactive)
-                      (exwm-input-release-keyboard ,id))))
-        ((exwm-input--on-KeyPress-char-mode)
-         (setq mode "char"
-               help-echo "mouse-1: Switch to line-mode"
-               cmd `(lambda ()
-                      (interactive)
-                      (exwm-input-grab-keyboard ,id)))))
-      (with-current-buffer (exwm--id->buffer id)
-        (setq mode-line-process
-              `(": "
-                (:propertize
-                 ,mode
-                 help-echo ,help-echo
-                 face powerline-active2 ;; Added for `smart-mode-line'
-                 mouse-face mode-line-highlight
-                 local-map
-                 (keymap
-                  (mode-line
-                   keymap
-                   (down-mouse-1 . ,cmd)))))))))
+  ;; (defun exwm-input--update-mode-line (id)
+  ;;   "Update the propertized `mode-line-process' for window ID."
+  ;;   (let (help-echo cmd mode)
+  ;;     (cl-case exwm--on-KeyPress
+  ;;       ((exwm-input--on-KeyPress-line-mode)
+  ;;        (setq mode "line"
+  ;;              help-echo "mouse-1: Switch to char-mode"
+  ;;              cmd `(lambda ()
+  ;;                     (interactive)
+  ;;                     (exwm-input-release-keyboard ,id))))
+  ;;       ((exwm-input--on-KeyPress-char-mode)
+  ;;        (setq mode "char"
+  ;;              help-echo "mouse-1: Switch to line-mode"
+  ;;              cmd `(lambda ()
+  ;;                     (interactive)
+  ;;                     (exwm-input-grab-keyboard ,id)))))
+  ;;     (with-current-buffer (exwm--id->buffer id)
+  ;;       (setq mode-line-process
+  ;;             `(": "
+  ;;               (:propertize
+  ;;                ,mode
+  ;;                help-echo ,help-echo
+  ;;                face powerline-active2 ;; Added for `smart-mode-line'
+  ;;                mouse-face mode-line-highlight
+  ;;                local-map
+  ;;                (keymap
+  ;;                 (mode-line
+  ;;                  keymap
+  ;;                  (down-mouse-1 . ,cmd)))))))))
+
+  ;; New functionality
+  ;; (setq exwm-manage-configurations
+  ;;       `((t
+  ;;          floating-mode-line nil
+  ;;          tiling-mode-line nil
+  ;;          floating-header-line ,mode-line-format
+  ;;          tiling-header-line ,mode-line-format)))
 
   (defun exwm-input-set-global-key (key function)
     "Add KEY to `exwm-input-prefix-keys' and bind FUNCTION to KEY
@@ -53,6 +61,10 @@
 
   ;; Shrink fringes to 1 pixel
   (fringe-mode 1)
+
+  ;; Set to char-mode by default
+  (setq exwm-manage-configurations
+        '((t char-mode t)))(setq exwm-manage-configurations '((t char-mode t)))
 
   ;; Show date and time in the modeline
   (setq display-time-default-load-average nil
@@ -244,17 +256,17 @@
         exwm-emms-bindings)
 
   ;; Started named programs in char-mode
-  (defun exwm-start-in-char-mode ()
-    (when (or (string= exwm-instance-name "eshell")
-              (string= exwm-instance-name "xterm")
-              (string= exwm-instance-name "emacs")
-              (string= exwm-instance-name "eemacs")
-              (string= exwm-instance-name "emacsclient")
-              (string= exwm-instance-name "edit")
-              (string= exwm-instance-name "Edit")
-              (string= exwm-instance-name "e"))
-      (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
-  (add-hook 'exwm-manage-finish-hook 'exwm-start-in-char-mode)
+  ;; (defun exwm-start-in-char-mode ()
+  ;;   (when (or (string= exwm-instance-name "eshell")
+  ;;             (string= exwm-instance-name "xterm")
+  ;;             (string= exwm-instance-name "emacs")
+  ;;             (string= exwm-instance-name "eemacs")
+  ;;             (string= exwm-instance-name "emacsclient")
+  ;;             (string= exwm-instance-name "edit")
+  ;;             (string= exwm-instance-name "Edit")
+  ;;             (string= exwm-instance-name "e"))
+  ;;     (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
+  ;; (add-hook 'exwm-manage-finish-hook 'exwm-start-in-char-mode)
 
 
   ;; The following example demonstrates how to set a key binding only available
@@ -301,7 +313,14 @@
   (auto-dim-other-buffers-mode -1)
 
   ;; Enable EXWM
-  (exwm-enable))
+  (exwm-enable)
+
+  ;; Remap keyboard
+  (defun exwm-xmodmap()
+    (call-process "xmodmap" nil (get-buffer-create "wm") nil
+                  (expand-file-name "~/.xmodmap")))
+  (exwm-xmodmap)
+  )
 
 ;; -----------------------------------------------------------------------------
 ;;; init-exwm.el ends here

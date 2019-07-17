@@ -110,7 +110,7 @@
         ("~" "\\verb" t)
         ("@" "\\alert{%s}" nil)))
 
-      org-latex-to-pdf-process
+      org-latex-pdf-process
       (quote
        ("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
       )

@@ -13,7 +13,8 @@
   (electric-operator-add-rules-for-mode
    'c++-mode
    (cons "*" nil)
-   (cons "/" nil)))
+   (cons "/" nil)
+   (cons "&" "& ")))
 
 ;; -----------------------------------------------------------------------------
 ;;;  Set the auto-mode-alist for all C++ related files

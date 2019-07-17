@@ -7,7 +7,9 @@
   :diminish projectile-mode
 
   :init
-  (setq projectile-completion-system 'ivy)
+  (setq projectile-completion-system 'ivy
+        projectile-tags-backend 'etags-select
+        projectile-tags-command "foamTags")
 
   :config
   (projectile-global-mode)
